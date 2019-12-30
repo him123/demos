@@ -1,23 +1,23 @@
+import 'package:american_homes_online/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'login_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class MyProfileScreen extends StatefulWidget {
+class MyProfileAgencyScreen extends StatefulWidget {
   final String userId;
   final String userType;
 
-  MyProfileScreen({this.userId, this.userType});
+  MyProfileAgencyScreen({this.userId, this.userType});
 
   @override
-  _MyProfileScreenState createState() =>
-      _MyProfileScreenState(userId: userId, userType: userType);
+  _MyProfileAgencyScreenState createState() => _MyProfileAgencyScreenState(userId: userId, userType: userType);
 }
 
-class _MyProfileScreenState extends State<MyProfileScreen> {
+class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
+
   final String userId;
   final String userType;
 
@@ -50,7 +50,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       position = '',
       agency_opening_hours = '';
 
-  _MyProfileScreenState({this.userId, this.userType});
+  _MyProfileAgencyScreenState({this.userId, this.userType});
 
   var titleController = TextEditingController();
   var fnameController = TextEditingController();
@@ -59,6 +59,13 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   var phnoController = TextEditingController();
   var mobileController = TextEditingController();
   var skypeController = TextEditingController();
+
+  var addressController = TextEditingController();
+  var stateController = TextEditingController();
+  var cityController = TextEditingController();
+  var areaController = TextEditingController();
+  var neighbourController = TextEditingController();
+  var zipController = TextEditingController();
 
   var facebookController = TextEditingController();
   var tweeterController = TextEditingController();
@@ -77,6 +84,23 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
     getMyProfile(userId, userType);
   }
+
+  List<String> spCategories = [
+    'None',
+    'Residencial',
+  ];
+
+  List<String> spActionCategories = [
+    'None',
+    'Commercial',
+    'Residential',
+  ];
+
+  String spCatVal = 'None',
+      selectedCate = '',
+      spACatVal = 'None',
+      selectedACate = '';
+
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +122,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ),
                     onPressed: () async {
                       SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
+                      await SharedPreferences.getInstance();
 
                       prefs.setString('login', '0');
                       Navigator.of(context).pushNamedAndRemoveUntil(
@@ -135,7 +159,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   ),
                   user_custom_picture == ''
                       ? Image.asset(
-                          'images/default_user.png')
+                      'images/default_user.png')
                       : Image.network(user_custom_picture, width: 200.0, height: 150.0, fit: BoxFit.cover,),
                   SizedBox(
                     height: 10.0,
@@ -155,7 +179,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   SizedBox(
                     height: 50.0,
                   ),
-                  /*TITLE/POSITION*/ Padding(
+                  /*AGENCY DETAILS - CONTACT INFO*/ Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Container(
                       decoration: BoxDecoration(
@@ -173,7 +197,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   Align(
                                     alignment: Alignment.topLeft,
                                     child: Text(
-                                      'User Details',
+                                      'Agency Details',
                                       style: TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.w700,
@@ -184,73 +208,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   Align(
                                     alignment: Alignment.topLeft,
                                     child: Text(
-                                      'Add some information about yourself.',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          /*FIRST NAME*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: titleController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-                                  labelText:
-                                      'Title/Position',
-                                  fillColor: Colors.white),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Container(
-                            width: double.infinity,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  /*PERSONAL DETAILS*/ Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 2.0, color: Theme.of(context).primaryColor),
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Column(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'User Details',
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 5.0,),
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Add your contact information.',
+                                      'Add your contact information',
                                       style: TextStyle(
                                         fontSize: 14.0,
                                         fontWeight: FontWeight.w500,
@@ -272,7 +230,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               decoration: InputDecoration(
                                   border: OutlineInputBorder(),
                                   filled: true,
-                                  labelText: 'Enter First name',
+                                  labelText: 'Agency Name',
                                   fillColor: Colors.white),
                             ),
                           ),
@@ -288,7 +246,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   border: OutlineInputBorder(),
                                   filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Enter Last name',
+                                  labelText: 'Phone',
                                   fillColor: Colors.white),
                             ),
                           ),
@@ -320,7 +278,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   border: OutlineInputBorder(),
                                   filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Phone number',
+                                  labelText: 'Mobile',
                                   fillColor: Colors.white),
                             ),
                           ),
@@ -336,7 +294,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   border: OutlineInputBorder(),
                                   filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Mobile number',
+                                  labelText: 'Skype',
                                   fillColor: Colors.white),
                             ),
                           ),
@@ -352,7 +310,55 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   border: OutlineInputBorder(),
                                   filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Skype',
+                                  labelText: 'Languages',
+                                  fillColor: Colors.white),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          /*Taxes*/ Container(
+                            width: 300.0,
+                            height: 40.0,
+                            child: TextFormField(
+                              controller: skypeController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  filled: true,
+//                        hintStyle: TextStyle(color: Colors.grey[800]),
+                                  labelText: 'Taxes',
+                                  fillColor: Colors.white),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          /*License*/ Container(
+                            width: 300.0,
+                            height: 40.0,
+                            child: TextFormField(
+                              controller: skypeController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  filled: true,
+//                        hintStyle: TextStyle(color: Colors.grey[800]),
+                                  labelText: 'License',
+                                  fillColor: Colors.white),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          /*Opening Hours*/ Container(
+                            width: 300.0,
+                            height: 40.0,
+                            child: TextFormField(
+                              controller: skypeController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  filled: true,
+//                        hintStyle: TextStyle(color: Colors.grey[800]),
+                                  labelText: 'Opening Hours',
                                   fillColor: Colors.white),
                             ),
                           ),
@@ -366,7 +372,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       ),
                     ),
                   ),
-                  /*SOCIAL DETAILS*/ Padding(
+                  /*AGENCY DETAILS - SOCIAL DETAILS*/ Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
                       decoration: BoxDecoration(
@@ -384,7 +390,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   Align(
                                     alignment: Alignment.topLeft,
                                     child: Text(
-                                      'User Details',
+                                      'Agency Details',
                                       style: TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.w700,
@@ -507,7 +513,341 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           Container(
                             width: double.infinity,
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  /*Agency Area/Categories*/ Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 2.0, color: Theme.of(context).primaryColor),
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Column(
+                                children: <Widget>[
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      'Agency Area/Categories',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 5.0,),
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      'What kind of listings do you handle?',
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          /*Select Category*/ Container(
+                            color: Colors.white,
+                            width: 300.0,
+                            height: 40.0,
+                            child: Container(
+                              alignment: Alignment.center,
+                              decoration: ShapeDecoration(
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      width: 1.0, style: BorderStyle.solid),
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0)),
+                                ),
+                              ),
+                              child: DropdownButton<String>(
+                                value: spCatVal,
+                                icon: Icon(Icons.arrow_drop_down),
+                                iconSize: 24,
+                                elevation: 16,
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 20,
+                                    inherit: false,
+                                    decorationColor: Colors.white),
+//                  underline: Container(
+//                    height: 2,
+//                    color: Colors.deepPurpleAccent,
+//                  ),
 
+                                onChanged: (String data) {
+                                  setState(() {
+                                    spCatVal = data;
+                                    selectedCate = spCatVal;
+                                  });
+                                },
+                                items: spCategories
+                                    .map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          /*Select Action Category*/ Container(
+                            color: Colors.white,
+                            width: 300.0,
+                            height: 40.0,
+                            child: Container(
+                              alignment: Alignment.center,
+                              decoration: ShapeDecoration(
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      width: 1.0, style: BorderStyle.solid),
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0)),
+                                ),
+                              ),
+                              child: DropdownButton<String>(
+                                value: spACatVal,
+                                icon: Icon(Icons.arrow_drop_down),
+                                iconSize: 24,
+                                elevation: 16,
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 20,
+                                    inherit: false,
+                                    decorationColor: Colors.white),
+//                  underline: Container(
+//                    height: 2,
+//                    color: Colors.deepPurpleAccent,
+//                  ),
+
+                                onChanged: (String data) {
+                                  setState(() {
+                                    spACatVal = data;
+                                    selectedACate = spACatVal;
+                                  });
+                                },
+                                items: spActionCategories
+                                    .map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  /*Agency Location - */ Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 2.0, color: Theme.of(context).primaryColor),
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Column(
+                                children: <Widget>[
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      'Agency Location',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 5.0,),
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      'Add some information about your agency.',
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          /*ADDRESS*/ Container(
+                            width: 300.0,
+                            height: 40.0,
+                            child: TextFormField(
+                              controller: addressController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  filled: true,
+//                        hintStyle: TextStyle(color: Colors.grey[800]),
+                                  labelText: 'Address',
+                                  fillColor: Colors.white),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          /*STATE/COUNTY*/ Container(
+                            width: 300.0,
+                            height: 40.0,
+                            child: TextFormField(
+                              controller: stateController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  filled: true,
+//                        hintStyle: TextStyle(color: Colors.grey[800]),
+                                  labelText: 'State/County',
+                                  fillColor: Colors.white),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          /*CITY*/ Container(
+                            width: 300.0,
+                            height: 40.0,
+                            child: TextFormField(
+                              controller: cityController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  filled: true,
+//                        hintStyle: TextStyle(color: Colors.grey[800]),
+                                  labelText: 'City',
+                                  fillColor: Colors.white),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          /*NEIGHBORHOOD*/ Container(
+                            width: 300.0,
+                            height: 40.0,
+                            child: TextFormField(
+                              controller: neighbourController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  filled: true,
+//                        hintStyle: TextStyle(color: Colors.grey[800]),
+                                  labelText: 'Neighborhood',
+                                  fillColor: Colors.white),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          /*ZIP*/ Container(
+                            width: 300.0,
+                            height: 40.0,
+                            child: TextFormField(
+                              controller: zipController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  filled: true,
+//                        hintStyle: TextStyle(color: Colors.grey[800]),
+                                  labelText: 'Zip',
+                                  fillColor: Colors.white),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          Container(
+                            width: double.infinity,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  /*AGENT SOME INFORMATION ABOUT YOURSELF*/ Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 2.0, color: Theme.of(context).primaryColor),
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                'Add some information about yourself',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          /*FIRST NAME*/ Container(
+                            width: 300.0,
+                            height: 40.0,
+                            child: TextFormField(
+                              controller: fnameController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  filled: true,
+                                  labelText: '*Title/Position',
+                                  fillColor: Colors.white),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          /*LAST NAME*/ Container(
+                            width: 300.0,
+                            child: TextFormField(
+                              maxLines: 8,
+                              controller: lnameController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  filled: true,
+//                        hintStyle: TextStyle(color: Colors.grey[800]),
+                                  labelText: 'About Me',
+                                  fillColor: Colors.white),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
                         ],
                       ),
                     ),
@@ -578,6 +918,13 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         phnoController.text = phone;
         mobileController.text = mobile;
         skypeController.text = skype;
+
+        addressController.text = data['address'].toString();
+        print('Address: ${data['address']}');
+//        stateController = data['state'];
+        cityController.text = data['city'];
+//        neighbourController = data['neighbour'];
+//        zipController = data['zip'];
 
         facebookController.text = facebook;
         tweeterController.text = twitter;

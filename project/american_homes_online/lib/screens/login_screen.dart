@@ -7,10 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-import '../main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id = 'login_screen';
@@ -24,19 +23,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   String email, pass;
   String _status = 'no-action';
+  bool chk=false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    if (getLoginStatus().toString() == '1') {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              fullscreenDialog: true,
-              builder: (BuildContext context) => DashBoardScreen()));
-    }
   }
 
   @override
@@ -66,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 5.0,
                   ),
                   TextFormField(
-                    validator: validateEmail,
+//                    validator: validateEmail,
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value) {
@@ -100,20 +92,42 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   Row(
                     children: <Widget>[
+                      Checkbox(
+                        value: chk,
+                        onChanged: (bool value){
+                          setState(() {
+                            chk = value;
+                          });
+                        },
+                      ),
+                      Container(width: 250.0,
+                          child: Text('By clicking the checkbox you accept the Privacy Policy and Terms Of Use',style: TextStyle(color: Colors.red,),))
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
                       Expanded(
                         child: RoundedButtons(
                           color: kAccentColor,
                           btnName: 'Login',
                           onPress: () {
-                          Navigator.pushNamed(context, DashBoardScreen.id);
-//                            if (_formKey.currentState.validate()) {
-//                              // If the form is valid, display a Snackbar.
-//                              setState(() {
-//                                showSpinner = true;
-//                              });
-////                              login(email, pass);
-//                            }
-//
+                            print('login button pressed --- ');
+                            if (_formKey.currentState.validate()) {
+                              // If the form is valid, display a Snackbar.
+                              setState(() {
+                                showSpinner = true;
+                              });
+
+                              if(chk==false){
+                                showAlert(context, 'Please select privacy policy');
+                                setState(() {
+                                  showSpinner=false;
+                                });
+                              }else{
+                                login(email, pass);
+                              }
+
+                            }
                           },
                         ),
                       ),
@@ -172,66 +186,60 @@ class _LoginScreenState extends State<LoginScreen> {
       return null;
   }
 
-//  Future<String> login(String email, String password) async {
-//    print('========= getData called ===========');
-//    var response = await http.get(
-//        'http://rajkeshar.com/material/api/customer.php?method=login&email=$email&password=$password&fcmtocken=123');
-//
-//    print(response.body);
-//
-//    if (json.decode(response.body)['STATUS'] == 0) {
-//      print('fail');
-//      showAlert(context, json.decode(response.body)['MESSAGE']);
-//    } else {
-//      print('success');
-//
-//      String image = json.decode(response.body)['profile_image'];
-//      String id = json.decode(response.body)['user_id'];
-//      String nameUser = json.decode(response.body)['name'];
-//      String tookEmail = json.decode(response.body)['email'];
-//      String tookAddress = json.decode(response.body)['address'];
-//      String tookNumber = json.decode(response.body)['phone'];
-//
-//      SharedPreferences prefs = await SharedPreferences.getInstance();
-//
-//      prefs.setString('profile_image', image);
-//      prefs.setString('name', nameUser);
-//      prefs.setString('id', id);
-//      prefs.setString('email', tookEmail);
-//      prefs.setString('address', tookAddress);
-//      prefs.setString('phone', tookNumber);
-//      prefs.setString('login', '1');
-//
-//      print(prefs.getString('profile_image'));
-////      setState(() => this._status = 'loading');
-////      appAuth.login().then((result) {
-////        if (result) {
-////          Navigator.of(context).pushReplacementNamed(NavigationDashboard.id);
-//      Navigator.of(context).pop();
-//      Navigator.push(
-//          context,
-//          MaterialPageRoute(
-//              fullscreenDialog: true,
-//              builder: (BuildContext context) => NavigationDashboard(
-//                    custId: id,
-//                    name: nameUser,
-//                    email: tookEmail,
-//                    phone: tookNumber,
-//                    address: tookAddress,
-//                    profileImage: image,
-//                  )));
-////        } else {
-////          setState(() => this._status = 'rejected');
-////        }
-////      });
-//    }
-//
-//    setState(() {
-//      showSpinner = false;
-//    });
-//
-//    return "Success!";
-//  }
+  Future<String> login(String email, String password) async {
+
+    print('========= getData called ===========');
+    var response = await http.get(
+        'https://americanhomesonline.com/wp-json/api/v1/Login/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&username=$email&password=$password');
+
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      dynamic data = json.decode(response.body)['data'];
+      if (data['api_status'] == 0) {
+        print('fail');
+        showAlert(context, data['message']);
+      } else {
+        print('success');
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        String id = data['user_id'].toString();
+        String nameUser = data['name'];
+        String tookEmail = data['email'];
+        String userType = data['user_type'];
+
+
+        print('id: $id');
+        print('username: $nameUser');
+        print('email: $email');
+        print('userType: $userType');
+
+        prefs.setString('name', nameUser);
+        prefs.setString('id', id);
+        prefs.setString('email', tookEmail);
+        prefs.setString('usertype', userType);
+        prefs.setString('login', '1');
+
+        Navigator.of(context).pop();
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                fullscreenDialog: true,
+                builder: (BuildContext context) => DashBoardScreen()));
+      }
+    } else {
+      setState(() {
+        showSpinner = false;
+      });
+      throw Exception('Failed to load photos');
+    }
+
+    setState(() {
+      showSpinner = false;
+    });
+
+    return "Success!";
+  }
 
   void showAlert(BuildContext context, String msg) {
     Alert(
@@ -252,8 +260,8 @@ class _LoginScreenState extends State<LoginScreen> {
     ).show();
   }
 
-  Future<String> getLoginStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('login');
-  }
+//  Future<String> getLoginStatus() async {
+////    SharedPreferences prefs = await SharedPreferences.getInstance();
+//    return prefs.getString('login');
+//  }
 }

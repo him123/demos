@@ -7,24 +7,33 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'dart:convert';
+import 'package:shimmer/shimmer.dart';
 
 class AgentListScreen extends StatefulWidget {
   static String id = 'AgentListScreen';
+  final String location;
+  final String name;
+
+  AgentListScreen({this.location, this.name});
 
   @override
-  _AgentListScreenState createState() => _AgentListScreenState();
+  _AgentListScreenState createState() => _AgentListScreenState(name: name,location: location);
 }
 
 class _AgentListScreenState extends State<AgentListScreen> {
+  final String location;
+  final String name;
   bool showSpinner = false;
   List<Agent> list = List();
+
+  _AgentListScreenState({this.location, this.name});
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    showSpinner=true;
-    getAgents();
+//    showSpinner=true;
+    getAgents(name, location);
   }
   @override
   Widget build(BuildContext context) {
@@ -34,7 +43,7 @@ class _AgentListScreenState extends State<AgentListScreen> {
         appBar: AppBar(
           title: Text('Agents'),
         ),
-        body: ListView.builder(
+        body: list.length==0 ? ShimmerList() : ListView.builder(
             itemCount: list.length,
             itemBuilder: (context, index) {
               return AgentItem(
@@ -49,10 +58,10 @@ class _AgentListScreenState extends State<AgentListScreen> {
     );
   }
 
-  Future<String> getAgents() async {
+  Future<String> getAgents(String name, String location) async {
     print('========= getData called ===========');
     var response = await http.get(
-        'https://americanhomesonline.com/wp-json/api/v1/Agent_Filter/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&location=&agent_name=');
+        'https://americanhomesonline.com/wp-json/api/v1/Agent_Filter/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&location=$location&agent_name=$name');
 
     this.setState(() {
       dynamic data = json.decode(response.body)['data'];
@@ -75,5 +84,79 @@ class _AgentListScreenState extends State<AgentListScreen> {
 
     showSpinner = false;
     return "Success!";
+  }
+}
+
+class ShimmerList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    int offset = 0;
+    int time = 800;
+
+    return SafeArea(
+      child: ListView.builder(
+        itemCount: 6,
+        itemBuilder: (BuildContext context, int index) {
+          offset += 5;
+          time = 800 + offset;
+
+          print(time);
+
+          return Shimmer.fromColors(
+            highlightColor: Colors.white,
+            baseColor: Colors.grey[300],
+            child: ShimmerLayout(),
+            period: Duration(milliseconds: time),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class ShimmerLayout extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    double containerWidth = 200;
+    double containerHeight = 15;
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          CircleAvatar(
+            radius: 50.0,
+            backgroundColor: Colors.grey,
+          ),
+          SizedBox(width: 20.0,),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  height: containerHeight,
+                  width: containerWidth,
+                  color: Colors.grey,
+                ),
+                SizedBox(height: 15.0,),
+                Container(
+                  height: containerHeight,
+                  width: containerWidth,
+                  color: Colors.grey,
+                ),
+                Container(
+                  height: containerHeight,
+                  width: containerWidth,
+                  color: Colors.grey,
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

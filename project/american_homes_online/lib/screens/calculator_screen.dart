@@ -4,20 +4,39 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Calculator extends StatefulWidget {
 
+  final bool showAppBar;
+  Calculator({this.showAppBar});
   @override
-  _CalculatorState createState() => _CalculatorState();
+  _CalculatorState createState() => _CalculatorState(showAppBar: showAppBar);
 }
 
 class _CalculatorState extends State<Calculator> {
   int heightAmo = 180;
   int heightFre = 180;
+  final bool showAppBar;
+  _CalculatorState({this.showAppBar});
 //  int weight = 60;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Calculator'),
+      appBar: showAppBar==true?AppBar(
+        title: Row(
+      children: <Widget>[
+      Hero(
+        tag: 'cal',
+        child: Image.asset(
+          'images/cal.png',
+          height: 30.0,
+          color: Colors.white,
+        ),
       ),
+      SizedBox(
+        width: 10.0,
+      ),
+      Text("Calculator"),
+      ],
+    ),
+      ):null,
       body: ListView(
         children: <Widget>[
           SizedBox(height: 20.0,),

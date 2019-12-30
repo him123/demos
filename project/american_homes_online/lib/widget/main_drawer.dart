@@ -1,5 +1,13 @@
+import 'package:american_homes_online/screens/add_new_property.dart';
+import 'package:american_homes_online/screens/login_screen.dart';
+import 'package:american_homes_online/screens/my_profile_agency_screen.dart';
+import 'package:american_homes_online/screens/my_profile_agent_screen.dart';
+import 'package:american_homes_online/screens/my_profile_developer_screen.dart';
+import 'package:american_homes_online/screens/my_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainDrawer extends StatelessWidget {
   final String name;
@@ -8,9 +16,16 @@ class MainDrawer extends StatelessWidget {
   final String phone;
   final String address;
   final String id;
+  final String userType;
 
   MainDrawer(
-      {this.name, this.phone, this.email, this.address, this.image, this.id});
+      {this.name,
+      this.phone,
+      this.email,
+      this.address,
+      this.image,
+      this.id,
+      this.userType});
 
   Widget buildListTile(String title, IconData icon, Function tapHandler) {
     return ListTile(
@@ -28,6 +43,34 @@ class MainDrawer extends StatelessWidget {
       ),
       onTap: tapHandler,
     );
+  }
+
+  Widget returnMyProfileWidget(String userType) {
+    if (userType == '1') {
+      print('go to User screen');
+      return MyProfileScreen(
+        userId: id,
+        userType: userType,
+      );
+    } else if (userType == '2') {
+      print('go to Agent screen');
+      return MyProfileAgentScreen(
+        userId: id,
+        userType: userType,
+      );
+    } else if (userType == '3') {
+      print('go to Agency screen');
+      return MyProfileAgencyScreen(
+        userId: id,
+        userType: userType,
+      );
+    } else {
+      print('go to Developer screen');
+      return MyProfileDeveloperScreen(
+        userId: id,
+        userType: userType,
+      );
+    }
   }
 
   @override
@@ -58,7 +101,11 @@ class MainDrawer extends StatelessWidget {
 //              ),
             ),
             currentAccountPicture: ClipOval(
-                child: Image.asset('images/default_user.png', fit: BoxFit.cover,),),
+              child: Image.asset(
+                'images/default_user.png',
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           buildListTile('HOME', Icons.home, () {
 //            Navigator.of(context).pushReplacementNamed(NavigationDashboard.id);
@@ -73,21 +120,17 @@ class MainDrawer extends StatelessWidget {
           buildListTile('MY PROFILE', FontAwesomeIcons.cog, () {
 //            Navigator.of(context).pushReplacementNamed(Account.id);
             Navigator.of(context).pop();
-//            Navigator.of(context).push(
-//              PageRouteBuilder(pageBuilder: (BuildContext context, _, __) {
-//                return Account(
-//                  image: image,
-//                  name: name,
-//                  email: email,
-//                  phone: phone,
-//                  address: address,
-//                );
-//              }, transitionsBuilder:
-//                  (_, Animation<double> animation, __, Widget child) {
-//                return new FadeTransition(opacity: animation, child: child);
-//              }),
-//            );
+
+            Navigator.of(context).push(
+              PageRouteBuilder(pageBuilder: (BuildContext context, _, __) {
+                return returnMyProfileWidget(userType);
+              }, transitionsBuilder:
+                  (_, Animation<double> animation, __, Widget child) {
+                return new FadeTransition(opacity: animation, child: child);
+              }),
+            );
           }),
+
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: Divider(
@@ -95,6 +138,7 @@ class MainDrawer extends StatelessWidget {
               height: 1.0,
             ),
           ),
+
           buildListTile('MY PROPERIES LIST', FontAwesomeIcons.mapMarkerAlt, () {
 //            Navigator.of(context).pushReplacementNamed(AboutUs.id);
 
@@ -108,67 +152,7 @@ class MainDrawer extends StatelessWidget {
 //              }),
 //            );
           }),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            child: Divider(
-              color: Colors.black,
-              height: 1.0,
-            ),
-          ),
-          buildListTile('ADD NEW PROPERTY', FontAwesomeIcons.plus, () {
-//            Navigator.of(context).pushReplacementNamed(ContactUs.id);
-            Navigator.of(context).pop();
-//            Navigator.of(context).push(
-//              PageRouteBuilder(pageBuilder: (BuildContext context, _, __) {
-//                return ContactUs();
-//              }, transitionsBuilder:
-//                  (_, Animation<double> animation, __, Widget child) {
-//                return new FadeTransition(opacity: animation, child: child);
-//              }),
-//            );
-          }),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            child: Divider(
-              color: Colors.black,
-              height: 1.0,
-            ),
-          ),
-          buildListTile('FAVORITE', FontAwesomeIcons.heart, () {
-//            Navigator.of(context).pushReplacementNamed(OrdersScreen.id);
-            Navigator.of(context).pop();
-//            Navigator.of(context).push(
-//              PageRouteBuilder(pageBuilder: (BuildContext context, _, __) {
-//                return OrdersScreen(
-//                  custId: id,
-//                );
-//              }, transitionsBuilder:
-//                  (_, Animation<double> animation, __, Widget child) {
-//                return new FadeTransition(opacity: animation, child: child);
-//              }),
-//            );
-          }),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            child: Divider(
-              color: Colors.black,
-              height: 1.0,
-            ),
-          ),
-          buildListTile('SAVED SEARCH', FontAwesomeIcons.search, () {
-//            Navigator.of(context).pushReplacementNamed(OrdersScreen.id);
-            Navigator.of(context).pop();
-//            Navigator.of(context).push(
-//              PageRouteBuilder(pageBuilder: (BuildContext context, _, __) {
-//                return OrdersScreen(
-//                  custId: id,
-//                );
-//              }, transitionsBuilder:
-//                  (_, Animation<double> animation, __, Widget child) {
-//                return new FadeTransition(opacity: animation, child: child);
-//              }),
-//            );
-          }),
+
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: Divider(
@@ -190,6 +174,7 @@ class MainDrawer extends StatelessWidget {
 //              }),
 //            );
           }),
+
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: Divider(
@@ -197,20 +182,75 @@ class MainDrawer extends StatelessWidget {
               height: 1.0,
             ),
           ),
-          buildListTile('LOGOUT', FontAwesomeIcons.powerOff, () {
-//            Navigator.of(context).pushReplacementNamed(OrdersScreen.id);
+
+          userType == '1' ? Text(''): buildListTile('ADD NEW PROPERTY', FontAwesomeIcons.plus, () {
+//            Navigator.of(context).pushReplacementNamed(ContactUs.id);
             Navigator.of(context).pop();
-//            Navigator.of(context).push(
-//              PageRouteBuilder(pageBuilder: (BuildContext context, _, __) {
-//                return OrdersScreen(
-//                  custId: id,
-//                );
-//              }, transitionsBuilder:
-//                  (_, Animation<double> animation, __, Widget child) {
-//                return new FadeTransition(opacity: animation, child: child);
-//              }),
-//            );
+            Navigator.of(context).push(
+              PageRouteBuilder(pageBuilder: (BuildContext context, _, __) {
+                return AddPropertyScreen();
+              }, transitionsBuilder:
+                  (_, Animation<double> animation, __, Widget child) {
+                return new FadeTransition(opacity: animation, child: child);
+              }),
+            );
           }),
+
+//          Padding(
+//            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+//            child: Divider(
+//              color: Colors.black,
+//              height: 1.0,
+//            ),
+//          ),
+//          buildListTile('LOGOUT', FontAwesomeIcons.powerOff, () {
+////            Navigator.of(context).pushReplacementNamed(OrdersScreen.id);
+//            Navigator.of(context).pop();
+//
+//
+//            Alert(
+//              context: context,
+////      type: AlertType.info,
+//              title: 'Want to Logout?',
+////      desc: msg,
+//              buttons: [
+//                DialogButton(
+//                  child: Text(
+//                    "Yes",
+//                    style: TextStyle(color: Colors.white, fontSize: 20),
+//                  ),
+//                  onPressed: () async {
+//                    SharedPreferences prefs = await SharedPreferences.getInstance();
+//
+//                    prefs.setString('login', '0');
+//
+//                    Navigator.of(context)
+//                        .pushNamedAndRemoveUntil(LoginScreen.id, (Route<dynamic> route) => false);
+//                  },
+//                  width: 120,
+//                ),
+//                DialogButton(
+//                  child: Text(
+//                    "No",
+//                    style: TextStyle(color: Colors.white, fontSize: 20),
+//                  ),
+//                  onPressed: () => Navigator.pop(context),
+//                  width: 120,
+//                )
+//              ],
+//            ).show();
+////            Navigator.of(context).push(
+////              PageRouteBuilder(pageBuilder: (BuildContext context, _, __) {
+////                return OrdersScreen(
+////                  custId: id,
+////                );
+////              }, transitionsBuilder:
+////                  (_, Animation<double> animation, __, Widget child) {
+////                return new FadeTransition(opacity: animation, child: child);
+////              }),
+////            );
+//          }
+//          ),
         ],
       ),
     );

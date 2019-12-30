@@ -1,1221 +1,155 @@
+import 'package:american_homes_online/model/property.dart';
+import 'package:american_homes_online/screens/property_details_screen.dart';
+import 'package:american_homes_online/widget/property_item.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'dart:convert';
 
-class PropertyListScreen extends StatelessWidget {
+import 'package:shimmer/shimmer.dart';
+
+class PropertyListScreen extends StatefulWidget {
+  @override
+  _PropertyListScreenState createState() => _PropertyListScreenState();
+}
+
+class _PropertyListScreenState extends State<PropertyListScreen> {
+  bool showSpinner = false;
+  List<Property> list = List();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    showSpinner = true;
+    getProperties();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return list.length == 0
+        ? ShimmerList()
+        : ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (context, index) {
+              return PropertyItem(
+                price: list[index].price,
+                property_action_category: list[index].property_action_category,
+                property_address: list[index].property_address,
+                property_id: list[index].property_id,
+                property_image: list[index].property_image,
+                property_rooms: list[index].property_rooms,
+                property_size: list[index].property_size,
+                property_title: list[index].property_title,
+                property_bedrooms: list[index].property_bedrooms,
+              );
+            });
+  }
+
+  Future<String> getProperties() async {
+    print('========= Property called ===========');
+    var response = await http.get(
+        'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&bedrooms=1&min_price=100&max_price=1000000');
+
+    this.setState(() {
+      dynamic data = json.decode(response.body)['data'];
+
+      if (response.statusCode == 200) {
+        list =
+            (data as List).map((data) => new Property.fromJson(data)).toList();
+
+        String firstname = list[0].property_latitude;
+        print('All Shops: $firstname');
+
+        setState(() {
+          showSpinner = false;
+        });
+      } else {
+        showSpinner = false;
+        throw Exception('Failed to load photos');
+      }
+    });
+
+    return "Success!";
+  }
+}
+
+class ShimmerList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    int offset = 0;
+    int time = 800;
+
+    return SafeArea(
+      child: ListView.builder(
+        itemCount: 6,
+        itemBuilder: (BuildContext context, int index) {
+          offset += 5;
+          time = 800 + offset;
+
+          print(time);
+
+          return Shimmer.fromColors(
+            highlightColor: Colors.white,
+            baseColor: Colors.grey[300],
+            child: ShimmerLayout(),
+            period: Duration(milliseconds: time),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class ShimmerLayout extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    double containerWidth = 200;
+    double containerHeight = 15;
+
+    return Column(
       children: <Widget>[
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Image.network(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiehYAkBhtPvh9SdUQXIDuOJJNqG7vDo7IuXEN4XhElq3YF3ow&s',
-                  width: 150.0,
-                  height: 115.0,
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                    color: Colors.blueAccent,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                        'Listed 15 days ago',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    )),
-                Positioned(
-                    bottom: 0.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(FontAwesomeIcons.solidCircle,color: Colors.blueAccent,size: 18.0,),
-                          SizedBox(width: 10.0),
-                          Text('ACTIVE',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ))
-              ],
+            Container(
+              width: 150.0,
+              height: 115.0,
+              color: Colors.grey,
             ),
             SizedBox(
-              width: 15.0,
+              width: 20.0,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Single Family Recedensy',
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.red),
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      '\$352,200',
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    AutoSizeText('2118 SUNSET VISTA Avenue',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                      ), maxLines: 2,),
-                    Text('Henderson',
-                        style: TextStyle(
-                          fontSize: 13.0,
-                        )),
-                  ],
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      '3',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bed,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-//                    SizedBox(width: 20.0,),
-                    Text(
-                      '2',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bath,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-                    AutoSizeText(
-                      '1188 sqft',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                  ],
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    height: containerHeight,
+                    width: containerWidth,
+                    color: Colors.grey,
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  Container(
+                    height: containerHeight,
+                    width: containerWidth,
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    height: containerHeight,
+                    width: containerWidth,
+                    color: Colors.grey,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-        Divider(
-          color: Colors.black,
-          height: 10.0,
-        ),
-        Row(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Image.network(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiehYAkBhtPvh9SdUQXIDuOJJNqG7vDo7IuXEN4XhElq3YF3ow&s',
-                  width: 150.0,
-                  height: 115.0,
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                    color: Colors.blueAccent,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                        'Listed 15 days ago',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    )),
-                Positioned(
-                    bottom: 0.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(FontAwesomeIcons.solidCircle,color: Colors.blueAccent,size: 18.0,),
-                          SizedBox(width: 10.0),
-                          Text('ACTIVE',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ))
-              ],
-            ),
-            SizedBox(
-              width: 15.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Single Family Recedensy',
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.red),
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      '\$352,200',
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    AutoSizeText('2118 SUNSET VISTA Avenue',
-                        style: TextStyle(
-                          fontSize: 12.0,
-                        ), maxLines: 2,),
-                    Text('Henderson',
-                        style: TextStyle(
-                          fontSize: 13.0,
-                        )),
-                  ],
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      '3',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bed,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-//                    SizedBox(width: 20.0,),
-                    Text(
-                      '2',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bath,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-                    AutoSizeText(
-                      '1188 sqft',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-        Divider(
-          color: Colors.black,
-          height: 10.0,
-        ),
-        Row(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Image.network(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiehYAkBhtPvh9SdUQXIDuOJJNqG7vDo7IuXEN4XhElq3YF3ow&s',
-                  width: 150.0,
-                  height: 115.0,
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                    color: Colors.blueAccent,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                        'Listed 15 days ago',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    )),
-                Positioned(
-                    bottom: 0.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(FontAwesomeIcons.solidCircle,color: Colors.blueAccent,size: 18.0,),
-                          SizedBox(width: 10.0),
-                          Text('ACTIVE',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ))
-              ],
-            ),
-            SizedBox(
-              width: 15.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Single Family Recedensy',
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.red),
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      '\$352,200',
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    AutoSizeText('2118 SUNSET VISTA Avenue',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                      ), maxLines: 2,),
-                    Text('Henderson',
-                        style: TextStyle(
-                          fontSize: 13.0,
-                        )),
-                  ],
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      '3',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bed,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-//                    SizedBox(width: 20.0,),
-                    Text(
-                      '2',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bath,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-                    AutoSizeText(
-                      '1188 sqft',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-        Divider(
-          color: Colors.black,
-          height: 10.0,
-        ),
-        Row(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Image.network(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiehYAkBhtPvh9SdUQXIDuOJJNqG7vDo7IuXEN4XhElq3YF3ow&s',
-                  width: 150.0,
-                  height: 115.0,
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                    color: Colors.blueAccent,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                        'Listed 15 days ago',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    )),
-                Positioned(
-                    bottom: 0.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(FontAwesomeIcons.solidCircle,color: Colors.blueAccent,size: 18.0,),
-                          SizedBox(width: 10.0),
-                          Text('ACTIVE',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ))
-              ],
-            ),
-            SizedBox(
-              width: 15.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Single Family Recedensy',
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.red),
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      '\$352,200',
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    AutoSizeText('2118 SUNSET VISTA Avenue',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                      ), maxLines: 2,),
-                    Text('Henderson',
-                        style: TextStyle(
-                          fontSize: 13.0,
-                        )),
-                  ],
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      '3',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bed,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-//                    SizedBox(width: 20.0,),
-                    Text(
-                      '2',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bath,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-                    AutoSizeText(
-                      '1188 sqft',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-        Divider(
-          color: Colors.black,
-          height: 10.0,
-        ),
-        Row(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Image.network(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiehYAkBhtPvh9SdUQXIDuOJJNqG7vDo7IuXEN4XhElq3YF3ow&s',
-                  width: 150.0,
-                  height: 115.0,
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                    color: Colors.blueAccent,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                        'Listed 15 days ago',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    )),
-                Positioned(
-                    bottom: 0.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(FontAwesomeIcons.solidCircle,color: Colors.blueAccent,size: 18.0,),
-                          SizedBox(width: 10.0),
-                          Text('ACTIVE',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ))
-              ],
-            ),
-            SizedBox(
-              width: 15.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Single Family Recedensy',
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.red),
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      '\$352,200',
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    AutoSizeText('2118 SUNSET VISTA Avenue',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                      ), maxLines: 2,),
-                    Text('Henderson',
-                        style: TextStyle(
-                          fontSize: 13.0,
-                        )),
-                  ],
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      '3',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bed,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-//                    SizedBox(width: 20.0,),
-                    Text(
-                      '2',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bath,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-                    AutoSizeText(
-                      '1188 sqft',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-        Divider(
-          color: Colors.black,
-          height: 10.0,
-        ),
-        Row(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Image.network(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiehYAkBhtPvh9SdUQXIDuOJJNqG7vDo7IuXEN4XhElq3YF3ow&s',
-                  width: 150.0,
-                  height: 115.0,
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                    color: Colors.blueAccent,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                        'Listed 15 days ago',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    )),
-                Positioned(
-                    bottom: 0.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(FontAwesomeIcons.solidCircle,color: Colors.blueAccent,size: 18.0,),
-                          SizedBox(width: 10.0),
-                          Text('ACTIVE',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ))
-              ],
-            ),
-            SizedBox(
-              width: 15.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Single Family Recedensy',
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.red),
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      '\$352,200',
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    AutoSizeText('2118 SUNSET VISTA Avenue',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                      ), maxLines: 2,),
-                    Text('Henderson',
-                        style: TextStyle(
-                          fontSize: 13.0,
-                        )),
-                  ],
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      '3',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bed,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-//                    SizedBox(width: 20.0,),
-                    Text(
-                      '2',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bath,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-                    AutoSizeText(
-                      '1188 sqft',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-        Divider(
-          color: Colors.black,
-          height: 10.0,
-        ),
-        Row(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Image.network(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiehYAkBhtPvh9SdUQXIDuOJJNqG7vDo7IuXEN4XhElq3YF3ow&s',
-                  width: 150.0,
-                  height: 115.0,
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                    color: Colors.blueAccent,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                        'Listed 15 days ago',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    )),
-                Positioned(
-                    bottom: 0.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(FontAwesomeIcons.solidCircle,color: Colors.blueAccent,size: 18.0,),
-                          SizedBox(width: 10.0),
-                          Text('ACTIVE',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ))
-              ],
-            ),
-            SizedBox(
-              width: 15.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Single Family Recedensy',
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.red),
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      '\$352,200',
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    AutoSizeText('2118 SUNSET VISTA Avenue',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                      ), maxLines: 2,),
-                    Text('Henderson',
-                        style: TextStyle(
-                          fontSize: 13.0,
-                        )),
-                  ],
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      '3',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bed,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-//                    SizedBox(width: 20.0,),
-                    Text(
-                      '2',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bath,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-                    AutoSizeText(
-                      '1188 sqft',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-        Divider(
-          color: Colors.black,
-          height: 10.0,
-        ),
-        Row(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Image.network(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiehYAkBhtPvh9SdUQXIDuOJJNqG7vDo7IuXEN4XhElq3YF3ow&s',
-                  width: 150.0,
-                  height: 115.0,
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                    color: Colors.blueAccent,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                        'Listed 15 days ago',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    )),
-                Positioned(
-                    bottom: 0.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(FontAwesomeIcons.solidCircle,color: Colors.blueAccent,size: 18.0,),
-                          SizedBox(width: 10.0),
-                          Text('ACTIVE',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ))
-              ],
-            ),
-            SizedBox(
-              width: 15.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Single Family Recedensy',
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.red),
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      '\$352,200',
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    AutoSizeText('2118 SUNSET VISTA Avenue',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                      ), maxLines: 2,),
-                    Text('Henderson',
-                        style: TextStyle(
-                          fontSize: 13.0,
-                        )),
-                  ],
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      '3',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bed,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-//                    SizedBox(width: 20.0,),
-                    Text(
-                      '2',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bath,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-                    AutoSizeText(
-                      '1188 sqft',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-        Divider(
-          color: Colors.black,
-          height: 10.0,
-        ),
-        Row(
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Image.network(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiehYAkBhtPvh9SdUQXIDuOJJNqG7vDo7IuXEN4XhElq3YF3ow&s',
-                  width: 150.0,
-                  height: 115.0,
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                    color: Colors.blueAccent,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                        'Listed 15 days ago',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    )),
-                Positioned(
-                    bottom: 0.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(FontAwesomeIcons.solidCircle,color: Colors.blueAccent,size: 18.0,),
-                          SizedBox(width: 10.0),
-                          Text('ACTIVE',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ))
-              ],
-            ),
-            SizedBox(
-              width: 15.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Single Family Recedensy',
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.red),
-                    ),
-                    SizedBox(
-                      height: 8.0,
-                    ),
-                    Text(
-                      '\$352,200',
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    AutoSizeText('2118 SUNSET VISTA Avenue',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                      ), maxLines: 2,),
-                    Text('Henderson',
-                        style: TextStyle(
-                          fontSize: 13.0,
-                        )),
-                  ],
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      '3',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bed,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-//                    SizedBox(width: 20.0,),
-                    Text(
-                      '2',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Icon(
-                      FontAwesomeIcons.bath,
-                      color: Colors.grey,
-                      size: 15.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.0, right: 8.0),
-                      child: Container(
-                        color: Colors.black12,
-                        height: 20,
-                        width: 2,
-                      ),
-                    ),
-                    AutoSizeText(
-                      '1188 sqft',
-                      style: TextStyle(fontSize: 12.0),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+
           ],
         ),
         Divider(

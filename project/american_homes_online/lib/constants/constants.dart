@@ -54,6 +54,9 @@ const kMemberShipTextStyle = TextStyle(
     fontFamily: 'Cairo',
 );
 
+const kAgentDetailsTextTitleStyle = TextStyle(fontSize: 19.0, color: Colors.black);
+const kAgentDetailsTextBelowStyle = TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400, color: Colors.black54);
+
 const kMessageTextFieldDecoration = InputDecoration(
   contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
   hintText: 'Type your message here...',

@@ -116,7 +116,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Center(child: CustomRadio()),
+                    child: Center(child: CustomRadio(bedOrBath: 1,)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(child: CustomRadio(bedOrBath: 2,)),
                   ),
                   Divider(
                     color: Colors.black,

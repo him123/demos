@@ -4,13 +4,21 @@ import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomRadio extends StatefulWidget {
+  final int bedOrBath;
+
+  CustomRadio({this.bedOrBath});
+
   @override
   createState() {
-    return new CustomRadioState();
+    return new CustomRadioState(bedOrBath: bedOrBath);
   }
 }
 
 class CustomRadioState extends State<CustomRadio> {
+  final int bedOrBath;
+
+  CustomRadioState({this.bedOrBath});
+
   List<RadioModel> sampleData = new List<RadioModel>();
 
   @override
@@ -44,7 +52,7 @@ class CustomRadioState extends State<CustomRadio> {
               sampleData[0].isSelected = true;
             });
           },
-          child: new RadioItem(sampleData[0]),
+          child: new RadioItem(sampleData[0], bedOrBath),
         ),
         InkWell(
           //highlightColor: Colors.red,
@@ -55,7 +63,7 @@ class CustomRadioState extends State<CustomRadio> {
               sampleData[1].isSelected = true;
             });
           },
-          child: new RadioItem(sampleData[1]),
+          child: new RadioItem(sampleData[1], bedOrBath),
         ),
         InkWell(
           //highlightColor: Colors.red,
@@ -66,7 +74,7 @@ class CustomRadioState extends State<CustomRadio> {
               sampleData[2].isSelected = true;
             });
           },
-          child: new RadioItem(sampleData[2]),
+          child: new RadioItem(sampleData[2], bedOrBath),
         ),
         InkWell(
           //highlightColor: Colors.red,
@@ -77,7 +85,7 @@ class CustomRadioState extends State<CustomRadio> {
               sampleData[3].isSelected = true;
             });
           },
-          child: new RadioItem(sampleData[3]),
+          child: new RadioItem(sampleData[3], bedOrBath),
         ),
         InkWell(
           //highlightColor: Colors.red,
@@ -88,7 +96,7 @@ class CustomRadioState extends State<CustomRadio> {
               sampleData[4].isSelected = true;
             });
           },
-          child: new RadioItem(sampleData[4]),
+          child: new RadioItem(sampleData[4], bedOrBath),
         ),
         InkWell(
           //highlightColor: Colors.red,
@@ -99,7 +107,7 @@ class CustomRadioState extends State<CustomRadio> {
               sampleData[5].isSelected = true;
             });
           },
-          child: new RadioItem(sampleData[5]),
+          child: new RadioItem(sampleData[5], bedOrBath),
         ),
       ],
     );
@@ -107,56 +115,60 @@ class CustomRadioState extends State<CustomRadio> {
 }
 
 class RadioItem extends StatelessWidget {
+  final int bedOrBath;
   final RadioModel _item;
 
-  RadioItem(this._item);
+  RadioItem(this._item, this.bedOrBath);
 
   @override
   Widget build(BuildContext context) {
-    return _item.isIcon==true? Container(
+    return _item.isIcon == true
+        ? Container(
 //      margin: new EdgeInsets.all(15.0),
-      child: Container(
-        height: 30.0,
-        width: 75.0,
+            child: Container(
+              height: 30.0,
+              width: 75.0,
 //        padding: const EdgeInsets.only(
 //            top: 11.0, bottom: 11.0, right: 20.0, left: 20.0),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(5.0),
-                bottomLeft: Radius.circular(5.0),
-                topRight: Radius.circular(0.0),
-                bottomRight: Radius.circular(0.0)),
-            border: Border.all(color: Colors.black),
-            color: _item.isSelected==true?Colors.black:Colors.white),
-        child: Icon(
-          FontAwesomeIcons.bath,
-          color: _item.isSelected==true?Colors.white:Colors.black,
-          size: 17.0,
-        ),
-      ),
-    ): Container(
-      height: 30.0,
-      width: 50.0,
-      child: new Center(
-        child: _item.isIcon
-            ? Icon(
-                FontAwesomeIcons.lock,
-                color: _item.isSelected ? Colors.white : Colors.black,
-              )
-            : Text(_item.buttonText,
-                style: new TextStyle(
-                    color: _item.isSelected ? Colors.white : Colors.black,
-                    fontSize: 18.0)),
-      ),
-      decoration: BoxDecoration(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(5.0),
+                      bottomLeft: Radius.circular(5.0),
+                      topRight: Radius.circular(0.0),
+                      bottomRight: Radius.circular(0.0)),
+                  border: Border.all(color: Colors.black),
+                  color:
+                      _item.isSelected == true ? Colors.black : Colors.white),
+              child: Icon(
+                bedOrBath == 1 ? FontAwesomeIcons.bed : FontAwesomeIcons.bath,
+                color: _item.isSelected == true ? Colors.white : Colors.black,
+                size: 17.0,
+              ),
+            ),
+          )
+        : Container(
+            height: 30.0,
+            width: 50.0,
+            child: new Center(
+              child: _item.isIcon
+                  ? Icon(
+                      FontAwesomeIcons.lock,
+                      color: _item.isSelected ? Colors.white : Colors.black,
+                    )
+                  : Text(_item.buttonText,
+                      style: new TextStyle(
+                          color: _item.isSelected ? Colors.white : Colors.black,
+                          fontSize: 18.0)),
+            ),
+            decoration: BoxDecoration(
 //          borderRadius: BorderRadius.only(
 //              topLeft: Radius.circular(5.0),
 //              bottomLeft: Radius.circular(5.0),
 //              topRight: Radius.circular(0.0),
 //              bottomRight: Radius.circular(0.0)),
-          border: Border.all(color: Colors.black),
-          color: _item.isSelected==true?Colors.black:Colors.white),
-    );
+                border: Border.all(color: Colors.black),
+                color: _item.isSelected == true ? Colors.black : Colors.white),
+          );
   }
 }
 

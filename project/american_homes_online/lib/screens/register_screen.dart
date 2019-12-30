@@ -1,19 +1,17 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:american_homes_online/components/rounded_buttons.dart';
 import 'package:american_homes_online/constants/constants.dart';
+import 'package:american_homes_online/screens/dashboard_screen.dart';
 import 'package:american_homes_online/screens/login_screen.dart';
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:path/path.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterScreen extends StatefulWidget {
   static String id = 'RegisterScreen';
@@ -26,7 +24,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool showSpinner = false;
 
 //  Future<File> imageFile;
-  String name, address, email, pass, phone;
+  String username, email, mobile, pass, userType;
   File _imageFile;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
@@ -36,6 +34,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController addressCntrlr = TextEditingController();
   TextEditingController phoneCntrlr = TextEditingController();
   TextEditingController passwordCntrlr = TextEditingController();
+  List<String> spinnerItems = [
+    'User',
+    'Single Agent',
+    'Agency',
+    'Developer',
+  ];
+
+  String dropdownValue = 'User';
 
   @override
   Widget build(BuildContext context) {
@@ -53,52 +59,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
             key: _formKey,
             autovalidate: _autoValidate,
             child: ListView(
-//            crossAxisAlignment: CrossAxisAlignment.center,
-//            mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      _openImagePicker(context);
-                    },
-                    child: CircleAvatar(
-                      radius: 60.0,
-                      backgroundColor: Theme.of(context).primaryColor,
-                      child: ClipOval(
-                        child: _imageFile != null
-                            ? Image.file(
-                                _imageFile,
-                                width: 200,
-                                height: 200,
-                                fit: BoxFit.cover,
-                              )
-                            : Icon(
-                                Icons.camera_alt,
-                                size: 60.0,
-                                color: Theme.of(context).accentColor,
-                              ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Center(
-                  child: Text(
-                    'Please Select Image',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ),
                 SizedBox(
                   height: 10.0,
                 ),
                 TextFormField(
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please enter name';
+                      return 'Please enter Username';
                     }
                     return null;
                   },
@@ -107,10 +75,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   keyboardType: TextInputType.text,
                   onChanged: (value) {
                     //Do something with the user input.
-                    name = value;
+                    username = value;
                   },
                   decoration:
-                      kInputBoxDecoration.copyWith(hintText: 'Enter Name'),
+                      kInputBoxDecoration.copyWith(hintText: 'Enter Username'),
                 ),
                 SizedBox(
                   height: 8.0,
@@ -133,7 +101,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextFormField(
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please enter address';
+                      return 'Please enter mobile number';
                     }
                     return null;
                   },
@@ -142,30 +110,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   keyboardType: TextInputType.text,
                   onChanged: (value) {
                     //Do something with the user input.
-                    address = value;
+                    mobile = value;
                   },
-                  decoration:
-                      kInputBoxDecoration.copyWith(hintText: 'Enter Address'),
+                  decoration: kInputBoxDecoration.copyWith(
+                      hintText: 'Enter mobile number'),
                 ),
                 SizedBox(
                   height: 8.0,
                 ),
-                TextFormField(
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter number';
-                    }
-                    return null;
-                  },
-                  controller: phoneCntrlr,
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    //Do something with the user input.
-                    phone = value;
-                  },
-                  decoration:
-                      kInputBoxDecoration.copyWith(hintText: 'Phone number'),
+                Container(
+                  alignment: Alignment.center,
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(width: 1.0, style: BorderStyle.solid),
+                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    ),
+                  ),
+                  child: DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: Icon(Icons.arrow_drop_down),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: TextStyle(color: Colors.red, fontSize: 20, inherit: false, decorationColor: Colors.white),
+//                  underline: Container(
+//                    height: 2,
+//                    color: Colors.deepPurpleAccent,
+//                  ),
+
+                    onChanged: (String data) {
+                      setState(() {
+                        dropdownValue = data;
+                        userType = dropdownValue;
+                      });
+                    },
+                    items: spinnerItems
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
                 ),
                 SizedBox(
                   height: 8.0,
@@ -195,30 +180,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     color: kPrimaryColor,
                     btnName: 'Sign Up',
                     onPress: () {
-                      print(name);
-                      print(phone);
-//                      if (name == null) {
-//                        print('inside the if');
-//                        showAlert(context, 'Please enter name');
-//                      } else if (email == null) {
-//                        showAlert(context, 'Please enter email');
-//                      } else if (address == null) {
-//                        showAlert(context, 'Please enter address');
-//                      } else if (phone == null) {
-//                        showAlert(context, 'Please enter phone number');
-//                      } else if (pass == null) {
-//                        showAlert(context, 'Please enter password');
-//                      } else {
-//                        print('API WILL CALL');
-//                        createPost(context,
-//                            'http://rajkeshar.com/material/api/customer.php');
-//                      }
                       if (_formKey.currentState.validate()) {
                         setState(() {
                           showSpinner = true;
                         });
-//                        createPost(context,
-//                            'http://rajkeshar.com/material/api/customer.php');
+                        String userTypeNo='0';
+                        if(userType=='User'){
+                          userTypeNo= '1';
+                        }else if(userType=='Single Agent'){
+                          userTypeNo= '2';
+                        }else if(userType=='Agency'){
+                          userTypeNo= '3';
+                        }else{
+                          userTypeNo= '4';
+                        }
+
+                        register(userTypeNo, email, username, pass, mobile);
                       }
                     },
                   ),
@@ -266,50 +243,59 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  void _getImage(BuildContext context, ImageSource source) {
-    ImagePicker.pickImage(source: source, maxWidth: 400.0).then((File image) {
+  Future<String> register(
+    String userType,
+    String email,
+    String userName,
+    String password,
+    String mobile,
+  ) async {
+    print('========= getData called ===========');
+    var response = await http.get(
+        'https://americanhomesonline.com/wp-json/api/v1/Register/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&new_user_type=$userType&email=$email&user_name=$userName&password=$password&mobile=$mobile');
+
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      dynamic data = json.decode(response.body)['data'];
+      if (data['api_status'] == 0) {
+        print('fail');
+        showAlert(context, data['message']);
+      } else {
+        print('success');
+
+        String id = data['user_id'].toString();
+        String nameUser = data['name'];
+        String tookEmail = data['email'];
+        String userType = data['user_type'];
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        prefs.setString('name', nameUser);
+        prefs.setString('id', id);
+        prefs.setString('email', tookEmail);
+        prefs.setString('usertype', userType);
+        prefs.setString('login', '1');
+
+        Navigator.of(context).pop();
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                fullscreenDialog: true,
+                builder: (BuildContext context) => DashBoardScreen()));
+      }
+    } else {
       setState(() {
-        _imageFile = image;
+        showSpinner = false;
       });
+      throw Exception('Failed to load photos');
+    }
 
-      Navigator.pop(context);
+    setState(() {
+      showSpinner = false;
     });
-  }
 
-  void _openImagePicker(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            height: 150.0,
-            padding: EdgeInsets.all(10.0),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  'Pick an Image',
-                  style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                FlatButton(
-                  textColor: Theme.of(context).accentColor,
-                  onPressed: () {
-                    _getImage(context, ImageSource.camera);
-                  },
-                  child: Text('User Camera'),
-                ),
-                FlatButton(
-                  textColor: Theme.of(context).accentColor,
-                  onPressed: () {
-                    _getImage(context, ImageSource.gallery);
-                  },
-                  child: Text('User Gallery'),
-                ),
-              ],
-            ),
-          );
-        });
+    return "Success!";
   }
 
   String validateEmail(String value) {
@@ -321,72 +307,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     else
       return null;
   }
-
-//  void createPost(BuildContext context, String url) async {
-//    var request = http.MultipartRequest('POST', Uri.parse(url));
-//
-//    if (_imageFile != null) {
-//      var stream =
-//          new http.ByteStream(DelegatingStream.typed(_imageFile.openRead()));
-//      final length = await _imageFile.length();
-//      var multiPartImage = http.MultipartFile('profile_image', stream, length,
-//          filename: basename(_imageFile.path));
-//      request.files.add(multiPartImage);
-//    }
-//
-//    print('====================FILE$_imageFile');
-//    request.fields['method'] = 'register_customer';
-//    request.fields['name'] = name;
-//    request.fields['email'] = email;
-//    request.fields['password'] = pass;
-//    request.fields['address'] = address;
-//    request.fields['phone'] = phone;
-//    request.fields['fcmtoken'] = 'd4as56f4a56sd4f5a4sd564';
-//
-//    http.Response response =
-//        await http.Response.fromStream(await request.send());
-//
-//    print(response.body);
-//
-//    String image = json.decode(response.body)['profile_image'];
-//    int id = json.decode(response.body)['user_id'];
-//    String nameUser = json.decode(response.body)['name'];
-//    String tookEmail = json.decode(response.body)['email'];
-//    String tookAddress = json.decode(response.body)['address'];
-//    String tookNumber = json.decode(response.body)['phone'];
-//
-//    SharedPreferences prefs = await SharedPreferences.getInstance();
-//
-//    prefs.setString('profile_image', image);
-//    prefs.setString('name', nameUser);
-//    prefs.setString('id', id.toString());
-//    prefs.setString('email', tookEmail);
-//    prefs.setString('address', tookAddress);
-//    prefs.setString('phone', tookNumber);
-//    prefs.setString('login', '1');
-//
-//    print(prefs.getString('profile_image'));
-//
-//    setState(() {
-//      showSpinner = false;
-//    });
-//
-////    Navigator.pop(context);
-////    Navigator.of(context).pushReplacementNamed(NavigationDashboard.id);
-//
-//    Navigator.push(
-//        context,
-//        new MaterialPageRoute(
-//          builder: (ctxt) => new NavigationDashboard(
-//            profileImage: image,
-//            address: address,
-//            phone: phone,
-//            email: email,
-//            name: nameUser,
-//            custId: id.toString(),
-//          ),
-//        ));
-//  }
 
   void showAlert(BuildContext context, String msg) {
     Alert(

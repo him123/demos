@@ -6,11 +6,14 @@ import 'dashboard_screen.dart';
 
 class AgentFinderScreen extends StatelessWidget {
   static String id = 'AgentFinderScreen';
+  final showAppBar;
+  AgentFinderScreen({this.showAppBar});
 
+  String location='',name='';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: showAppBar==true?AppBar(
         title: Row(
           children: <Widget>[
             Hero(
@@ -27,7 +30,7 @@ class AgentFinderScreen extends StatelessWidget {
             Text("Agent Finder"),
           ],
         ),
-      ),
+      ):null,
       body: Column(
         children: <Widget>[
           SizedBox(height: 20.0,),
@@ -40,13 +43,18 @@ class AgentFinderScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0,bottom: 5.0),
             child: TextField(
+              onChanged: (val){
+                location=val;
+              },
               decoration: kInputBoxDecoration.copyWith(hintText: 'Enter Location'),
             ),
           ),
           Padding(
             padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0,bottom: 5.0),
             child: TextField(
-
+              onChanged: (val){
+                name=val;
+              },
               decoration: kInputBoxDecoration.copyWith(hintText: 'Enter Name'),
             ),
           ),
@@ -70,7 +78,17 @@ class AgentFinderScreen extends StatelessWidget {
             child: InkWell(
               onTap: (){
 
-                Navigator.pushNamed(context, AgentListScreen.id);
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                      transitionDuration: Duration(seconds: 2),
+                      pageBuilder: (BuildContext context, _, __) {
+                        return AgentListScreen(name: name,location: location,);
+                      }, transitionsBuilder:
+                      (_, Animation<double> animation, __, Widget child) {
+                    return new FadeTransition(
+                        opacity: animation, child: child);
+                  }),
+                );
               },
               child: Container(
                 decoration: BoxDecoration(

@@ -1,13 +1,16 @@
 import 'dart:async';
 
 import 'package:american_homes_online/constants/constants.dart';
+import 'package:american_homes_online/model/property.dart';
 import 'package:american_homes_online/screens/property_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'dart:convert';
 
 class MapSearchScreen extends StatelessWidget {
   static String id = 'MapSearchScreen';
-
 
   List<String> _tabs = [
     "Map",
@@ -57,7 +60,10 @@ class MapSearchScreen extends StatelessWidget {
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                Container(child: Tab(text: "$label"), width: 60.0,),
+                                Container(
+                                  child: Tab(text: "$label"),
+                                  width: 60.0,
+                                ),
                               ],
                             ))
                         .toList(),
@@ -67,10 +73,9 @@ class MapSearchScreen extends StatelessWidget {
                     child: Text(
                       'Search result',
                       style: TextStyle(
-                        fontSize: 17.0,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700
-                      ),
+                          fontSize: 17.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700),
                     ),
                   ),
                 ],
@@ -98,20 +103,50 @@ class MapSample extends StatefulWidget {
 }
 
 class MapSampleState extends State<MapSample> {
+  bool showSpinner = false;
+  List<Property> list = List();
   Completer<GoogleMapController> _controller = Completer();
+  Map<MarkerId, Marker> markers =
+      <MarkerId, Marker>{}; // CLASS MEMBER, MAP OF MARKS
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
+  static CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(42.2814681, -71.09566540000003),
+    zoom: 5.0,
   );
 
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(
-          37.43296265331129,
-          -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getProperties();
+  }
+
+  void _add(List<Property> list) {
+    for (int i = 0; i < list.length; i++) {
+      MarkerId markerId = MarkerId(list[i].property_id.toString());
+
+      Marker marker = Marker(
+        markerId: markerId,
+        position: LatLng(double.parse(list[i].property_latitude),
+            double.parse(list[i].property_longitude)),
+        infoWindow: InfoWindow(
+            title: list[i].property_title,
+            snippet: list[i].property_action_category),
+        onTap: () {
+//        _onMarkerTapped(markerId);
+        },
+      );
+      markers[markerId] = marker;
+    }
+
+//    });
+  }
+
+//  static CameraPosition _kLake = CameraPosition(
+//      bearing: 192.8334901395799,
+//      target: LatLng(37.43296265331129, -122.08832357078792),
+//      tilt: 59.440717697143555,
+//      zoom: 19.151926040649414);
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +157,9 @@ class MapSampleState extends State<MapSample> {
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
+        markers: Set<Marker>.of(markers.values),
       ),
+
 //      floatingActionButton: FloatingActionButton.extended(
 //        onPressed: _goToTheLake,
 //        label: Text('To the lake!'),
@@ -131,8 +168,48 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+//  Future<void> _goToTheLake() async {
+//    final GoogleMapController controller = await _controller.future;
+//    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+//  }
+
+  Future<String> getProperties() async {
+    print('========= Property called ===========');
+    var response = await http.get(
+        'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd');
+
+    if (mounted) {
+      this.setState(() {
+        dynamic data = json.decode(response.body)['data'];
+
+        if (response.statusCode == 200) {
+          list = (data as List)
+              .map((data) => new Property.fromJson(data))
+              .toList();
+
+          String firstname = list[0].property_latitude;
+          print('All Shops: $firstname');
+
+          _add(list);
+
+          setState(() {
+            showSpinner = false;
+
+            _kGooglePlex = CameraPosition(
+              target: LatLng(double.parse(list[0].property_latitude),
+                  double.parse(list[0].property_longitude)),
+              zoom: 14.4746,
+            );
+          });
+        } else {
+          throw Exception('Failed to load photos');
+        }
+      });
+    }
+
+//    print(data[1]["name"]);
+
+    showSpinner = false;
+    return "Success!";
   }
 }
