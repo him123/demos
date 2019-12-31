@@ -226,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         transitionDuration:
                                         Duration(seconds: 1),
                                         pageBuilder: (_, __, ___) =>
-                                            MyFavorite()));
+                                            MyFavorite(userId: userId,)));
                               },
                               child: Column(
                                 mainAxisAlignment:

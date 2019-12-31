@@ -9,6 +9,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 const kExpansionTextHeaderStyle = TextStyle(
@@ -42,7 +43,8 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   final String image;
   final String pid;
   final String title;
-
+  bool isFav = false;
+  String userId = '';
   Completer<GoogleMapController> _controller = Completer();
 
   _PropertyDetailsScreenState({this.image, this.pid, this.title});
@@ -50,6 +52,11 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 
   CameraPosition _kGooglePlex;
+
+  getUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString('id');
+  }
 
   void _add(double lat, double long) {
     MarkerId markerId = MarkerId(pid);
@@ -81,6 +88,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
     );
 
     getPropertyDetails(pid);
+    getUserDetails();
   }
 
   List<Widget> featuresRows(List list) {
@@ -127,39 +135,38 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
 
             flexibleSpace: FlexibleSpaceBar(
 //              title: Text(title),
-              background: images == null
-                  ? Hero(
-                      tag: 'pro_img$pid',
-                      child: Image.network(
-                        image,
-                        fit: BoxFit.cover,
-                      ))
-                  : Swiper(
-                itemBuilder: (BuildContext context, int index) {
-                  return CachedNetworkImage(
-                    imageUrl: images[index]['image'].toString(),
-                    imageBuilder: (context, imageProvider) =>
-                        Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
+                background: images == null
+                    ? Hero(
+                        tag: 'pro_img$pid',
+                        child: Image.network(
+                          image,
+                          fit: BoxFit.cover,
+                        ))
+                    : Swiper(
+                        itemBuilder: (BuildContext context, int index) {
+                          return CachedNetworkImage(
+                            imageUrl: images[index]['image'].toString(),
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
 //                                      colorFilter:
 //                                      ColorFilter.mode(Colors.red, BlendMode.colorBurn)
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                    placeholder: (context, url) => Align(
-                        alignment: Alignment.center,
-                        child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                        Icon(Icons.error),
-                  );
-                },
-                itemCount: images.length,
-                pagination: new SwiperPagination(),
-                control: new SwiperControl(color: Colors.red),
-              )
+                            placeholder: (context, url) => Align(
+                                alignment: Alignment.center,
+                                child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                          );
+                        },
+                        itemCount: images.length,
+                        pagination: new SwiperPagination(),
+                        control: new SwiperControl(color: Colors.red),
+                      )
 //              PageView.builder(
 //                      itemCount: images.length,
 //                      itemBuilder: (BuildContext context, int index) {
@@ -188,7 +195,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
 //                          ],
 //                        ));
 //                      }),
-            ),
+                ),
 
 //              : Swiper(
 //                itemBuilder: (BuildContext context, int index) {
@@ -237,10 +244,34 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                           ),
                         ],
                       ),
-                      Text(
-                        'AHO $pid',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700, color: Colors.black54),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'AHO $pid',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black54),
+                          ),
+                          SizedBox(
+                            width: 5.0,
+                          ),
+                          isFav == true
+                              ? InkWell(
+                                  onTap: () {
+                                    makeFav(userId, pid, isFav);
+                                  },
+                                  child: Icon(
+                                    FontAwesomeIcons.solidHeart,
+                                    color: Colors.red,
+                                  ))
+                              : InkWell(
+                                  onTap: () {
+                                    makeFav(userId, pid, isFav);
+                                  },
+                                  child: Icon(FontAwesomeIcons.heart))
+                        ],
                       )
                     ],
                   ),
@@ -1048,6 +1079,42 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
         setState(() {
           showSpinner = false;
         });
+      } else {
+        showSpinner = false;
+        throw Exception('Failed to load photos');
+      }
+    });
+
+    return "Success!";
+  }
+
+  Future<String> makeFav(
+    String userId,
+    String postId,
+    bool isFavVal,
+  ) async {
+
+    String madeUrl = 'https://americanhomesonline.com/wp-json/api/v1/Add_Fav/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&user_id=$userId&post_id=$postId';
+    print('========= MakeFave ===========$madeUrl');
+
+
+    var response = await http.get(
+        madeUrl);
+
+    print(response.body);
+    setState(() {
+      dynamic data = json.decode(response.body)['data'];
+
+      if (response.statusCode == 200) {
+        if (data['api_status'] == 1) {
+          setState(() {
+            if (isFavVal == true) {
+              isFav = false;
+            } else {
+              isFav = true;
+            }
+          });
+        } else {}
       } else {
         showSpinner = false;
         throw Exception('Failed to load photos');

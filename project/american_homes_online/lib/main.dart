@@ -67,7 +67,7 @@ void main() async {
       ValidateScreen.id: (context) => ValidateScreen(),
       DashBoardScreen.id: (context) => DashBoardScreen(userType: userType,),
       MapSearchScreen.id: (context) => MapSearchScreen(),
-      MyFavorite.id: (context) => MyFavorite(),
+      MyFavorite.id: (context) => MyFavorite(userId: id,),
       SavedSearch.id: (context) => SavedSearch(),
       AgentFinderScreen.id: (context) => AgentFinderScreen(),
       SearchScreen.id: (context) => SearchScreen(),

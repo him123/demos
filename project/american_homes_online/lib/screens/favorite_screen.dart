@@ -12,20 +12,28 @@ import 'package:shimmer/shimmer.dart';
 
 class MyFavorite extends StatefulWidget {
   static String id='MyFavorite';
+  final String userId;
+
+  MyFavorite({this.userId});
+
   @override
-  _MyFavoriteState createState() => _MyFavoriteState();
+  _MyFavoriteState createState() => _MyFavoriteState(userId: userId);
 }
 
 class _MyFavoriteState extends State<MyFavorite> {
+
   bool showSpinner = false;
   List<Property> list = List();
+
+  final String userId;
+  _MyFavoriteState({this.userId});
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     showSpinner = true;
-    getProperties();
+    getProperties(userId);
   }
 
   @override
@@ -67,10 +75,10 @@ class _MyFavoriteState extends State<MyFavorite> {
     );
   }
 
-  Future<String> getProperties() async {
-    print('========= Property called ===========');
+  Future<String> getProperties(String userId) async {
+    print('========= Property called ===========$userId');
     var response = await http.get(
-        'https://americanhomesonline.com/wp-json/api/v1/List_Fav/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&user_id=132');
+        'https://americanhomesonline.com/wp-json/api/v1/List_Fav/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&user_id=$userId');
 
     this.setState(() {
       dynamic data = json.decode(response.body)['data'];
