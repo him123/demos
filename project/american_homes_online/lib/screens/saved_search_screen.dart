@@ -1,40 +1,88 @@
+import 'package:american_homes_online/components/database_util.dart';
+import 'package:american_homes_online/model/saved_search.dart';
 import 'package:flutter/material.dart';
 
-class SavedSearch extends StatelessWidget {
+class SavedSearch extends StatefulWidget {
   static String id = 'SavedSearch';
+
+  @override
+  _SavedSearchState createState() => _SavedSearchState();
+}
+
+class _SavedSearchState extends State<SavedSearch> {
+//  List<SavedSearch> list;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(title: Row(
-        children: <Widget>[
-          Hero(
-            tag: 'saved',
-            child: Image.asset(
-              'images/recent_search.png',
-              height: 30.0,
-              color: Colors.white,
+      appBar: AppBar(
+        title: Row(
+          children: <Widget>[
+            Hero(
+              tag: 'saved',
+              child: Image.asset(
+                'images/recent_search.png',
+                height: 30.0,
+                color: Colors.white,
+              ),
             ),
-          ),
-          SizedBox(
-            width: 10.0,
-          ),
-          Text("Saved search"),
-        ],
-      ),),
-      body: ListView(
-        children: <Widget>[
-          ListTile(
-            title: Text('First'),
-            subtitle: (Text('Map bound')),
-          ),
-          ListTile(
-            title: Text('First'),
-            subtitle: (Text('Map bound')),
-          )
-        ],
+            SizedBox(
+              width: 10.0,
+            ),
+            Text("Saved search"),
+          ],
+        ),
       ),
-
+      body: FutureBuilder<List<SavedSearchModel>>(
+        future: DBProvider.db.getAllSavedSearches(),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<SavedSearchModel>> snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (BuildContext context, int index) {
+                SavedSearchModel item = snapshot.data[index];
+                return Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            item.name,
+                            style: TextStyle(
+                                fontSize: 18.0, fontWeight: FontWeight.w700),
+                          ),
+                          Text(
+                            item.date,
+                            style: TextStyle(
+                                fontSize: 14.0, fontWeight: FontWeight.w400),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text(item.is_map_included!=null?item.is_map_included:'Map'),
+                          SizedBox(width: 5.0,),
+                          Text(item.filters!=null?item.filters:'Filter')
+                        ],
+                      )
+                    ],
+                  ),
+                );
+              },
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
     );
   }
 }

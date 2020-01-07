@@ -11,20 +11,29 @@ import 'dart:convert';
 import 'package:shimmer/shimmer.dart';
 
 class PropertyListScreen extends StatefulWidget {
+  final List<Property> list;
+
+  PropertyListScreen({this.list});
+
   @override
-  _PropertyListScreenState createState() => _PropertyListScreenState();
+  _PropertyListScreenState createState() => _PropertyListScreenState(list: list);
 }
 
 class _PropertyListScreenState extends State<PropertyListScreen> {
-  bool showSpinner = false;
-  List<Property> list = List();
+
+  final List<Property> list;
+
+  _PropertyListScreenState({this.list});
+
+//  bool showSpinner = false;
+//  List<Property> list = List();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    showSpinner = true;
-    getProperties();
+//    showSpinner = true;
+//    getProperties();
   }
 
   @override
@@ -48,32 +57,32 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
             });
   }
 
-  Future<String> getProperties() async {
-    print('========= Property called ===========');
-    var response = await http.get(
-        'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&bedrooms=1&min_price=100&max_price=1000000');
-
-    this.setState(() {
-      dynamic data = json.decode(response.body)['data'];
-
-      if (response.statusCode == 200) {
-        list =
-            (data as List).map((data) => new Property.fromJson(data)).toList();
-
-        String firstname = list[0].property_latitude;
-        print('All Shops: $firstname');
-
-        setState(() {
-          showSpinner = false;
-        });
-      } else {
-        showSpinner = false;
-        throw Exception('Failed to load photos');
-      }
-    });
-
-    return "Success!";
-  }
+//  Future<String> getProperties() async {
+//    print('========= Property called ===========');
+//    var response = await http.get(
+//        'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&bedrooms=1&min_price=100&max_price=1000000');
+//
+//    this.setState(() {
+//      dynamic data = json.decode(response.body)['data'];
+//
+//      if (response.statusCode == 200) {
+//        list =
+//            (data as List).map((data) => new Property.fromJson(data)).toList();
+//
+//        String firstname = list[0].property_latitude;
+//        print('All Shops: $firstname');
+//
+//        setState(() {
+//          showSpinner = false;
+//        });
+//      } else {
+//        showSpinner = false;
+//        throw Exception('Failed to load photos');
+//      }
+//    });
+//
+//    return "Success!";
+//  }
 }
 
 class ShimmerList extends StatelessWidget {

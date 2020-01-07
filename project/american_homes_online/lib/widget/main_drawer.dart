@@ -1,4 +1,5 @@
 import 'package:american_homes_online/screens/add_new_property.dart';
+import 'package:american_homes_online/screens/home_screen.dart';
 import 'package:american_homes_online/screens/login_screen.dart';
 import 'package:american_homes_online/screens/my_profile_agency_screen.dart';
 import 'package:american_homes_online/screens/my_profile_agent_screen.dart';
@@ -108,7 +109,16 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           buildListTile('HOME', Icons.home, () {
-//            Navigator.of(context).pushReplacementNamed(NavigationDashboard.id);
+            Navigator.of(context).pop();
+
+            Navigator.of(context).push(
+              PageRouteBuilder(pageBuilder: (BuildContext context, _, __) {
+                return HomeScreen(userType: userType,);
+              }, transitionsBuilder:
+                  (_, Animation<double> animation, __, Widget child) {
+                return new FadeTransition(opacity: animation, child: child);
+              }),
+            );
           }),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -188,7 +198,7 @@ class MainDrawer extends StatelessWidget {
             Navigator.of(context).pop();
             Navigator.of(context).push(
               PageRouteBuilder(pageBuilder: (BuildContext context, _, __) {
-                return AddPropertyScreen();
+                return AddPropertyScreen(userId: id,);
               }, transitionsBuilder:
                   (_, Animation<double> animation, __, Widget child) {
                 return new FadeTransition(opacity: animation, child: child);

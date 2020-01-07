@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   String email, pass;
   String _status = 'no-action';
-  bool chk=false;
+  bool chk=true;
 
   @override
   void initState() {
