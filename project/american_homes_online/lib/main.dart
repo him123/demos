@@ -1,4 +1,5 @@
 import 'package:american_homes_online/constants/constants.dart';
+import 'package:american_homes_online/screens/UploadImageDemo.dart';
 import 'package:american_homes_online/screens/agent_finder_screen.dart';
 import 'package:american_homes_online/screens/agentlist_screen.dart';
 import 'package:american_homes_online/screens/dashboard_screen.dart';
@@ -66,7 +67,7 @@ void main() async {
       ForgetPasswordScreen.id: (context) => ForgetPasswordScreen(),
       ValidateScreen.id: (context) => ValidateScreen(),
       DashBoardScreen.id: (context) => DashBoardScreen(userType: userType,),
-      MapSearchScreen.id: (context) => MapSearchScreen(),
+      MapSearchScreen.id: (context) => MapSearchScreen(url: 'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&bedrooms=&min_price=&max_price=&bathrooms=&home_type=&community=&zip=&listing_type=&building=&features=&size=&pet_allowed=&utility&floor_type=',filters: 0,),
       MyFavorite.id: (context) => MyFavorite(userId: id,),
       SavedSearch.id: (context) => SavedSearch(),
       AgentFinderScreen.id: (context) => AgentFinderScreen(),

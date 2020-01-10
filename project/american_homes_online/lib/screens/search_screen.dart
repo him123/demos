@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:numberpicker/numberpicker.dart';
 
+import 'mapsearch_screen.dart';
+
 class SearchScreen extends StatefulWidget {
   static String id = 'SearchScreen';
 
@@ -15,7 +17,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
 
-  bool isChecked = false;
+  bool isOpenHome = false;
   List selPType = [];
   List selAmenitiesAndFeatures = [];
   List communityAmenities = [];
@@ -29,17 +31,29 @@ class _SearchScreenState extends State<SearchScreen> {
 
   String saleOrRental = 'All';
   String price = 'All';
+  String cityOraddress='';
 
   String getText(List fullList) {
     if (fullList.length == 1) {
       return fullList[0].toString();
-    } else {
+    } else if (fullList.length > 1) {
       return 'Multiple';
+    }else{
+      return '';
     }
   }
 
   double _currentPrice = 10000.0;
 
+  int isFilters(){
+    if(selAmenitiesAndFeatures.length>0 || selPType.length>0 || communityAmenities.length>0 ||
+        buildingAmenities.length>0||flooringType.length>0||petsAllowed.length>0||utilitiesIncluded.length>0||
+        lotDescription.length>0||moreCriteriaSel.length>0){
+      return 1;
+    }else{
+      return 0;
+    }
+  }
   void _showDialog() {
     showDialog<int>(
         context: context,
@@ -89,17 +103,20 @@ class _SearchScreenState extends State<SearchScreen> {
                 shrinkWrap: true,
                 children: <Widget>[
                   TextField(
+                    onChanged: (val){
+                      cityOraddress=val;
+                    },
                     decoration: InputDecoration(
                         border: UnderlineInputBorder(
                             borderSide: new BorderSide(color: Colors.red)),
-                        hintText: 'Select city'),
+                        hintText: 'Address, Neighborhood, City or Zip'),
                   ),
-                  TextField(
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.red)),
-                        hintText: 'Search by address (E.g. 123 Main)'),
-                  ),
+//                  TextField(
+//                    decoration: InputDecoration(
+//                        border: UnderlineInputBorder(
+//                            borderSide: new BorderSide(color: Colors.red)),
+//                        hintText: 'Search by address (E.g. 123 Main)'),
+//                  ),
                   InkWell(
                     onTap: () async {
                       final result = await Navigator.push(
@@ -264,7 +281,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                 mainList: amenitiesAndFeatures,
                               ),
                             ));
-
                         setState(() {
                           selAmenitiesAndFeatures = result;
                         });
@@ -536,10 +552,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         Checkbox(
                           onChanged: (val) {
                             setState(() {
-                              isChecked = val;
+                              isOpenHome = val;
                             });
                           },
-                          value: isChecked,
+                          value: isOpenHome,
                         ),
                       ],
                     ),
@@ -619,7 +635,15 @@ class _SearchScreenState extends State<SearchScreen> {
                         fontSize: 20,
                       ),
                     ),
-                    onPressed: () async {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                              transitionDuration:
+                              Duration(seconds: 1),
+                              pageBuilder: (_, __, ___) =>
+                                  MapSearchScreen(url: 'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&bedrooms=&min_price=&max_price=&bathrooms=&home_type$isOpenHome=&community=${getText(communityAmenities)}&zip=$cityOraddress&listing_type=${getText(selPType)}&building=${getText(buildingAmenities)}&features=${getText(selAmenitiesAndFeatures)}&size=${getText(lotDescription)}&pet_allowed=${getText(petsAllowed)}&utility${getText(utilitiesIncluded)}&floor_type=${getText(flooringType)}',filters: isFilters(),)));
+                    },
                   ),
                 ],
               ),

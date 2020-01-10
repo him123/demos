@@ -2,6 +2,8 @@ import 'package:american_homes_online/components/database_util.dart';
 import 'package:american_homes_online/model/saved_search.dart';
 import 'package:flutter/material.dart';
 
+import 'mapsearch_screen.dart';
+
 class SavedSearch extends StatefulWidget {
   static String id = 'SavedSearch';
 
@@ -46,40 +48,60 @@ class _SavedSearchState extends State<SavedSearch> {
             return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index) {
+
                 SavedSearchModel item = snapshot.data[index];
-                return Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                return Card(
+                  elevation: 3.0,
+                  borderOnForeground: true,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                                transitionDuration:
+                                Duration(seconds: 1),
+                                pageBuilder: (_, __, ___) =>
+                                    MapSearchScreen(url: item.url, filters: 0,)));
+                      },
+                      child: Column(
                         children: <Widget>[
-                          Text(
-                            item.name,
-                            style: TextStyle(
-                                fontSize: 18.0, fontWeight: FontWeight.w700),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                item.name,
+                                style: TextStyle(
+                                    fontSize: 18.0, fontWeight: FontWeight.w700),
+                              ),
+                              Text(
+                                item.date,
+                                style: TextStyle(
+                                    fontSize: 14.0, fontWeight: FontWeight.w400),
+                              )
+                            ],
                           ),
-                          Text(
-                            item.date,
-                            style: TextStyle(
-                                fontSize: 14.0, fontWeight: FontWeight.w400),
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          Row(
+                            children: <Widget>[
+//                            Text(item.is_map_included!=null?item.is_map_included:'Map'),
+//                            SizedBox(width: 5.0,),
+                              Text(item.filters)
+                            ],
                           )
                         ],
                       ),
-                      Row(
-                        children: <Widget>[
-                          Text(item.is_map_included!=null?item.is_map_included:'Map'),
-                          SizedBox(width: 5.0,),
-                          Text(item.filters!=null?item.filters:'Filter')
-                        ],
-                      )
-                    ],
+                    ),
                   ),
                 );
               },
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: Text('No Saved Search Found',style: TextStyle(fontSize: 25.0),));
           }
         },
       ),

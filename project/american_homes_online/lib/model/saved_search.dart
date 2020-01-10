@@ -31,7 +31,7 @@ class SavedSearchModel{
     url: json["url"],
     name: json["name"],
     date: json["date"],
-    filters: json["filters"],
+    filters: json["filter"],
     is_map_included: json["is_map_included"],
   );
 
@@ -39,7 +39,7 @@ class SavedSearchModel{
     "url": url,
     "name": name,
     "date": date,
-    "filters": filters,
+    "filter": filters,
     "is_map_included": is_map_included,
   };
 }

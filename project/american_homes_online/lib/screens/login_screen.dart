@@ -225,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
             context,
             MaterialPageRoute(
                 fullscreenDialog: true,
-                builder: (BuildContext context) => DashBoardScreen()));
+                builder: (BuildContext context) => DashBoardScreen(userType: userType,)));
       }
     } else {
       setState(() {

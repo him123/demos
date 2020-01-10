@@ -5,6 +5,7 @@ import 'package:american_homes_online/constants/constants.dart';
 import 'package:american_homes_online/model/property.dart';
 import 'package:american_homes_online/model/saved_search.dart';
 import 'package:american_homes_online/screens/property_list_screen.dart';
+import 'package:american_homes_online/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -14,13 +15,17 @@ import 'dart:convert';
 
 class MapSearchScreen extends StatefulWidget {
   static String id = 'MapSearchScreen';
+  final String url;
+  final int filters;
+
+  MapSearchScreen({this.url, this.filters});
 
   @override
   _MapSearchScreenState createState() => _MapSearchScreenState();
 }
 
 class _MapSearchScreenState extends State<MapSearchScreen> {
-  String url = 'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd';
+//  String url = 'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd';
   List<String> _tabs = [
     "Map",
     "List",
@@ -65,6 +70,7 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
     // TODO: implement initState
     super.initState();
     getProperties();
+    print('Check filter: ${widget.filters}');
   }
 
   @override
@@ -78,19 +84,34 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
               child: Scaffold(
                 appBar: new AppBar(
                   title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Hero(
-                        tag: 'map-img',
-                        child: Image.asset(
-                          'images/mappin.png',
-                          height: 30.0,
-                          color: Colors.white,
-                        ),
+                      Row(
+                        children: <Widget>[
+                          Hero(
+                            tag: 'map-img',
+                            child: Image.asset(
+                              'images/mappin.png',
+                              height: 30.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          Text("Map Search"),
+                        ],
                       ),
-                      SizedBox(
-                        width: 10.0,
-                      ),
-                      Text("Map Search"),
+                      InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                    transitionDuration: Duration(seconds: 1),
+                                    pageBuilder: (_, __, ___) =>
+                                        SearchScreen()));
+                          },
+                          child: Container(child: Text('Filter'))),
                     ],
                   ),
                   // Creating Tabs
@@ -218,9 +239,8 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
   }
 
   Future<String> getProperties() async {
-    print('========= Property called ===========');
-    var response = await http.get(
-        url);
+    print('========= Property called ===========${widget.url}');
+    var response = await http.get(widget.url);
 
     if (mounted) {
       setState(() {
@@ -265,7 +285,7 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
             title: Text('Name Your Search'),
             content: TextField(
               onChanged: (val) {
-                savedSearchName=val;
+                savedSearchName = val;
               },
               controller: _textFieldController,
               decoration: InputDecoration(hintText: "Enter a name"),
@@ -273,17 +293,19 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
             actions: <Widget>[
               new FlatButton(
                 child: new Text('Ok'),
-                onPressed: () async{
+                onPressed: () async {
                   var now = new DateTime.now();
                   String formattedDate = DateFormat('dd/MM/yyyy').format(now);
                   print('Entred name: ${formattedDate}');
 
                   var savedSearchModel = SavedSearchModel();
-                  savedSearchModel.url=url;
-                  savedSearchModel.name=savedSearchName;
+
+                  savedSearchModel.url = widget.url;
+                  savedSearchModel.name = savedSearchName;
                   savedSearchModel.date = formattedDate;
-                  savedSearchModel.filters='No Filters';
-                  savedSearchModel.is_map_included='1';
+                  savedSearchModel.filters =
+                      widget.filters == 0 ? 'No Filters' : 'Filter Included';
+                  savedSearchModel.is_map_included = '1';
 //
                   await DBProvider.db.insertSearch(savedSearchModel);
                   Navigator.of(context).pop();

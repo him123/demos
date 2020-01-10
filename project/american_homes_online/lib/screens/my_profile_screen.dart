@@ -162,62 +162,65 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         border: Border.all(
                             width: 2.0, color: Theme.of(context).primaryColor),
                       ),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Column(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'User Details',
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w700,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Column(
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'User Details',
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: 5.0,),
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Add some information about yourself.',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w500,
+                                    SizedBox(height: 5.0,),
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'Add some information about yourself.',
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          /*FIRST NAME*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: titleController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-                                  labelText:
-                                      'Title/Position',
-                                  fillColor: Colors.white),
+                            SizedBox(
+                              height: 20.0,
                             ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Container(
-                            width: double.infinity,
-                          )
-                        ],
+                            /*FIRST NAME*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: titleController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+                                    labelText:
+                                        'Title/Position',
+                                    fillColor: Colors.white),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            Container(
+                              width: double.infinity,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -228,141 +231,144 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         border: Border.all(
                             width: 2.0, color: Theme.of(context).primaryColor),
                       ),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Column(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'User Details',
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w700,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Column(
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'User Details',
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: 5.0,),
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Add your contact information.',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w500,
+                                    SizedBox(height: 5.0,),
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'Add your contact information.',
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          /*FIRST NAME*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: fnameController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-                                  labelText: 'Enter First name',
-                                  fillColor: Colors.white),
+                            SizedBox(
+                              height: 20.0,
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*LAST NAME*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: lnameController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            /*FIRST NAME*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: fnameController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+                                    labelText: 'Enter First name',
+                                    fillColor: Colors.white),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*LAST NAME*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: lnameController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Enter Last name',
-                                  fillColor: Colors.white),
+                                    labelText: 'Enter Last name',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*EMAIL*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: emailController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*EMAIL*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: emailController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Enter email',
-                                  fillColor: Colors.white),
+                                    labelText: 'Enter email',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*PHONE*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: phnoController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*PHONE*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: phnoController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Phone number',
-                                  fillColor: Colors.white),
+                                    labelText: 'Phone number',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*MOBILE*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: mobileController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*MOBILE*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: mobileController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Mobile number',
-                                  fillColor: Colors.white),
+                                    labelText: 'Mobile number',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*SKYPE*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: skypeController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*SKYPE*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: skypeController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Skype',
-                                  fillColor: Colors.white),
+                                    labelText: 'Skype',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Container(
-                            width: double.infinity,
-                          )
-                        ],
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            Container(
+                              width: double.infinity,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -373,142 +379,145 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         border: Border.all(
                             width: 2.0, color: Theme.of(context).primaryColor),
                       ),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Column(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'User Details',
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w700,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Column(
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'User Details',
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: 5.0,),
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Add your social media information.',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w500,
+                                    SizedBox(height: 5.0,),
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'Add your social media information.',
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          /*FIRST NAME*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: facebookController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-                                  labelText: 'Facebook Url',
-                                  fillColor: Colors.white),
+                            SizedBox(
+                              height: 20.0,
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*LAST NAME*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: tweeterController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            /*FIRST NAME*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: facebookController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+                                    labelText: 'Facebook Url',
+                                    fillColor: Colors.white),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*LAST NAME*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: tweeterController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Tweeter Url',
-                                  fillColor: Colors.white),
+                                    labelText: 'Tweeter Url',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*EMAIL*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: linkedinController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*EMAIL*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: linkedinController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'LinkedIn Url',
-                                  fillColor: Colors.white),
+                                    labelText: 'LinkedIn Url',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*PHONE*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: instagramController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*PHONE*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: instagramController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Instagram Url',
-                                  fillColor: Colors.white),
+                                    labelText: 'Instagram Url',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*MOBILE*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: pintrestController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*MOBILE*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: pintrestController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Pinterest Url',
-                                  fillColor: Colors.white),
+                                    labelText: 'Pinterest Url',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*WEBSITE*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: websiteController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*WEBSITE*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: websiteController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Website',
-                                  fillColor: Colors.white),
+                                    labelText: 'Website',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Container(
-                            width: double.infinity,
-                          ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            Container(
+                              width: double.infinity,
+                            ),
 
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

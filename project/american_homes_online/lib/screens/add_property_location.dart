@@ -53,6 +53,8 @@ class _AddPropertyLocationState extends State<AddPropertyLocation> {
   property_latitude= '',
   property_longitude= '';
 
+  bool isEnable = false;
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -103,93 +105,116 @@ class _AddPropertyLocationState extends State<AddPropertyLocation> {
                     width: 300.0,
                     child: Column(
                       children: <Widget>[
-                        TextFormField(
-                          onChanged: (val){
-                            property_address = val;
-                          },
-//                      controller: titleController,
-                          decoration: InputDecoration(
-//                              border: OutlineInputBorder(),
-                              filled: true,
-                              labelText: '*Address',
-                              fillColor: Colors.white),
+                        Container(
+                          width: 350.0,
+                          height: 40.0,
+                          child: TextFormField(
+                            onChanged: (val){
+                              property_address = val;
+                            },
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                filled: true,
+                                labelText: '*Address',
+                                fillColor: Colors.white),
+                          ),
                         ),
-//                        SizedBox(
-//                          height: 10.0,
-//                        ),
-                        TextFormField(
-//                      controller: titleController,
-                          onChanged: (val){
-                            property_county = val;
-                          },
-                          decoration: InputDecoration(
-//                              border: OutlineInputBorder(),
-                              filled: true,
-                              labelText: 'County / State',
-                              fillColor: Colors.white),
+                        SizedBox(
+                          height: 10.0,
                         ),
-//                        SizedBox(
-//                          height: 10.0,
-//                        ),
-                        TextFormField(
-//                      controller: titleController,
-                          onChanged: (val){
-                            property_city= val;
-                          },
-                          decoration: InputDecoration(
-//                              border: OutlineInputBorder(),
-                              filled: true,
-                              labelText: 'City',
-                              fillColor: Colors.white),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              width: 140.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                onChanged: (val){
+                                  property_county = val;
+                                },
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+                                    labelText: 'County / State',
+                                    fillColor: Colors.white),
+                              ),
+                            ),
+                            Container(
+                              width: 140.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                onChanged: (val){
+                                  property_city= val;
+                                },
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+                                    labelText: 'City',
+                                    fillColor: Colors.white),
+                              ),
+                            ),
+                          ],
                         ),
-//                        SizedBox(
-//                          height: 10.0,
-//                        ),
-                        TextFormField(
-//                      controller: titleController,
-                          onChanged: (val){
-                            property_area= val;
-                          },
-                          decoration: InputDecoration(
-//                              border: OutlineInputBorder(),
-                              filled: true,
-                              labelText: 'Area',
-                              fillColor: Colors.white),
+                        SizedBox(
+                          height: 10.0,
                         ),
-//                        SizedBox(
-//                          height: 10.0,
-//                        ),
-                        TextFormField(
+                        Container(
+                          width: 350.0,
+                          height: 40.0,
+                          child: TextFormField(
 //                      controller: titleController,
-                          onChanged: (val){
-                            property_zip= val;
-                          },
-                          decoration: InputDecoration(
-//                              border: OutlineInputBorder(),
-                              filled: true,
-                              labelText: 'Zip',
-                              fillColor: Colors.white),
+                            onChanged: (val){
+                              property_area= val;
+                            },
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                filled: true,
+                                labelText: 'Neighborhood',
+                                fillColor: Colors.white),
+                          ),
                         ),
-//                        SizedBox(
-//                          height: 10.0,
-//                        ),
-                        TextFormField(
-                          onChanged: (val){
-                            property_country = val;
-                          },
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Container(
+                          width: 350.0,
+                          height: 40.0,
+                          child: TextFormField(
 //                      controller: titleController,
-                          decoration: InputDecoration(
-//                              border: OutlineInputBorder(),
+                            onChanged: (val){
+                              property_zip= val;
+                            },
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                filled: true,
+                                labelText: 'Zip',
+                                fillColor: Colors.white),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Container(
+                          width: 350.0,
+                          height: 40.0,
+                          child: TextFormField(
+                            onChanged: (val){
+                              property_country = val;
+                            },
+//                      controller: titleController,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
 
-                              filled: true,
-                              labelText: 'Country',
-                              fillColor: Colors.white),
+                                filled: true,
+                                labelText: 'Country',
+                                fillColor: Colors.white),
+                          ),
                         ),
                       ],
                     )),
-//                SizedBox(
-//                  height: 20.0,
-//                ),
+                SizedBox(
+                  height: 20.0,
+                ),
                 Container(
                   height: 200.0,
                   child: GoogleMap(
@@ -207,26 +232,75 @@ class _AddPropertyLocationState extends State<AddPropertyLocation> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Flexible(
-                        child: TextFormField(
+                        child: Container(
+                          width: 350.0,
+                          height: 40.0,
+                          child: TextFormField(
 //                      controller: titleController,
-                          decoration: InputDecoration(
-//                              border: OutlineInputBorder(),
-                              filled: true,
-                              labelText: 'Latitude',
-                              fillColor: Colors.white),
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                filled: true,
+                                labelText: 'Latitude',
+                                fillColor: Colors.white),
+                          ),
                         ),
                       ),
                       SizedBox(
                         width: 5.3,
                       ),
                       Flexible(
-                        child:TextFormField(
+                        child:Container(
+                          width: 350.0,
+                          height: 40.0,
+                          child: TextFormField(
 //                      controller: titleController,
-                          decoration: InputDecoration(
-//                              border: OutlineInputBorder(),
-                              filled: true,
-                              labelText: 'Longitude',
-                              fillColor: Colors.white),
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                filled: true,
+                                labelText: 'Longitude',
+                                fillColor: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only( bottom: 10.0,left: 8.0,right: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Flexible(
+                        child: Container(
+                          width: 350.0,
+                          height: 40.0,
+                          child: Row(
+                            children: <Widget>[
+                              Checkbox(
+                                onChanged: (val){
+                                  isEnable=val;
+                                },
+                                value: isEnable,
+                              ),
+                              Text('Google Street View')
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5.3,
+                      ),
+                      Flexible(
+                        child:Container(
+                          width: 350.0,
+                          height: 40.0,
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                filled: true,
+                                labelText: 'Camera Angle (value from 0 to 360)',
+                                fillColor: Colors.white),
+                          ),
                         ),
                       ),
                     ],

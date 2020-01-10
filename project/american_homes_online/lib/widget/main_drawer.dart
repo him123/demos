@@ -1,6 +1,8 @@
 import 'package:american_homes_online/screens/add_new_property.dart';
+import 'package:american_homes_online/screens/dashboard_screen.dart';
 import 'package:american_homes_online/screens/home_screen.dart';
 import 'package:american_homes_online/screens/login_screen.dart';
+import 'package:american_homes_online/screens/mapsearch_screen.dart';
 import 'package:american_homes_online/screens/my_profile_agency_screen.dart';
 import 'package:american_homes_online/screens/my_profile_agent_screen.dart';
 import 'package:american_homes_online/screens/my_profile_developer_screen.dart';
@@ -113,7 +115,7 @@ class MainDrawer extends StatelessWidget {
 
             Navigator.of(context).push(
               PageRouteBuilder(pageBuilder: (BuildContext context, _, __) {
-                return HomeScreen(userType: userType,);
+                return DashBoardScreen(userType: userType,);
               }, transitionsBuilder:
                   (_, Animation<double> animation, __, Widget child) {
                 return new FadeTransition(opacity: animation, child: child);
@@ -152,15 +154,17 @@ class MainDrawer extends StatelessWidget {
           buildListTile('MY PROPERIES LIST', FontAwesomeIcons.mapMarkerAlt, () {
 //            Navigator.of(context).pushReplacementNamed(AboutUs.id);
 
+
+
             Navigator.of(context).pop();
-//            Navigator.of(context).push(
-//              PageRouteBuilder(pageBuilder: (BuildContext context, _, __) {
-//                return AboutUs();
-//              }, transitionsBuilder:
-//                  (_, Animation<double> animation, __, Widget child) {
-//                return new FadeTransition(opacity: animation, child: child);
-//              }),
-//            );
+
+            Navigator.push(
+                context,
+                PageRouteBuilder(
+                    transitionDuration:
+                    Duration(seconds: 1),
+                    pageBuilder: (_, __, ___) =>
+                        MapSearchScreen(url: 'https://americanhomesonline.com/wp-json/api/v1/Agent_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&agent_id=$id',filters: 1,)));
           }),
 
           Padding(

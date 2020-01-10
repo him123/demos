@@ -23,16 +23,16 @@ class DBProvider {
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "TestDB.db");
+    String path = join(documentsDirectory.path, "Aho.db");
 
-    return await openDatabase(path, version: 4, onOpen: (db) {},
+    return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
 
       await db.execute("CREATE TABLE saved_search ("
           "id INTEGER PRIMARY KEY,"
           "url TEXT,"
           "name TEXT,"
-          "fliters TEXT,"
+          "filter TEXT,"
           "date TEXT,"
           "is_map_included TEXT"
           ")");
@@ -82,9 +82,10 @@ class DBProvider {
   }
 
   insertSearch(SavedSearchModel savedSearchModel) async {
+    print('Filter to be saved: ${savedSearchModel.filters}');
     final db = await database;
     var raw = await db.rawInsert(
-        "INSERT Into saved_search (name, url,fliters,date,is_map_included)"
+        "INSERT Into saved_search (name, url, filter, date, is_map_included)"
         " VALUES (?,?,?,?,?)",
         [
           savedSearchModel.name,
@@ -172,7 +173,7 @@ class DBProvider {
         ? res.map((c) => SavedSearchModel.fromMap(c)).toList()
         : [];
 
-    print('checkl list : ${list[0].url}');
+    print('checkl list : ${list[0].filters}');
 
     return list;
   }

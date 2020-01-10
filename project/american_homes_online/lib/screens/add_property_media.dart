@@ -3,12 +3,14 @@ import 'dart:io';
 
 import 'package:american_homes_online/model/property_model.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
 import 'package:path/path.dart';
 
-const String imgUploadUrl = 'https://americanhomesonline.com/wp-json/api/v1/Property_Images/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd';
+const String imgUploadUrl =
+    'https://americanhomesonline.com/test.php';
 
 class AddPropertyMedia extends StatefulWidget {
   const AddPropertyMedia({
@@ -101,16 +103,16 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
                       child: ClipOval(
                         child: _imageFile != null
                             ? Image.file(
-                          _imageFile,
-                          width: 200,
-                          height: 200,
-                          fit: BoxFit.cover,
-                        )
+                                _imageFile,
+                                width: 200,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              )
                             : Icon(
-                          Icons.camera_alt,
-                          size: 60.0,
-                          color: Theme.of(context).accentColor,
-                        ),
+                                Icons.camera_alt,
+                                size: 60.0,
+                                color: Theme.of(context).accentColor,
+                              ),
                       ),
                     ),
                   ),
@@ -123,6 +125,7 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
                   child: InkWell(
                     onTap: () {
                       _openImagePicker(context);
+//                      testPost(context, imgUploadUrl);
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -223,8 +226,8 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
                 ),
                 /*Video from*/ Container(
                   color: Colors.white,
-                  width: 300.0,
-                  height: 40.0,
+                  width: 150.0,
+                  height: 30.0,
                   child: Container(
                     alignment: Alignment.center,
                     decoration: ShapeDecoration(
@@ -239,10 +242,10 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
                       iconSize: 24,
                       elevation: 16,
                       style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 20,
+                          color: Colors.black,
+                          fontSize: 16,
                           inherit: false,
-                          decorationColor: Colors.white),
+                          decorationColor: Colors.black),
 //                  underline: Container(
 //                    height: 2,
 //                    color: Colors.deepPurpleAccent,
@@ -270,12 +273,16 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
                 /*URL*/ Padding(
                   padding: const EdgeInsets.only(
                       top: 0.0, right: 15.0, left: 15.0, bottom: 10.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        filled: true,
-                        labelText: 'Embed Video id:',
-                        fillColor: Colors.white),
+                  child: Container(
+                    width: 350.0,
+                    height: 40.0,
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          filled: true,
+                          labelText: 'Embed Video id:',
+                          fillColor: Colors.white),
+                    ),
                   ),
                 ),
                 Container(
@@ -290,7 +297,7 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
           children: <Widget>[
             InkWell(
               onTap: () {
-              widget.onDataChange(
+                widget.onDataChange(
                     0, 'This is title of property', widget.propertyModel);
               },
               child: Padding(
@@ -342,21 +349,44 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
     );
   }
 
+  Upload(
+    File imageFile,
+    String url,
+  ) async {
+    var stream =
+        new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    var length = await imageFile.length();
+
+    var uri = Uri.parse(url);
+
+    var request = new http.MultipartRequest("POST", uri);
+    var multipartFile = new http.MultipartFile('upload_img', stream, length,
+        filename: basename(imageFile.path));
+    //contentType: new MediaType('image', 'png'));
+
+    request.files.add(multipartFile);
+    var response = await request.send();
+    print(response.statusCode);
+    response.stream.transform(utf8.decoder).listen((value) {
+      print(value);
+    });
+  }
 
   void createPost(BuildContext context, String url, File _imageFile) async {
+    print('====post method called =====');
     var request = http.MultipartRequest('POST', Uri.parse(url));
 
-    if (_imageFile != null) {
-      var stream =
-      new http.ByteStream(DelegatingStream.typed(_imageFile.openRead()));
-      final length = await _imageFile.length();
-      var multiPartImage = http.MultipartFile('upload_img', stream, length,
-          filename: basename(_imageFile.path));
-      request.files.add(multiPartImage);
-    }
+//    if (_imageFile != null) {
+//      var stream =
+//          new http.ByteStream(DelegatingStream.typed(_imageFile.openRead()));
+//      final length = await _imageFile.length();
+//      var multiPartImage = http.MultipartFile('upload_img', stream, length,
+//          filename: basename(_imageFile.path));
+//      request.files.add(multiPartImage);
+//    }
 
-    print('====================FILE$_imageFile');
-//    request.fields['method'] = 'register_customer';
+//    print('====================FILE$_imageFile');
+    request.fields['upload_img'] = 'This is test from flutter';
 //    request.fields['name'] = name;
 //    request.fields['email'] = email;
 //    request.fields['password'] = pass;
@@ -365,9 +395,9 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
 //    request.fields['fcmtoken'] = 'd4as56f4a56sd4f5a4sd564';
 
     http.Response response =
-    await http.Response.fromStream(await request.send());
+        await http.Response.fromStream(await request.send());
 //
-    print(response.body);
+    print('FResponse: ${response.body}');
 //
 //    String image = json.decode(response.body)['profile_image'];
 //    int id = json.decode(response.body)['user_id'];
@@ -415,9 +445,10 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
         _imageFile = image;
       });
 
-      createPost(context,
-          imgUploadUrl, _imageFile);
+//      createPost(context, imgUploadUrl, _imageFile);
 
+//      Upload(_imageFile, imgUploadUrl);
+      testPost(context, imgUploadUrl);
 
       Navigator.pop(context);
     });
@@ -457,5 +488,62 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
             ),
           );
         });
+  }
+
+  void testPost(BuildContext context, String url,) async {
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+
+    if (_imageFile != null) {
+      var stream =
+      new http.ByteStream(DelegatingStream.typed(_imageFile.openRead()));
+      final length = await _imageFile.length();
+      var multiPartImage = http.MultipartFile('upload_img', stream, length,
+          filename: basename(_imageFile.path));
+//      final headers = {'Content-Type': 'multipart/form-data; boundary=MultipartBoundry',
+//      'secret_key':'yQTTspWXd530xNAEnBKkMFNFuBbKG6kd'};
+//      request.headers.addAll(headers);
+      request.files.add(multiPartImage);
+
+//      secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd
+    }
+
+    print('====================FILE$_imageFile');
+
+
+//    Map<String, dynamic> body = {
+//      'upload_img': imageFile,
+//      'testtext': 'This is flutter'
+//    };
+//
+//    String jsonBody = json.encode(body);
+//    final encoding = Encoding.getByName('utf-8');
+//
+//    final headers = {'Content-Type': 'application/json'};
+
+//    Map<String, String> headers = { "Content-Type": "application/json"};
+//    request.headers.addAll(headers);
+
+//    request.fields['upload_img'] = imageFile;
+    request.fields['testtext'] = 'Flitter is this';
+
+//
+
+//
+    print('Request: ${request.fields.toString()}');
+
+//    Response response = await post(
+//      Uri.parse(url),
+//      headers: headers,
+//      body: jsonBody,
+//      encoding: encoding,
+//    );
+//
+//    int statusCode = response.statusCode;
+//    String responseBody = response.body;
+
+    http.Response response =
+        await http.Response.fromStream(await request.send());
+
+    print('FResponse ${response.body}}');
   }
 }

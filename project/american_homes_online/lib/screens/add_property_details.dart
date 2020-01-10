@@ -38,7 +38,7 @@ class _AddPropertyDetailsState extends State<AddPropertyDetails> {
   String spStrucTypeVal = 'Brick', selectedStructType = '';
   String spFloorVal = '1', selectedFloor = '';
 
-  double txtFldHeight = 45.0;
+  double txtFldHeight = 40.0;
   String property_size = '',
       property_lot_size = '',
       property_rooms = '',
@@ -428,8 +428,8 @@ class _AddPropertyDetailsState extends State<AddPropertyDetails> {
                                             iconSize: 24,
                                             elevation: 16,
                                             style: TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 20,
+                                                color: Colors.black,
+                                                fontSize: 16,
                                                 inherit: false,
                                                 decorationColor: Colors.white),
 //                  underline: Container(
@@ -496,8 +496,8 @@ class _AddPropertyDetailsState extends State<AddPropertyDetails> {
                                             iconSize: 24,
                                             elevation: 16,
                                             style: TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 20,
+                                                color: Colors.black,
+                                                fontSize: 16,
                                                 inherit: false,
                                                 decorationColor: Colors.white),
                                             onChanged: (String data) {

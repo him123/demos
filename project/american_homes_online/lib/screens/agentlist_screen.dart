@@ -17,7 +17,8 @@ class AgentListScreen extends StatefulWidget {
   AgentListScreen({this.location, this.name});
 
   @override
-  _AgentListScreenState createState() => _AgentListScreenState(name: name,location: location);
+  _AgentListScreenState createState() =>
+      _AgentListScreenState(name: name, location: location);
 }
 
 class _AgentListScreenState extends State<AgentListScreen> {
@@ -25,6 +26,7 @@ class _AgentListScreenState extends State<AgentListScreen> {
   final String name;
   bool showSpinner = false;
   List<Agent> list = List();
+  bool isFail = false;
 
   _AgentListScreenState({this.location, this.name});
 
@@ -35,6 +37,7 @@ class _AgentListScreenState extends State<AgentListScreen> {
 //    showSpinner=true;
     getAgents(name, location);
   }
+
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
@@ -43,17 +46,21 @@ class _AgentListScreenState extends State<AgentListScreen> {
         appBar: AppBar(
           title: Text('Agents'),
         ),
-        body: list.length==0 ? ShimmerList() : ListView.builder(
-            itemCount: list.length,
-            itemBuilder: (context, index) {
-              return AgentItem(
-                title: list[index].title,
-                agent_id: list[index].agent_id.toString(),
-                mobile: list[index].mobile,
-                profile_img: list[index].profile_img,
-                total: list[index].total.toString(),
-              );
-            }),
+        body: list.length == 0
+            ? ShimmerList(
+                isFail: isFail,
+              )
+            : ListView.builder(
+                itemCount: list.length,
+                itemBuilder: (context, index) {
+                  return AgentItem(
+                    title: list[index].title,
+                    agent_id: list[index].agent_id.toString(),
+                    mobile: list[index].mobile,
+                    profile_img: list[index].profile_img,
+                    total: list[index].total.toString(),
+                  );
+                }),
       ),
     );
   }
@@ -66,17 +73,30 @@ class _AgentListScreenState extends State<AgentListScreen> {
     this.setState(() {
       dynamic data = json.decode(response.body)['data'];
 
-      if (response.statusCode == 200) {
-        list = (data as List).map((data) => new Agent.fromJson(data)).toList();
+      print('Check Data: $data');
+      if (data != null) {
+        if (response.statusCode == 200) {
+          list =
+              (data as List).map((data) => new Agent.fromJson(data)).toList();
 
-        String firstname = list[0].title;
-        print('All Shops: $firstname');
+          String firstname = list[0].title;
+          print('All Shops: $firstname');
 
+          setState(() {
+            showSpinner = false;
+          });
+        } else {
+          setState(() {
+            showSpinner = false;
+            isFail = true;
+          });
+          throw Exception('Failed to load photos');
+        }
+      } else {
         setState(() {
           showSpinner = false;
+          isFail = true;
         });
-      } else {
-        throw Exception('Failed to load photos');
       }
     });
 
@@ -88,28 +108,34 @@ class _AgentListScreenState extends State<AgentListScreen> {
 }
 
 class ShimmerList extends StatelessWidget {
+  final isFail;
+
+  ShimmerList({this.isFail});
+
   @override
   Widget build(BuildContext context) {
     int offset = 0;
     int time = 800;
 
     return SafeArea(
-      child: ListView.builder(
-        itemCount: 6,
-        itemBuilder: (BuildContext context, int index) {
-          offset += 5;
-          time = 800 + offset;
+      child: isFail == true
+          ? Center(child: Text('No Agent Found', style: TextStyle(fontSize: 25.0),))
+          : ListView.builder(
+              itemCount: 6,
+              itemBuilder: (BuildContext context, int index) {
+                offset += 5;
+                time = 800 + offset;
 
-          print(time);
+                print(time);
 
-          return Shimmer.fromColors(
-            highlightColor: Colors.white,
-            baseColor: Colors.grey[300],
-            child: ShimmerLayout(),
-            period: Duration(milliseconds: time),
-          );
-        },
-      ),
+                return Shimmer.fromColors(
+                  highlightColor: Colors.white,
+                  baseColor: Colors.grey[300],
+                  child: ShimmerLayout(),
+                  period: Duration(milliseconds: time),
+                );
+              },
+            ),
     );
   }
 }
@@ -129,7 +155,9 @@ class ShimmerLayout extends StatelessWidget {
             radius: 50.0,
             backgroundColor: Colors.grey,
           ),
-          SizedBox(width: 20.0,),
+          SizedBox(
+            width: 20.0,
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -141,7 +169,9 @@ class ShimmerLayout extends StatelessWidget {
                   width: containerWidth,
                   color: Colors.grey,
                 ),
-                SizedBox(height: 15.0,),
+                SizedBox(
+                  height: 15.0,
+                ),
                 Container(
                   height: containerHeight,
                   width: containerWidth,

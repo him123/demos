@@ -125,44 +125,50 @@ class _AddPropertyDescriptionState extends State<AddPropertyDescription> {
                       height: 20.0,
                     ),
                     /*FIRST NAME*/ Container(
-                        width: 300.0,
                         child: Column(
                           children: <Widget>[
-                            TextFormField(
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please enter title';
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-                                  labelText: 'Title/Position',
-                                  fillColor: Colors.white),
-                              onChanged: (val) {
-                                property_title = val;
-                              },
+                            Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter title';
+                                  }
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+                                    labelText: 'Title/Position',
+                                    fillColor: Colors.white),
+                                onChanged: (val) {
+                                  property_title = val;
+                                },
+                              ),
                             ),
                             SizedBox(
                               height: 10.0,
                             ),
-                            TextFormField(
-                              maxLines: 5,
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please enter description';
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-                                  labelText: 'Description',
-                                  fillColor: Colors.white),
-                              onChanged: (val) {
-                                property_description = val;
-                              },
+                            Container(
+                              width: 350.0,
+                              child: TextFormField(
+                                maxLines: 5,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter description';
+                                  }
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+                                    labelText: 'Description',
+                                    fillColor: Colors.white),
+                                onChanged: (val) {
+                                  property_description = val;
+                                },
+                              ),
                             ),
                           ],
                         )),
@@ -221,62 +227,73 @@ class _AddPropertyDescriptionState extends State<AddPropertyDescription> {
                       height: 20.0,
                     ),
                     /*FIRST NAME*/ Container(
-                        width: 300.0,
                         child: Column(
                           children: <Widget>[
-                            TextFormField(
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please enter price';
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-                                  labelText: 'Price in \$ (only numbers)',
-                                  fillColor: Colors.white),
-                              onChanged: (val) {
-                                property_price = val;
-                              },
+                            Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter price';
+                                  }
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+                                    labelText: 'Price in \$ (only numbers)',
+                                    fillColor: Colors.white),
+                                onChanged: (val) {
+                                  property_price = val;
+                                },
+                              ),
                             ),
                             SizedBox(
                               height: 10.0,
                             ),
-                            TextFormField(
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please enter taxes in \$';
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-                                  labelText: 'Taxes in \$',
-                                  fillColor: Colors.white),
-                              onChanged: (val) {
-                                property_taxes = val;
-                              },
+                            Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter taxes in \$';
+                                  }
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+                                    labelText: 'Taxes in \$',
+                                    fillColor: Colors.white),
+                                onChanged: (val) {
+                                  property_taxes = val;
+                                },
+                              ),
                             ),
                             SizedBox(
                               height: 10.0,
                             ),
-                            TextFormField(
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please enter maintanance';
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-                                  labelText: 'Maintenance in \$',
-                                  fillColor: Colors.white),
-                              onChanged: (val) {
-                                property_maintenance = val;
-                              },
+                            Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter maintanance';
+                                  }
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+                                    labelText: 'Maintenance in \$',
+                                    fillColor: Colors.white),
+                                onChanged: (val) {
+                                  property_maintenance = val;
+                                },
+                              ),
                             ),
                           ],
                         )),
@@ -335,13 +352,12 @@ class _AddPropertyDescriptionState extends State<AddPropertyDescription> {
                       height: 20.0,
                     ),
                     /*FIRST NAME*/ Container(
-                        width: 300.0,
                         child: Column(
                           children: <Widget>[
                             /*Category*/ Container(
                               color: Colors.white,
                               width: 300.0,
-                              height: 40.0,
+                              height: 30.0,
                               child: Container(
                                 alignment: Alignment.center,
                                 decoration: ShapeDecoration(
@@ -358,8 +374,8 @@ class _AddPropertyDescriptionState extends State<AddPropertyDescription> {
                                   iconSize: 24,
                                   elevation: 16,
                                   style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 20,
+                                      color: Colors.black,
+                                      fontSize: 16,
                                       inherit: false,
                                       decorationColor: Colors.white),
 //                  underline: Container(
@@ -391,7 +407,7 @@ class _AddPropertyDescriptionState extends State<AddPropertyDescription> {
                             /*Listed in*/ Container(
                               color: Colors.white,
                               width: 300.0,
-                              height: 40.0,
+                              height: 30.0,
                               child: Container(
                                 alignment: Alignment.center,
                                 decoration: ShapeDecoration(
@@ -408,8 +424,8 @@ class _AddPropertyDescriptionState extends State<AddPropertyDescription> {
                                   iconSize: 24,
                                   elevation: 16,
                                   style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 20,
+                                      color: Colors.black,
+                                      fontSize: 16,
                                       inherit: false,
                                       decorationColor: Colors.white),
 //                  underline: Container(
@@ -498,7 +514,7 @@ class _AddPropertyDescriptionState extends State<AddPropertyDescription> {
                             /*Category*/ Container(
                               color: Colors.white,
                               width: 300.0,
-                              height: 40.0,
+                              height: 30.0,
                               child: Container(
                                 alignment: Alignment.center,
                                 decoration: ShapeDecoration(
@@ -515,8 +531,8 @@ class _AddPropertyDescriptionState extends State<AddPropertyDescription> {
                                   iconSize: 24,
                                   elevation: 16,
                                   style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 20,
+                                      color: Colors.black,
+                                      fontSize: 16,
                                       inherit: false,
                                       decorationColor: Colors.white),
 //                  underline: Container(

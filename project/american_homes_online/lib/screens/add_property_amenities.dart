@@ -259,6 +259,7 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
                                   Text('Lake View'),
                                 ],
                               ),
+                              SizedBox(height: 40.0,),
                             ],
                           ),
                           Column(
@@ -481,20 +482,7 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
                                   Text('Club House'),
                                 ],
                               ),
-                              Row(
-                                children: <Widget>[
-                                  Checkbox(
-                                    onChanged: (val) {
-                                      print('onCnahged $val');
-                                      setState(() {
-                                        golf = val;
-                                      });
-                                    },
-                                    value: golf,
-                                  ),
-                                  Text('Golf'),
-                                ],
-                              ),
+
                             ],
                           ),
                           Row(
@@ -527,20 +515,7 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
                                   Text('Gated'),
                                 ],
                               ),
-                              Row(
-                                children: <Widget>[
-                                  Checkbox(
-                                    onChanged: (val) {
-                                      print('onCnahged $val');
-                                      setState(() {
-                                        comminityPool = val;
-                                      });
-                                    },
-                                    value: comminityPool,
-                                  ),
-                                  Text('Community Pool'),
-                                ],
-                              ),
+
                             ],
                           ),
                           Row(
@@ -573,6 +548,39 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
                                   Text('Tennis'),
                                 ],
                               ),
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Checkbox(
+                                    onChanged: (val) {
+                                      print('onCnahged $val');
+                                      setState(() {
+                                        comminityPool = val;
+                                      });
+                                    },
+                                    value: comminityPool,
+                                  ),
+                                  Text('Community Pool'),
+                                ],
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Checkbox(
+                                    onChanged: (val) {
+                                      print('onCnahged $val');
+                                      setState(() {
+                                        golf = val;
+                                      });
+                                    },
+                                    value: golf,
+                                  ),
+                                  Text('Golf'),
+                                ],
+                              ),
+
                             ],
                           ),
                         ],

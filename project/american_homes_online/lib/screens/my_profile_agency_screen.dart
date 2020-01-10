@@ -13,11 +13,11 @@ class MyProfileAgencyScreen extends StatefulWidget {
   MyProfileAgencyScreen({this.userId, this.userType});
 
   @override
-  _MyProfileAgencyScreenState createState() => _MyProfileAgencyScreenState(userId: userId, userType: userType);
+  _MyProfileAgencyScreenState createState() =>
+      _MyProfileAgencyScreenState(userId: userId, userType: userType);
 }
 
 class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
-
   final String userId;
   final String userType;
 
@@ -60,8 +60,9 @@ class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
   var mobileController = TextEditingController();
   var skypeController = TextEditingController();
 
-  var addressController = TextEditingController();
+//  var addController = TextEditingController();
   var stateController = TextEditingController();
+  var addrssController = TextEditingController();
   var cityController = TextEditingController();
   var areaController = TextEditingController();
   var neighbourController = TextEditingController();
@@ -73,6 +74,8 @@ class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
   var instagramController = TextEditingController();
   var pintrestController = TextEditingController();
   var websiteController = TextEditingController();
+
+  var aboutmeController = TextEditingController();
 
   bool showSpinner = false;
 
@@ -101,7 +104,6 @@ class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
       spACatVal = 'None',
       selectedACate = '';
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,7 +124,7 @@ class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
                     ),
                     onPressed: () async {
                       SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
+                          await SharedPreferences.getInstance();
 
                       prefs.setString('login', '0');
                       Navigator.of(context).pushNamedAndRemoveUntil(
@@ -158,9 +160,13 @@ class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
                     height: 10.0,
                   ),
                   user_custom_picture == ''
-                      ? Image.asset(
-                      'images/default_user.png')
-                      : Image.network(user_custom_picture, width: 200.0, height: 150.0, fit: BoxFit.cover,),
+                      ? Image.asset('images/default_user.png')
+                      : Image.network(
+                          user_custom_picture,
+                          width: 200.0,
+                          height: 150.0,
+                          fit: BoxFit.cover,
+                        ),
                   SizedBox(
                     height: 10.0,
                   ),
@@ -186,189 +192,194 @@ class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
                         border: Border.all(
                             width: 2.0, color: Theme.of(context).primaryColor),
                       ),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Column(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Agency Details',
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w700,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Column(
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'Agency Details',
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: 5.0,),
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Add your contact information',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w500,
+                                    SizedBox(
+                                      height: 5.0,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'Add your contact information',
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          /*FIRST NAME*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: fnameController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-                                  labelText: 'Agency Name',
-                                  fillColor: Colors.white),
+                            SizedBox(
+                              height: 20.0,
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*LAST NAME*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: lnameController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            /*Agency Name*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: fnameController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+                                    labelText: 'Agency Name',
+                                    fillColor: Colors.white),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*LAST NAME*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: lnameController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Phone',
-                                  fillColor: Colors.white),
+                                    labelText: 'Phone',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*EMAIL*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: emailController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*EMAIL*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: emailController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Enter email',
-                                  fillColor: Colors.white),
+                                    labelText: 'Enter email',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*PHONE*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: phnoController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*PHONE*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: phnoController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Mobile',
-                                  fillColor: Colors.white),
+                                    labelText: 'Mobile',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*MOBILE*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: mobileController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*MOBILE*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: mobileController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Skype',
-                                  fillColor: Colors.white),
+                                    labelText: 'Skype',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*SKYPE*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: skypeController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*SKYPE*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: skypeController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Languages',
-                                  fillColor: Colors.white),
+                                    labelText: 'Languages',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*Taxes*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: skypeController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*Taxes*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: skypeController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Taxes',
-                                  fillColor: Colors.white),
+                                    labelText: 'Taxes',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*License*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: skypeController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*License*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: skypeController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'License',
-                                  fillColor: Colors.white),
+                                    labelText: 'License',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*Opening Hours*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: skypeController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*Opening Hours*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: skypeController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Opening Hours',
-                                  fillColor: Colors.white),
+                                    labelText: 'Opening Hours',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Container(
-                            width: double.infinity,
-                          )
-                        ],
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            Container(
+                              width: double.infinity,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -379,141 +390,146 @@ class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
                         border: Border.all(
                             width: 2.0, color: Theme.of(context).primaryColor),
                       ),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Column(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Agency Details',
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w700,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Column(
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'Agency Details',
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: 5.0,),
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Add your social media information.',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w500,
+                                    SizedBox(
+                                      height: 5.0,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'Add your social media information.',
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          /*FIRST NAME*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: facebookController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-                                  labelText: 'Facebook Url',
-                                  fillColor: Colors.white),
+                            SizedBox(
+                              height: 20.0,
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*LAST NAME*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: tweeterController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            /*Facebook Url*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: facebookController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+                                    labelText: 'Facebook Url',
+                                    fillColor: Colors.white),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*Tweeter Url*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: tweeterController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Tweeter Url',
-                                  fillColor: Colors.white),
+                                    labelText: 'Tweeter Url',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*EMAIL*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: linkedinController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*EMAIL*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: linkedinController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'LinkedIn Url',
-                                  fillColor: Colors.white),
+                                    labelText: 'LinkedIn Url',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*PHONE*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: instagramController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*PHONE*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: instagramController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Instagram Url',
-                                  fillColor: Colors.white),
+                                    labelText: 'Instagram Url',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*MOBILE*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: pintrestController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*MOBILE*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: pintrestController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Pinterest Url',
-                                  fillColor: Colors.white),
+                                    labelText: 'Pinterest Url',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*WEBSITE*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: websiteController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*WEBSITE*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: websiteController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Website',
-                                  fillColor: Colors.white),
+                                    labelText: 'Website',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Container(
-                            width: double.infinity,
-                          ),
-                        ],
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            Container(
+                              width: double.infinity,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -524,141 +540,141 @@ class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
                         border: Border.all(
                             width: 2.0, color: Theme.of(context).primaryColor),
                       ),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Column(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Agency Area/Categories',
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w700,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Column(
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'Agency Area/Categories',
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: 5.0,),
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'What kind of listings do you handle?',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w500,
+                                    SizedBox(
+                                      height: 5.0,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'What kind of listings do you handle?',
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          /*Select Category*/ Container(
-                            color: Colors.white,
-                            width: 300.0,
-                            height: 40.0,
-                            child: Container(
-                              alignment: Alignment.center,
-                              decoration: ShapeDecoration(
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                      width: 1.0, style: BorderStyle.solid),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
+                                  ],
                                 ),
                               ),
-                              child: DropdownButton<String>(
-                                value: spCatVal,
-                                icon: Icon(Icons.arrow_drop_down),
-                                iconSize: 24,
-                                elevation: 16,
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 20,
-                                    inherit: false,
-                                    decorationColor: Colors.white),
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            /*Select Category*/ Container(
+                              color: Colors.white,
+                              width: 350.0,
+                              height: 40.0,
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                        width: 1.0, style: BorderStyle.solid),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5.0)),
+                                  ),
+                                ),
+                                child: DropdownButton<String>(
+                                  value: spCatVal,
+                                  icon: Icon(Icons.arrow_drop_down),
+                                  iconSize: 24,
+                                  elevation: 16,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      inherit: false,
+                                      decorationColor: Colors.white),
+                                  onChanged: (String data) {
+                                    setState(() {
+                                      spCatVal = data;
+                                      selectedCate = spCatVal;
+                                    });
+                                  },
+                                  items: spCategories
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*Select Action Category*/ Container(
+                              color: Colors.white,
+                              width: 350.0,
+                              height: 40.0,
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                        width: 1.0, style: BorderStyle.solid),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5.0)),
+                                  ),
+                                ),
+                                child: DropdownButton<String>(
+                                  value: spACatVal,
+                                  icon: Icon(Icons.arrow_drop_down),
+                                  iconSize: 24,
+                                  elevation: 16,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      inherit: false,
+                                      decorationColor: Colors.white),
 //                  underline: Container(
 //                    height: 2,
 //                    color: Colors.deepPurpleAccent,
 //                  ),
 
-                                onChanged: (String data) {
-                                  setState(() {
-                                    spCatVal = data;
-                                    selectedCate = spCatVal;
-                                  });
-                                },
-                                items: spCategories
-                                    .map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          /*Select Action Category*/ Container(
-                            color: Colors.white,
-                            width: 300.0,
-                            height: 40.0,
-                            child: Container(
-                              alignment: Alignment.center,
-                              decoration: ShapeDecoration(
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                      width: 1.0, style: BorderStyle.solid),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
+                                  onChanged: (String data) {
+                                    setState(() {
+                                      spACatVal = data;
+                                      selectedACate = spACatVal;
+                                    });
+                                  },
+                                  items: spActionCategories
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
                                 ),
                               ),
-                              child: DropdownButton<String>(
-                                value: spACatVal,
-                                icon: Icon(Icons.arrow_drop_down),
-                                iconSize: 24,
-                                elevation: 16,
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 20,
-                                    inherit: false,
-                                    decorationColor: Colors.white),
-//                  underline: Container(
-//                    height: 2,
-//                    color: Colors.deepPurpleAccent,
-//                  ),
-
-                                onChanged: (String data) {
-                                  setState(() {
-                                    spACatVal = data;
-                                    selectedACate = spACatVal;
-                                  });
-                                },
-                                items: spActionCategories
-                                    .map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                        ],
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -669,126 +685,130 @@ class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
                         border: Border.all(
                             width: 2.0, color: Theme.of(context).primaryColor),
                       ),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Column(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Agency Location',
-                                      style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w700,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Column(
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'Agency Location',
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: 5.0,),
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Add some information about your agency.',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w500,
+                                    SizedBox(
+                                      height: 5.0,
+                                    ),
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        'Add some information about your agency.',
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          /*ADDRESS*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: addressController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-//                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Address',
-                                  fillColor: Colors.white),
+                            SizedBox(
+                              height: 20.0,
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*STATE/COUNTY*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: stateController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-//                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'State/County',
-                                  fillColor: Colors.white),
+                            /*ADDRESS*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: addrssController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+                                    labelText: 'Address',
+                                    labelStyle: TextStyle(color: Colors.black),
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*CITY*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: cityController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-//                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'City',
-                                  fillColor: Colors.white),
+                            SizedBox(
+                              height: 10.0,
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*NEIGHBORHOOD*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: neighbourController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-//                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Neighborhood',
-                                  fillColor: Colors.white),
+                            /*STATE/COUNTY*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: stateController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+                                    labelText: 'State/County',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*ZIP*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: zipController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-//                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'Zip',
-                                  fillColor: Colors.white),
+                            SizedBox(
+                              height: 10.0,
                             ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Container(
-                            width: double.infinity,
-                          )
-                        ],
+                            /*CITY*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: cityController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+//                        hintStyle: TextStyle(color: Colors.grey[800]),
+                                    labelText: 'City',
+                                    fillColor: Colors.white),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*NEIGHBORHOOD*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: neighbourController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+//                        hintStyle: TextStyle(color: Colors.grey[800]),
+                                    labelText: 'Neighborhood',
+                                    fillColor: Colors.white),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*ZIP*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: zipController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+//                        hintStyle: TextStyle(color: Colors.grey[800]),
+                                    labelText: 'Zip',
+                                    fillColor: Colors.white),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            Container(
+                              width: double.infinity,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -799,56 +819,59 @@ class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
                         border: Border.all(
                             width: 2.0, color: Theme.of(context).primaryColor),
                       ),
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                'Add some information about yourself',
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w700,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'Add some information about yourself',
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          /*FIRST NAME*/ Container(
-                            width: 300.0,
-                            height: 40.0,
-                            child: TextFormField(
-                              controller: fnameController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
-                                  labelText: '*Title/Position',
-                                  fillColor: Colors.white),
+                            SizedBox(
+                              height: 20.0,
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          /*LAST NAME*/ Container(
-                            width: 300.0,
-                            child: TextFormField(
-                              maxLines: 8,
-                              controller: lnameController,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  filled: true,
+                            /*FIRST NAME*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: titleController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+                                    labelText: '*Title/Position',
+                                    fillColor: Colors.white),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            /*LAST NAME*/ Container(
+                              width: 350.0,
+                              child: TextFormField(
+                                maxLines: 8,
+                                controller: aboutmeController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                  labelText: 'About Me',
-                                  fillColor: Colors.white),
+                                    labelText: 'About Me',
+                                    fillColor: Colors.white),
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                        ],
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -918,8 +941,9 @@ class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
         phnoController.text = phone;
         mobileController.text = mobile;
         skypeController.text = skype;
+        aboutmeController.text = data['description'];
 
-        addressController.text = data['address'].toString();
+        addrssController.text = data['address'];
         print('Address: ${data['address']}');
 //        stateController = data['state'];
         cityController.text = data['city'];
