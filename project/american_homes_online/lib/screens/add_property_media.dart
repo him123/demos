@@ -3,14 +3,14 @@ import 'dart:io';
 
 import 'package:american_homes_online/model/property_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
 import 'package:path/path.dart';
 
-const String imgUploadUrl =
-    'https://americanhomesonline.com/test.php';
+const String imgUploadUrl = 'https://americanhomesonline.com/test.php';
 
 class AddPropertyMedia extends StatefulWidget {
   const AddPropertyMedia({
@@ -37,6 +37,9 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
   ];
   String spProStaVal = 'Vimeo', selectedProSta = '';
   File _imageFile;
+
+  List<File> _imageFileArr = [];
+  List<String> _imageArr = ['images/agent.png','images/aho_logo.jpg'];
 
   @override
   void initState() {
@@ -92,29 +95,24 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
                 SizedBox(
                   height: 20.0,
                 ),
-                Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      _openImagePicker(context);
+                Container(
+                  height: 250.0,
+                  width: 400.0,
+                  child: Swiper(
+                    key: UniqueKey(),
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (BuildContext context, int index) {
+                      return _imageFileArr.length==0 ? Text('upload images'):
+                      Image.file(
+                        _imageFileArr[index],
+                        width: 350,
+                        height: 200,
+                        fit: BoxFit.cover,
+                      );
                     },
-                    child: CircleAvatar(
-                      radius: 60.0,
-                      backgroundColor: Theme.of(context).primaryColor,
-                      child: ClipOval(
-                        child: _imageFile != null
-                            ? Image.file(
-                                _imageFile,
-                                width: 200,
-                                height: 200,
-                                fit: BoxFit.cover,
-                              )
-                            : Icon(
-                                Icons.camera_alt,
-                                size: 60.0,
-                                color: Theme.of(context).accentColor,
-                              ),
-                      ),
-                    ),
+                    itemCount: _imageFileArr.length==0?0:_imageFileArr.length,
+                    pagination: new SwiperPagination(),
+                    control: new SwiperControl(color: Colors.red),
                   ),
                 ),
                 SizedBox(
@@ -442,13 +440,15 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
   void _getImage(BuildContext context, ImageSource source) {
     ImagePicker.pickImage(source: source, maxWidth: 400.0).then((File image) {
       setState(() {
+        print('File: ${image}');
         _imageFile = image;
+        _imageFileArr.add(_imageFile);
       });
 
 //      createPost(context, imgUploadUrl, _imageFile);
 
 //      Upload(_imageFile, imgUploadUrl);
-      testPost(context, imgUploadUrl);
+//      testPost(context, imgUploadUrl);
 
       Navigator.pop(context);
     });
@@ -490,12 +490,16 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
         });
   }
 
-  void testPost(BuildContext context, String url,) async {
+  void testPost(
+    BuildContext context,
+    String url,
+  ) async {
+    print('=====Method called');
     var request = http.MultipartRequest('POST', Uri.parse(url));
 
     if (_imageFile != null) {
       var stream =
-      new http.ByteStream(DelegatingStream.typed(_imageFile.openRead()));
+          new http.ByteStream(DelegatingStream.typed(_imageFile.openRead()));
       final length = await _imageFile.length();
       var multiPartImage = http.MultipartFile('upload_img', stream, length,
           filename: basename(_imageFile.path));
@@ -508,7 +512,6 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
     }
 
     print('====================FILE$_imageFile');
-
 
 //    Map<String, dynamic> body = {
 //      'upload_img': imageFile,
@@ -526,9 +529,6 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
 //    request.fields['upload_img'] = imageFile;
     request.fields['testtext'] = 'Flitter is this';
 
-//
-
-//
     print('Request: ${request.fields.toString()}');
 
 //    Response response = await post(
