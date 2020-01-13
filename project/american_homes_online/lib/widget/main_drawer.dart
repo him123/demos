@@ -1,6 +1,7 @@
 import 'package:american_homes_online/screens/add_new_property.dart';
 import 'package:american_homes_online/screens/dashboard_screen.dart';
 import 'package:american_homes_online/screens/home_screen.dart';
+import 'package:american_homes_online/screens/image_upload_demo.dart';
 import 'package:american_homes_online/screens/login_screen.dart';
 import 'package:american_homes_online/screens/mapsearch_screen.dart';
 import 'package:american_homes_online/screens/my_profile_agency_screen.dart';

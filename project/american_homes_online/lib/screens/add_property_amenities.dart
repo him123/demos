@@ -4,6 +4,7 @@ import 'package:american_homes_online/model/property_model.dart';
 import 'package:american_homes_online/screens/successfully_property_added.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -77,6 +78,7 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
       trash = false,
       water = false;
   bool showSpinner = false;
+
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
@@ -87,8 +89,8 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
             padding: EdgeInsets.all(8.0),
             child: Container(
               decoration: BoxDecoration(
-                border:
-                    Border.all(width: 2.0, color: Theme.of(context).primaryColor),
+                border: Border.all(
+                    width: 2.0, color: Theme.of(context).primaryColor),
               ),
               child: Column(
                 children: <Widget>[
@@ -259,7 +261,9 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
                                   Text('Lake View'),
                                 ],
                               ),
-                              SizedBox(height: 40.0,),
+                              SizedBox(
+                                height: 40.0,
+                              ),
                             ],
                           ),
                           Column(
@@ -423,8 +427,8 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
             padding: EdgeInsets.all(8.0),
             child: Container(
               decoration: BoxDecoration(
-                border:
-                    Border.all(width: 2.0, color: Theme.of(context).primaryColor),
+                border: Border.all(
+                    width: 2.0, color: Theme.of(context).primaryColor),
               ),
               child: Column(
                 children: <Widget>[
@@ -482,7 +486,6 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
                                   Text('Club House'),
                                 ],
                               ),
-
                             ],
                           ),
                           Row(
@@ -515,7 +518,6 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
                                   Text('Gated'),
                                 ],
                               ),
-
                             ],
                           ),
                           Row(
@@ -580,7 +582,6 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
                                   Text('Golf'),
                                 ],
                               ),
-
                             ],
                           ),
                         ],
@@ -599,8 +600,8 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
             padding: EdgeInsets.all(8.0),
             child: Container(
               decoration: BoxDecoration(
-                border:
-                    Border.all(width: 2.0, color: Theme.of(context).primaryColor),
+                border: Border.all(
+                    width: 2.0, color: Theme.of(context).primaryColor),
               ),
               child: Column(
                 children: <Widget>[
@@ -676,8 +677,8 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
             padding: EdgeInsets.all(8.0),
             child: Container(
               decoration: BoxDecoration(
-                border:
-                    Border.all(width: 2.0, color: Theme.of(context).primaryColor),
+                border: Border.all(
+                    width: 2.0, color: Theme.of(context).primaryColor),
               ),
               child: Column(
                 children: <Widget>[
@@ -845,8 +846,8 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
             padding: EdgeInsets.all(8.0),
             child: Container(
               decoration: BoxDecoration(
-                border:
-                    Border.all(width: 2.0, color: Theme.of(context).primaryColor),
+                border: Border.all(
+                    width: 2.0, color: Theme.of(context).primaryColor),
               ),
               child: Column(
                 children: <Widget>[
@@ -1022,10 +1023,9 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
               InkWell(
                 onTap: () {
                   setState(() {
-                    showSpinner=true;
+                    showSpinner = true;
                   });
-                  createPostReqAddProperty(context,
-                      'https://americanhomesonline.com/wp-json/api/v1/Add_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd');
+                  createPostReqAddProperty(context, addPropertyURL);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -1050,7 +1050,9 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
   }
 
   void createPostReqAddProperty(BuildContext context, String url) async {
-    var request = http.MultipartRequest('POST', Uri.parse(url));
+    print(url);
+//    var request = http.MultipartRequest('POST', Uri.parse(url));
+    var map = new Map<String, dynamic>();
 
 //    if (_imageFile != null) {
 //      var stream =
@@ -1061,131 +1063,133 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
 //      request.files.add(multiPartImage);
 //    }
 
-    print('This is user id: ${widget.propertyModel.user_id}');
+    print('This is user id: ${widget.propertyModel.toMap()}');
 
-    request.fields['user_id'] = widget.propertyModel.user_id;
-    request.fields['property_title'] = widget.propertyModel.property_title;
-    request.fields['property_description'] =
+    map['user_id'] = widget.propertyModel.user_id;
+    map['property_title'] = widget.propertyModel.property_title;
+    map['property_description'] =
         widget.propertyModel.property_description;
-    request.fields['property_price'] = widget.propertyModel.property_price;
-    request.fields['prop_category'] = widget.propertyModel.prop_category;
-    request.fields['prop_action_category'] =
+    map['property_price'] = widget.propertyModel.property_price;
+    map['prop_category'] = widget.propertyModel.prop_category;
+    map['prop_action_category'] =
         widget.propertyModel.prop_action_category;
-    request.fields['property_status'] = widget.propertyModel.property_status;
-    request.fields['property_taxes'] = widget.propertyModel.property_taxes;
-    request.fields['property_maintenance'] =
+    map['property_status'] = widget.propertyModel.property_status;
+    map['property_taxes'] = widget.propertyModel.property_taxes;
+    map['property_maintenance'] =
         widget.propertyModel.property_maintenance;
 
-    request.fields['attached'] = widget.propertyModel.attached;
-    request.fields['attachthumb'] = widget.propertyModel.attachthumb;
-    request.fields['embed_video_type'] = widget.propertyModel.embed_video_type;
-    request.fields['embed_video_id'] = widget.propertyModel.embed_video_id;
-    request.fields['embed_virtual_tour'] =
+//    map['attached'] = widget.propertyModel.attached;
+    map['attachid'] = widget.propertyModel.attachid;
+    map['attachthumb'] = widget.propertyModel.attachthumb;
+    map['embed_video_type'] = widget.propertyModel.embed_video_type;
+    map['embed_video_id'] = widget.propertyModel.embed_video_id;
+    map['embed_virtual_tour'] =
         widget.propertyModel.embed_virtual_tour;
 
-    request.fields['property_address'] = widget.propertyModel.property_address;
-    request.fields['property_county'] = widget.propertyModel.property_country;
-    request.fields['property_city'] = widget.propertyModel.property_city;
-    request.fields['property_area'] = widget.propertyModel.property_area;
-    request.fields['property_zip'] = widget.propertyModel.property_zip;
-    request.fields['property_country'] = widget.propertyModel.property_country;
-    request.fields['google_camera_angle'] =
+    map['property_address'] = widget.propertyModel.property_address;
+    map['property_county'] = widget.propertyModel.property_country;
+    map['property_city'] = widget.propertyModel.property_city;
+    map['property_area'] = widget.propertyModel.property_area;
+    map['property_zip'] = widget.propertyModel.property_zip;
+    map['property_country'] = widget.propertyModel.property_country;
+    map['google_camera_angle'] =
         widget.propertyModel.google_camera_angle;
-    request.fields['property_google_view'] =
+    map['property_google_view'] =
         widget.propertyModel.property_google_view;
-    request.fields['property_latitude'] =
+    map['property_latitude'] =
         widget.propertyModel.property_latitude;
-    request.fields['property_longitude'] =
+    map['property_longitude'] =
         widget.propertyModel.property_longitude;
 
-    request.fields['property_size'] = widget.propertyModel.property_size;
-    request.fields['property_lot_size'] =
+    map['property_size'] = widget.propertyModel.property_size;
+    map['property_lot_size'] =
         widget.propertyModel.property_lot_size;
-    request.fields['property_rooms'] = widget.propertyModel.property_rooms;
-    request.fields['property_bedrooms'] =
+    map['property_rooms'] = widget.propertyModel.property_rooms;
+    map['property_bedrooms'] =
         widget.propertyModel.property_bedrooms;
-    request.fields['property_bathrooms'] =
+    map['property_bathrooms'] =
         widget.propertyModel.property_bathrooms;
-    request.fields['property_year'] = widget.propertyModel.property_year;
-    request.fields['property_garage'] = widget.propertyModel.property_garage;
-    request.fields['property_garage_size'] =
+    map['property_year'] = widget.propertyModel.property_year;
+    map['property_garage'] = widget.propertyModel.property_garage;
+    map['property_garage_size'] =
         widget.propertyModel.property_garage_size;
-    request.fields['property_date'] = widget.propertyModel.property_date;
-    request.fields['property_basement'] =
+    map['property_date'] = widget.propertyModel.property_date;
+    map['property_basement'] =
         widget.propertyModel.property_basement;
-    request.fields['property_external_construction'] =
+    map['property_external_construction'] =
         widget.propertyModel.property_external_construction;
-    request.fields['exterior_material'] =
+    map['exterior_material'] =
         widget.propertyModel.exterior_material;
-    request.fields['property_roofing'] = widget.propertyModel.property_roofing;
-    request.fields['stories_number'] = widget.propertyModel.stories_number;
-    request.fields['owner_notes'] = widget.propertyModel.owner_notes;
+    map['property_roofing'] = widget.propertyModel.property_roofing;
+    map['stories_number'] = widget.propertyModel.stories_number;
+    map['owner_notes'] = widget.propertyModel.owner_notes;
 
-    request.fields['attic'] = Attic.toString();
-    request.fields['wine_cellar'] = wineceller.toString();
-    request.fields['fenced_yard'] = fencedyard.toString();
-    request.fields['basketball_court'] = basketballCourt.toString();
-    request.fields['tennis_court'] = tenniscourt.toString();
-    request.fields['backyard'] = backyarrd.toString();
-    request.fields['ocean_view'] = oceanView.toString();
-    request.fields['lake_view'] = lakeview.toString();
-    request.fields['front_yard'] = frontyard.toString();
-    request.fields['deck'] = decl.toString();
-    request.fields['dishwasher'] = dishwasher.toString();
-    request.fields['furnished'] = furnished.toString();
-    request.fields['balcony-patio'] = balcon7patlo.toString();
-    request.fields['loft'] = loft.toString();
-    request.fields['swimming_pool'] = swimmingpool.toString();
-    request.fields['washer_dryer'] = washerdryer.toString();
-    request.fields['c-ac'] = cac.toString();
-    request.fields['a-c'] = ac.toString();
-    request.fields['fireplace'] = fireplaces.toString();
+    map['attic'] = Attic.toString();
+    map['wine_cellar'] = wineceller.toString();
+    map['fenced_yard'] = fencedyard.toString();
+    map['basketball_court'] = basketballCourt.toString();
+    map['tennis_court'] = tenniscourt.toString();
+    map['backyard'] = backyarrd.toString();
+    map['ocean_view'] = oceanView.toString();
+    map['lake_view'] = lakeview.toString();
+    map['front_yard'] = frontyard.toString();
+    map['deck'] = decl.toString();
+    map['dishwasher'] = dishwasher.toString();
+    map['furnished'] = furnished.toString();
+    map['balcony-patio'] = balcon7patlo.toString();
+    map['loft'] = loft.toString();
+    map['swimming_pool'] = swimmingpool.toString();
+    map['washer_dryer'] = washerdryer.toString();
+    map['c-ac'] = cac.toString();
+    map['a-c'] = ac.toString();
+    map['fireplace'] = fireplaces.toString();
 
-    request.fields['age-restricted'] = ageRestricted.toString();
-    request.fields['club-house'] = clubhouse.toString();
-    request.fields['community-pool'] = comminityPool.toString();
-    request.fields['fitness-center'] = fitnessCenter.toString();
-    request.fields['gated'] = gated.toString();
-    request.fields['golf'] = golf.toString();
-    request.fields['guard-gated'] = gaurdGated.toString();
-    request.fields['tennis'] = tennis.toString();
+    map['age-restricted'] = ageRestricted.toString();
+    map['club-house'] = clubhouse.toString();
+    map['community-pool'] = comminityPool.toString();
+    map['fitness-center'] = fitnessCenter.toString();
+    map['gated'] = gated.toString();
+    map['golf'] = golf.toString();
+    map['guard-gated'] = gaurdGated.toString();
+    map['tennis'] = tennis.toString();
 
-    request.fields['cats'] = cats.toString();
-    request.fields['dogs'] = dogs.toString();
+    map['cats'] = cats.toString();
+    map['dogs'] = dogs.toString();
 
-    request.fields['carpet'] = carpet.toString();
-    request.fields['ceramic'] = caremic.toString();
-    request.fields['granite'] = granite.toString();
-    request.fields['marble'] = marble.toString();
-    request.fields['parquet'] = parquet.toString();
-    request.fields['porcelain'] = porcelaiin.toString();
-    request.fields['vinyl'] = vinyl.toString();
-    request.fields['wood'] = wood.toString();
+    map['carpet'] = carpet.toString();
+    map['ceramic'] = caremic.toString();
+    map['granite'] = granite.toString();
+    map['marble'] = marble.toString();
+    map['parquet'] = parquet.toString();
+    map['porcelain'] = porcelaiin.toString();
+    map['vinyl'] = vinyl.toString();
+    map['wood'] = wood.toString();
 
-    request.fields['a-c'] = uac.toString();
-    request.fields['c-a-c'] = ucac.toString();
-    request.fields['electricity'] = electricity.toString();
-    request.fields['gas'] = gas.toString();
-    request.fields['heat'] = heat.toString();
-    request.fields['trash'] = trash.toString();
-    request.fields['water'] = water.toString();
+    map['a-c'] = uac.toString();
+    map['c-a-c'] = ucac.toString();
+    map['electricity'] = electricity.toString();
+    map['gas'] = gas.toString();
+    map['heat'] = heat.toString();
+    map['trash'] = trash.toString();
+    map['water'] = water.toString();
 
-    print('Request: ${request.fields.toString()}');
+    print('Request: ${map.toString()}');
 
-    http.Response response =
-        await http.Response.fromStream(await request.send());
-//
-    print(response.body);
+    var response = await post(Uri.parse(url),
 
+        body: map,
+        );
+
+    print('Response: ${response.body}');
     dynamic data = json.decode(response.body)['data'];
-
+//
     setState(() {
       showSpinner=false;
       if (data['api_status'] == 1) {
         Navigator.push(
             context,
             new MaterialPageRoute(
-              builder: (ctxt) => new SuccessScree(),
+              builder: (ctxt) => new SuccessScreen(),
             ));
       } else {
         showAlert(context, data['message']);

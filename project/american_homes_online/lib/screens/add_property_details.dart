@@ -55,6 +55,8 @@ class _AddPropertyDetailsState extends State<AddPropertyDetails> {
       stories_number = '',
       owner_notes = '';
 
+  double fontSize=11.0;
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -101,448 +103,466 @@ class _AddPropertyDetailsState extends State<AddPropertyDetails> {
                 SizedBox(
                   height: 20.0,
                 ),
-                /*FIRST NAME*/ Container(
-                    width: 380.0,
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              child: SizedBox(
-                                height: txtFldHeight,
-                                child: TextFormField(
-                                  onChanged: (val) {
-                                    property_size = val;
-                                  },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      filled: true,
-                                      labelText: 'Size in ft2 (*only numbers)',
-                                      fillColor: Colors.white),
+                /*FIRST NAME*/ Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                      width: 380.0,
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Flexible(
+                                child: SizedBox(
+                                  height: txtFldHeight,
+                                  child: TextFormField(
+                                    onChanged: (val) {
+                                      property_size = val;
+                                    },
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        filled: true,
+                                        labelText: 'Size in ft2 (*only numbers)',
+                                        labelStyle: TextStyle(fontSize: 11.0),
+                                        fillColor: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 8.0,
-                            ),
-                            Flexible(
-                              child: SizedBox(
-                                height: txtFldHeight,
-                                child: TextFormField(
-                                  onChanged: (val) {
-                                    property_lot_size = val;
-                                  },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      filled: true,
-                                      labelText:
-                                          'Lot Size in ft2 (*only numbers)',
-                                      fillColor: Colors.white),
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              Flexible(
+                                child: SizedBox(
+                                  height: txtFldHeight,
+                                  child: TextFormField(
+                                    onChanged: (val) {
+                                      property_lot_size = val;
+                                    },
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        filled: true,
+                                        labelStyle: TextStyle(fontSize: 11.0),
+                                        labelText:
+                                            'Lot Size in ft2 (*only numbers)',
+                                        fillColor: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              child: SizedBox(
-                                height: txtFldHeight,
-                                child: TextFormField(
-                                  onChanged: (val) {
-                                    property_rooms = val;
-                                  },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      filled: true,
-                                      labelText: 'Rooms (*only numbers)',
-                                      fillColor: Colors.white),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Flexible(
+                                child: SizedBox(
+                                  height: txtFldHeight,
+                                  child: TextFormField(
+                                    onChanged: (val) {
+                                      property_rooms = val;
+                                    },
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        filled: true,
+                                        labelStyle: TextStyle(fontSize: 11.0),
+                                        labelText: 'Rooms (*only numbers)',
+                                        fillColor: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 8.0,
-                            ),
-                            Flexible(
-                              child: SizedBox(
-                                height: txtFldHeight,
-                                child: TextFormField(
-                                  onChanged: (val) {
-                                    property_bedrooms = val;
-                                  },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      filled: true,
-                                      labelText: 'Bedrooms (*only numbers)',
-                                      fillColor: Colors.white),
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              Flexible(
+                                child: SizedBox(
+                                  height: txtFldHeight,
+                                  child: TextFormField(
+                                    onChanged: (val) {
+                                      property_bedrooms = val;
+                                    },
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        filled: true,
+                                        labelStyle: TextStyle(fontSize: 11.0),
+                                        labelText: 'Bedrooms (*only numbers)',
+                                        fillColor: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              child: SizedBox(
-                                height: txtFldHeight,
-                                child: TextFormField(
-                                  onChanged: (val) {
-                                    property_bathrooms = val;
-                                  },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      filled: true,
-                                      labelText: 'Bathrooms (*only numbers)',
-                                      fillColor: Colors.white),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Flexible(
+                                child: SizedBox(
+                                  height: txtFldHeight,
+                                  child: TextFormField(
+                                    onChanged: (val) {
+                                      property_bathrooms = val;
+                                    },
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        filled: true,
+                                        labelStyle: TextStyle(fontSize: 11.0),
+                                        labelText: 'Bathrooms (*only numbers)',
+                                        fillColor: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 8.0,
-                            ),
-                            Flexible(
-                              child: SizedBox(
-                                height: txtFldHeight,
-                                child: TextFormField(
-                                  onChanged: (val) {
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              Flexible(
+                                child: SizedBox(
+                                  height: txtFldHeight,
+                                  child: TextFormField(
+                                    onChanged: (val) {
 //                                    customid
-                                  },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      filled: true,
-                                      labelText: 'Custom ID (*numeric)',
-                                      fillColor: Colors.white),
+                                    },
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        filled: true,
+                                        labelStyle: TextStyle(fontSize: 11.0),
+                                        labelText: 'Custom ID (*numeric)',
+                                        fillColor: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              child: SizedBox(
-                                height: txtFldHeight,
-                                child: TextFormField(
-                                  onChanged: (val) {
-                                    property_year = val;
-                                  },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      filled: true,
-                                      labelText: 'Year Built (*text)',
-                                      fillColor: Colors.white),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Flexible(
+                                child: SizedBox(
+                                  height: txtFldHeight,
+                                  child: TextFormField(
+                                    onChanged: (val) {
+                                      property_year = val;
+                                    },
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        filled: true,
+                                        labelStyle: TextStyle(fontSize: 11.0),
+                                        labelText: 'Year Built (*text)',
+                                        fillColor: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 8.0,
-                            ),
-                            Flexible(
-                              child: SizedBox(
-                                height: txtFldHeight,
-                                child: TextFormField(
-                                  onChanged: (val) {
-                                    property_garage = val;
-                                  },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      filled: true,
-                                      labelText: 'Garages (*text)',
-                                      fillColor: Colors.white),
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              Flexible(
+                                child: SizedBox(
+                                  height: txtFldHeight,
+                                  child: TextFormField(
+                                    onChanged: (val) {
+                                      property_garage = val;
+                                    },
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        filled: true,
+                                        labelStyle: TextStyle(fontSize: 11.0),
+                                        labelText: 'Garages (*text)',
+                                        fillColor: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              child: SizedBox(
-                                height: txtFldHeight,
-                                child: TextFormField(
-                                  onChanged: (val) {
-                                    property_garage_size = val;
-                                  },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      filled: true,
-                                      labelText: 'Garage Size (*text)',
-                                      fillColor: Colors.white),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Flexible(
+                                child: SizedBox(
+                                  height: txtFldHeight,
+                                  child: TextFormField(
+                                    onChanged: (val) {
+                                      property_garage_size = val;
+                                    },
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        filled: true,
+                                        labelStyle: TextStyle(fontSize: 11.0),
+                                        labelText: 'Garage Size (*text)',
+                                        fillColor: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 8.0,
-                            ),
-                            Flexible(
-                              child: SizedBox(
-                                height: txtFldHeight,
-                                child: TextFormField(
-                                  onChanged: (val) {},
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      filled: true,
-                                      labelText: 'Available from (*date)',
-                                      fillColor: Colors.white),
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              Flexible(
+                                child: SizedBox(
+                                  height: txtFldHeight,
+                                  child: TextFormField(
+                                    onChanged: (val) {},
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        filled: true,
+                                        labelStyle: TextStyle(fontSize: 11.0),
+                                        labelText: 'Available from (*date)',
+                                        fillColor: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              child: SizedBox(
-                                height: txtFldHeight,
-                                child: TextFormField(
-                                  onChanged: (val) {
-                                    property_basement = val;
-                                  },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      filled: true,
-                                      labelText: 'Basement (*text)',
-                                      fillColor: Colors.white),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Flexible(
+                                child: SizedBox(
+                                  height: txtFldHeight,
+                                  child: TextFormField(
+                                    onChanged: (val) {
+                                      property_basement = val;
+                                    },
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        filled: true,
+                                        labelStyle: TextStyle(fontSize: 11.0),
+                                        labelText: 'Basement (*text)',
+                                        fillColor: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 8.0,
-                            ),
-                            Flexible(
-                              child: SizedBox(
-                                height: txtFldHeight,
-                                child: TextFormField(
-                                  onChanged: (val) {
-                                    property_external_construction = val;
-                                  },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      filled: true,
-                                      labelText:
-                                          'External Construction (*text)',
-                                      fillColor: Colors.white),
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              Flexible(
+                                child: SizedBox(
+                                  height: txtFldHeight,
+                                  child: TextFormField(
+                                    onChanged: (val) {
+                                      property_external_construction = val;
+                                    },
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        filled: true,
+                                        labelStyle: TextStyle(fontSize: 11.0),
+                                        labelText:
+                                            'External Construction (*text)',
+                                        fillColor: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              child: SizedBox(
-                                height: txtFldHeight,
-                                child: TextFormField(
-                                  onChanged: (val) {
-                                    exterior_material = val;
-                                  },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      filled: true,
-                                      labelText: 'Exterior Material (*text)',
-                                      fillColor: Colors.white),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Flexible(
+                                child: SizedBox(
+                                  height: txtFldHeight,
+                                  child: TextFormField(
+                                    onChanged: (val) {
+                                      exterior_material = val;
+                                    },
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        filled: true,
+                                        labelStyle: TextStyle(fontSize: 11.0),
+                                        labelText: 'Exterior Material (*text)',
+                                        fillColor: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 8.0,
-                            ),
-                            Flexible(
-                              child: SizedBox(
-                                height: txtFldHeight,
-                                child: TextFormField(
-                                  onChanged: (val) {
-                                    property_roofing = val;
-                                  },
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      filled: true,
-                                      labelText: 'Roofing (*text)',
-                                      fillColor: Colors.white),
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              Flexible(
+                                child: SizedBox(
+                                  height: txtFldHeight,
+                                  child: TextFormField(
+                                    onChanged: (val) {
+                                      property_roofing = val;
+                                    },
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        filled: true,
+                                        labelStyle: TextStyle(fontSize: 11.0),
+                                        labelText: 'Roofing (*text)',
+                                        fillColor: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        /*DropDown*/ Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                    color: Colors.white,
-                                    height: 70.0,
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      decoration: ShapeDecoration(
-                                        shape: RoundedRectangleBorder(
-                                          side: BorderSide(
-                                              width: 1.0,
-                                              style: BorderStyle.solid),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5.0)),
-                                        ),
-                                      ),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Align(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(2.0),
-                                              child: Text('Structure Type'),
-                                            ),
-                                            alignment: Alignment.topLeft,
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          /*DropDown*/ Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Flexible(
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      color: Colors.white,
+                                      height: 70.0,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        decoration: ShapeDecoration(
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                                width: 1.0,
+                                                style: BorderStyle.solid),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5.0)),
                                           ),
-                                          DropdownButton<String>(
-                                            value: spStrucTypeVal,
-                                            icon: Icon(Icons.arrow_drop_down),
-                                            iconSize: 24,
-                                            elevation: 16,
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                                inherit: false,
-                                                decorationColor: Colors.white),
+                                        ),
+                                        child: Column(
+                                          children: <Widget>[
+                                            Align(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(2.0),
+                                                child: Text('Structure Type',style: TextStyle(fontSize: 12.0),),
+                                              ),
+                                              alignment: Alignment.topLeft,
+                                            ),
+                                            DropdownButton<String>(
+                                              value: spStrucTypeVal,
+                                              icon: Icon(Icons.arrow_drop_down),
+                                              iconSize: 24,
+                                              elevation: 16,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  inherit: false,
+                                                  decorationColor: Colors.white),
 //                  underline: Container(
 //                    height: 2,
 //                    color: Colors.deepPurpleAccent,
 //                  ),
 
-                                            onChanged: (String data) {
-                                              setState(() {
-                                                spStrucTypeVal = data;
-                                                selectedStructType =
-                                                    spStrucTypeVal;
-                                              });
-                                            },
-                                            items: spStructureType
-                                                .map<DropdownMenuItem<String>>(
-                                                    (String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(value),
-                                              );
-                                            }).toList(),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: 8.0,
-                            ),
-                            Flexible(
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                    color: Colors.white,
-                                    height: 70.0,
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      decoration: ShapeDecoration(
-                                        shape: RoundedRectangleBorder(
-                                          side: BorderSide(
-                                              width: 1.0,
-                                              style: BorderStyle.solid),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5.0)),
+                                              onChanged: (String data) {
+                                                setState(() {
+                                                  spStrucTypeVal = data;
+                                                  selectedStructType =
+                                                      spStrucTypeVal;
+                                                });
+                                              },
+                                              items: spStructureType
+                                                  .map<DropdownMenuItem<String>>(
+                                                      (String value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Text(value),
+                                                );
+                                              }).toList(),
+                                            )
+                                          ],
                                         ),
                                       ),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Align(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(2.0),
-                                              child: Text('Floors No'),
-                                            ),
-                                            alignment: Alignment.topLeft,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 8.0,
+                              ),
+                              Flexible(
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      color: Colors.white,
+                                      height: 70.0,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        decoration: ShapeDecoration(
+                                          shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                                width: 1.0,
+                                                style: BorderStyle.solid),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5.0)),
                                           ),
-                                          DropdownButton<String>(
-                                            value: spFloorVal,
-                                            icon: Icon(Icons.arrow_drop_down),
-                                            iconSize: 24,
-                                            elevation: 16,
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                                inherit: false,
-                                                decorationColor: Colors.white),
-                                            onChanged: (String data) {
-                                              setState(() {
-                                                spFloorVal = data;
-                                                selectedFloor = spFloorVal;
-                                              });
-                                            },
-                                            items: spFloorNo
-                                                .map<DropdownMenuItem<String>>(
-                                                    (String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(value),
-                                              );
-                                            }).toList(),
-                                          )
-                                        ],
+                                        ),
+                                        child: Column(
+                                          children: <Widget>[
+                                            Align(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(2.0),
+                                                child: Text('Floors No',style: TextStyle(fontSize: 12.0)),
+                                              ),
+                                              alignment: Alignment.topLeft,
+                                            ),
+                                            DropdownButton<String>(
+                                              value: spFloorVal,
+                                              icon: Icon(Icons.arrow_drop_down),
+                                              iconSize: 24,
+                                              elevation: 16,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  inherit: false,
+                                                  decorationColor: Colors.white),
+                                              onChanged: (String data) {
+                                                setState(() {
+                                                  spFloorVal = data;
+                                                  selectedFloor = spFloorVal;
+                                                });
+                                              },
+                                              items: spFloorNo
+                                                  .map<DropdownMenuItem<String>>(
+                                                      (String value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Text(value),
+                                                );
+                                              }).toList(),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        SizedBox(
-                          height: txtFldHeight,
-                          child: TextFormField(
-                            onChanged: (val) {
-                              owner_notes = val;
-                            },
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                filled: true,
-                                labelText:
-                                    'Owner/Agent notes (*not visible on front end)',
-                                fillColor: Colors.white),
+                            ],
                           ),
-                        )
-                      ],
-                    )),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          SizedBox(
+                            height: txtFldHeight,
+                            child: TextFormField(
+                              onChanged: (val) {
+                                owner_notes = val;
+                              },
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  filled: true,
+                                  labelStyle: TextStyle(fontSize: 11.0),
+                                  labelText:
+                                      'Owner/Agent notes (*not visible on front end)',
+                                  fillColor: Colors.white),
+                            ),
+                          )
+                        ],
+                      )),
+                ),
                 SizedBox(
                   height: 20.0,
                 ),

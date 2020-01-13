@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:american_homes_online/model/property_model.dart';
 import 'package:american_homes_online/model/saved_search.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBProvider {
@@ -22,8 +21,9 @@ class DBProvider {
   }
 
   initDB() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "Aho.db");
+//    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+//    String path = join(documentsDirectory.path, "Aho.db");
+    String path = '';
 
     return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {

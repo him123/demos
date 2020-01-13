@@ -4,8 +4,6 @@ import 'package:american_homes_online/screens/add_property_amenities.dart';
 import 'package:american_homes_online/screens/add_property_details.dart';
 import 'package:american_homes_online/screens/add_property_location.dart';
 import 'package:american_homes_online/screens/add_property_media.dart';
-import 'package:american_homes_online/screens/my_passing_widget.dart';
-import 'package:american_homes_online/screens/mywidget.dart';
 import 'package:flutter/material.dart';
 
 class AddPropertyScreen extends StatefulWidget {

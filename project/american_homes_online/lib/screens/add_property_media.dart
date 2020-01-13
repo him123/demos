@@ -4,13 +4,10 @@ import 'dart:io';
 import 'package:american_homes_online/model/property_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:http/http.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:async/async.dart';
-import 'package:path/path.dart';
-
-const String imgUploadUrl = 'https://americanhomesonline.com/test.php';
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mime/mime.dart';
 
 class AddPropertyMedia extends StatefulWidget {
   const AddPropertyMedia({
@@ -39,14 +36,15 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
   File _imageFile;
 
   List<File> _imageFileArr = [];
-  List<String> _imageArr = ['images/agent.png','images/aho_logo.jpg'];
-
+  List<String> _imageArr = ['images/agent.png', 'images/aho_logo.jpg'];
+  List<String> attachedList=[];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
     print('I got from first ${widget.propertyModel.user_id}');
+    print('I got from price ${widget.propertyModel.property_price}');
   }
 
   @override
@@ -102,15 +100,17 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
                     key: UniqueKey(),
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext context, int index) {
-                      return _imageFileArr.length==0 ? Text('upload images'):
-                      Image.file(
-                        _imageFileArr[index],
-                        width: 350,
-                        height: 200,
-                        fit: BoxFit.cover,
-                      );
+                      return _imageFileArr.length == 0
+                          ? Text('upload images')
+                          : Image.file(
+                              _imageFileArr[index],
+                              width: 350,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            );
                     },
-                    itemCount: _imageFileArr.length==0?0:_imageFileArr.length,
+                    itemCount:
+                        _imageFileArr.length == 0 ? 0 : _imageFileArr.length,
                     pagination: new SwiperPagination(),
                     control: new SwiperControl(color: Colors.red),
                   ),
@@ -122,19 +122,20 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
                   padding: const EdgeInsets.all(8.0),
                   child: InkWell(
                     onTap: () {
-                      _openImagePicker(context);
-//                      testPost(context, imgUploadUrl);
+                      _openImagePickerModal(context);
                     },
                     child: Container(
                       alignment: Alignment.center,
                       width: 200.0,
                       height: 40.0,
                       color: Colors.red,
-                      child: Text('MEDIA',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 16.0)),
+                      child: _isUploading == true
+                          ? CircularProgressIndicator(backgroundColor: Colors.white,)
+                          : Text('ADD MEDIA',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 16.0)),
                     ),
                   ),
                 ),
@@ -316,12 +317,14 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
             InkWell(
               onTap: () {
 //                var pModel = PropertyModel();
-
-                widget.propertyModel.attached = '1235';
+//                widget.propertyModel.attached = attachedList.join(', ');
+                widget.propertyModel.attachid = attachedList.join(', ');
                 widget.propertyModel.attachthumb = '';
                 widget.propertyModel.embed_video_type = '';
                 widget.propertyModel.embed_video_id = '';
                 widget.propertyModel.embed_virtual_tour = '';
+
+                print('images ids: ${widget.propertyModel.attached}');
 
                 widget.onDataChange(
                     2, 'This is title of property', widget.propertyModel);
@@ -347,114 +350,85 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
     );
   }
 
-  Upload(
-    File imageFile,
-    String url,
-  ) async {
-    var stream =
-        new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
-    var length = await imageFile.length();
+  // To track the file uploading state
+  bool _isUploading = false;
 
-    var uri = Uri.parse(url);
+  String baseUrl =
+      'https://americanhomesonline.com/wp-json/api/v1/Property_Images/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd';
 
-    var request = new http.MultipartRequest("POST", uri);
-    var multipartFile = new http.MultipartFile('upload_img', stream, length,
-        filename: basename(imageFile.path));
-    //contentType: new MediaType('image', 'png'));
-
-    request.files.add(multipartFile);
-    var response = await request.send();
-    print(response.statusCode);
-    response.stream.transform(utf8.decoder).listen((value) {
-      print(value);
+  Future<Map<String, dynamic>> _uploadImage(File image) async {
+    setState(() {
+      _isUploading = true;
     });
+
+    // Find the mime type of the selected file by looking at the header bytes of the file
+    final mimeTypeData =
+        lookupMimeType(image.path, headerBytes: [0xFF, 0xD8]).split('/');
+
+    // Intilize the multipart request
+    final imageUploadRequest =
+        http.MultipartRequest('POST', Uri.parse(baseUrl));
+
+    print(image.path);
+    // Attach the file in the request
+    final file = await http.MultipartFile.fromPath('upload_img', image.path,
+        contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+
+    imageUploadRequest.fields['ext'] = mimeTypeData[1];
+
+    imageUploadRequest.files.add(file);
+
+    try {
+      final streamedResponse = await imageUploadRequest.send();
+
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode != 200) {
+
+        return null;
+      }else{
+        dynamic data = json.decode(response.body)['data'];
+        print('Data: $data');
+        int attach = data['attach'];
+        print('check ID: $attach');
+
+        attachedList.add(attach.toString());
+      }
+
+      final Map<String, dynamic> responseData = json.decode(response.body);
+
+      _resetState();
+
+      return responseData;
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 
-  void createPost(BuildContext context, String url, File _imageFile) async {
-    print('====post method called =====');
-    var request = http.MultipartRequest('POST', Uri.parse(url));
-
-//    if (_imageFile != null) {
-//      var stream =
-//          new http.ByteStream(DelegatingStream.typed(_imageFile.openRead()));
-//      final length = await _imageFile.length();
-//      var multiPartImage = http.MultipartFile('upload_img', stream, length,
-//          filename: basename(_imageFile.path));
-//      request.files.add(multiPartImage);
+  void _startUploading(BuildContext context) async {
+    final Map<String, dynamic> response = await _uploadImage(_imageFile);
+    print(response);
+    // Check if any error occured
+//    if (response == null || response.containsKey("error")) {
+//      Toast.show("Image Upload Failed!!!", context,
+//          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+//    } else {
+//      Toast.show("Image Uploaded Successfully!!!", context,
+//          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
 //    }
-
-//    print('====================FILE$_imageFile');
-    request.fields['upload_img'] = 'This is test from flutter';
-//    request.fields['name'] = name;
-//    request.fields['email'] = email;
-//    request.fields['password'] = pass;
-//    request.fields['address'] = address;
-//    request.fields['phone'] = phone;
-//    request.fields['fcmtoken'] = 'd4as56f4a56sd4f5a4sd564';
-
-    http.Response response =
-        await http.Response.fromStream(await request.send());
-//
-    print('FResponse: ${response.body}');
-//
-//    String image = json.decode(response.body)['profile_image'];
-//    int id = json.decode(response.body)['user_id'];
-//    String nameUser = json.decode(response.body)['name'];
-//    String tookEmail = json.decode(response.body)['email'];
-//    String tookAddress = json.decode(response.body)['address'];
-//    String tookNumber = json.decode(response.body)['phone'];
-//
-//    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-//    prefs.setString('profile_image', image);
-//    prefs.setString('name', nameUser);
-//    prefs.setString('id', id.toString());
-//    prefs.setString('email', tookEmail);
-//    prefs.setString('address', tookAddress);
-//    prefs.setString('phone', tookNumber);
-//    prefs.setString('login', '1');
-//
-//    print(prefs.getString('profile_image'));
-//
-//    setState(() {
-//      showSpinner = false;
-//    });
-
-//    Navigator.pop(context);
-//    Navigator.of(context).pushReplacementNamed(NavigationDashboard.id);
-
-//    Navigator.push(
-//        context,
-//        new MaterialPageRoute(
-//          builder: (ctxt) => new NavigationDashboard(
-//            profileImage: image,
-//            address: address,
-//            phone: phone,
-//            email: email,
-//            name: nameUser,
-//            custId: id.toString(),
-//          ),
-//        ));
   }
 
-  void _getImage(BuildContext context, ImageSource source) {
-    ImagePicker.pickImage(source: source, maxWidth: 400.0).then((File image) {
-      setState(() {
-        print('File: ${image}');
-        _imageFile = image;
-        _imageFileArr.add(_imageFile);
-      });
-
-//      createPost(context, imgUploadUrl, _imageFile);
-
-//      Upload(_imageFile, imgUploadUrl);
-//      testPost(context, imgUploadUrl);
-
-      Navigator.pop(context);
+  void _resetState() {
+    setState(() {
+      _isUploading = false;
+      _imageFile = null;
     });
   }
 
-  void _openImagePicker(BuildContext context) {
+  void _openImagePickerModal(BuildContext context) {
+    final flatButtonColor = Theme.of(context).primaryColor;
+    print('Image Picker Modal Called');
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -464,25 +438,25 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
             child: Column(
               children: <Widget>[
                 Text(
-                  'Pick an Image',
-                  style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+                  'Pick an image',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 10.0,
                 ),
                 FlatButton(
-                  textColor: Theme.of(context).accentColor,
+                  textColor: flatButtonColor,
+                  child: Text('Use Camera'),
                   onPressed: () {
                     _getImage(context, ImageSource.camera);
                   },
-                  child: Text('User Camera'),
                 ),
                 FlatButton(
-                  textColor: Theme.of(context).accentColor,
+                  textColor: flatButtonColor,
+                  child: Text('Use Gallery'),
                   onPressed: () {
                     _getImage(context, ImageSource.gallery);
                   },
-                  child: Text('User Gallery'),
                 ),
               ],
             ),
@@ -490,60 +464,16 @@ class _AddPropertyMediaState extends State<AddPropertyMedia> {
         });
   }
 
-  void testPost(
-    BuildContext context,
-    String url,
-  ) async {
-    print('=====Method called');
-    var request = http.MultipartRequest('POST', Uri.parse(url));
+  void _getImage(BuildContext context, ImageSource source) async {
+    File image = await ImagePicker.pickImage(source: source);
 
-    if (_imageFile != null) {
-      var stream =
-          new http.ByteStream(DelegatingStream.typed(_imageFile.openRead()));
-      final length = await _imageFile.length();
-      var multiPartImage = http.MultipartFile('upload_img', stream, length,
-          filename: basename(_imageFile.path));
-//      final headers = {'Content-Type': 'multipart/form-data; boundary=MultipartBoundry',
-//      'secret_key':'yQTTspWXd530xNAEnBKkMFNFuBbKG6kd'};
-//      request.headers.addAll(headers);
-      request.files.add(multiPartImage);
+    setState(() {
+      _imageFile = image;
+      _imageFileArr.add(_imageFile);
+    });
 
-//      secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd
-    }
-
-    print('====================FILE$_imageFile');
-
-//    Map<String, dynamic> body = {
-//      'upload_img': imageFile,
-//      'testtext': 'This is flutter'
-//    };
-//
-//    String jsonBody = json.encode(body);
-//    final encoding = Encoding.getByName('utf-8');
-//
-//    final headers = {'Content-Type': 'application/json'};
-
-//    Map<String, String> headers = { "Content-Type": "application/json"};
-//    request.headers.addAll(headers);
-
-//    request.fields['upload_img'] = imageFile;
-    request.fields['testtext'] = 'Flitter is this';
-
-    print('Request: ${request.fields.toString()}');
-
-//    Response response = await post(
-//      Uri.parse(url),
-//      headers: headers,
-//      body: jsonBody,
-//      encoding: encoding,
-//    );
-//
-//    int statusCode = response.statusCode;
-//    String responseBody = response.body;
-
-    http.Response response =
-        await http.Response.fromStream(await request.send());
-
-    print('FResponse ${response.body}}');
+    _startUploading(context);
+    // Closes the bottom sheet
+    Navigator.pop(context);
   }
 }

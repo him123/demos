@@ -50,8 +50,13 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
 
       Marker marker = Marker(
         markerId: markerId,
-        position: LatLng(double.parse(list[i].property_latitude),
-            double.parse(list[i].property_longitude)),
+        position: LatLng(
+            double.parse(list[i].property_latitude == ""
+                ? '0.0'
+                : list[i].property_latitude),
+            double.parse(list[i].property_longitude == ""
+                ? '0.0'
+                : list[i].property_longitude)),
         infoWindow: InfoWindow(
             title: list[i].property_title,
             snippet: list[i].property_action_category),

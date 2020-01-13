@@ -1,4 +1,3 @@
-import 'package:american_homes_online/components/database_util.dart';
 import 'package:american_homes_online/model/property_model.dart';
 import 'package:flutter/material.dart';
 
@@ -128,7 +127,7 @@ class _AddPropertyDescriptionState extends State<AddPropertyDescription> {
                         child: Column(
                           children: <Widget>[
                             Container(
-                              width: 350.0,
+                              width: 300.0,
                               height: 40.0,
                               child: TextFormField(
                                 validator: (value) {
@@ -151,7 +150,7 @@ class _AddPropertyDescriptionState extends State<AddPropertyDescription> {
                               height: 10.0,
                             ),
                             Container(
-                              width: 350.0,
+                              width: 300.0,
                               child: TextFormField(
                                 maxLines: 5,
                                 validator: (value) {
@@ -230,7 +229,7 @@ class _AddPropertyDescriptionState extends State<AddPropertyDescription> {
                         child: Column(
                           children: <Widget>[
                             Container(
-                              width: 350.0,
+                              width: 300.0,
                               height: 40.0,
                               child: TextFormField(
                                 validator: (value) {
@@ -253,7 +252,7 @@ class _AddPropertyDescriptionState extends State<AddPropertyDescription> {
                               height: 10.0,
                             ),
                             Container(
-                              width: 350.0,
+                              width: 300.0,
                               height: 40.0,
                               child: TextFormField(
                                 validator: (value) {
@@ -276,7 +275,7 @@ class _AddPropertyDescriptionState extends State<AddPropertyDescription> {
                               height: 10.0,
                             ),
                             Container(
-                              width: 350.0,
+                              width: 300.0,
                               height: 40.0,
                               child: TextFormField(
                                 validator: (value) {
@@ -586,6 +585,7 @@ class _AddPropertyDescriptionState extends State<AddPropertyDescription> {
                   pModel.prop_action_category = prop_action_category;
                   pModel.property_status = property_status;
 
+                  print('check model: ${pModel.property_price}');
 
                   widget.onDataChange(1, 'This is title of property',pModel);
                 },

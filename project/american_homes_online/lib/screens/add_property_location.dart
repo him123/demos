@@ -236,6 +236,9 @@ class _AddPropertyLocationState extends State<AddPropertyLocation> {
                           width: 350.0,
                           height: 40.0,
                           child: TextFormField(
+                            onChanged: (val){
+                              property_latitude=val;
+                            },
 //                      controller: titleController,
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(),
@@ -253,6 +256,9 @@ class _AddPropertyLocationState extends State<AddPropertyLocation> {
                           width: 350.0,
                           height: 40.0,
                           child: TextFormField(
+                            onChanged: (val){
+                              property_longitude=val;
+                            },
 //                      controller: titleController,
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(),
@@ -282,7 +288,7 @@ class _AddPropertyLocationState extends State<AddPropertyLocation> {
                                 },
                                 value: isEnable,
                               ),
-                              Text('Google Street View')
+                              Text('Google Street View',style: TextStyle(fontSize: 11.0),)
                             ],
                           ),
                         ),

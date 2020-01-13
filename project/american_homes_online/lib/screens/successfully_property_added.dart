@@ -1,7 +1,7 @@
 import 'package:american_homes_online/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
-class SuccessScree extends StatelessWidget {
+class SuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -12,6 +12,7 @@ class PropertyModel {
   String property_maintenance = '';
 
   String attached = '';
+  String attachid='';
   String attachthumb = '';
   String embed_video_type = '';
   String embed_video_id = '';
@@ -55,6 +56,7 @@ class PropertyModel {
       this.property_taxes,
       this.property_maintenance,
       this.attached,
+        this.attachid,
       this.attachthumb,
       this.embed_video_type,
       this.embed_video_id,
@@ -106,6 +108,7 @@ class PropertyModel {
         property_taxes: json["property_taxes"],
         property_maintenance: json["property_maintenance"],
         attached: json["attached"],
+    attachid: json["attachid"],
         attachthumb: json["attachthumb"],
         embed_video_type: json["embed_video_type "],
         embed_video_id: json["embed_video_id"],
@@ -148,6 +151,7 @@ class PropertyModel {
         "property_taxes": property_taxes,
         "property_maintenance": property_maintenance,
         "attached": attached,
+        "attachid": attachid ,
         "attachthumb": attachthumb,
         "embed_video_type": embed_video_type,
         "embed_video_id": embed_video_id,

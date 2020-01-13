@@ -1,10 +1,10 @@
 import 'package:american_homes_online/constants/constants.dart';
-import 'package:american_homes_online/screens/UploadImageDemo.dart';
 import 'package:american_homes_online/screens/agent_finder_screen.dart';
 import 'package:american_homes_online/screens/agentlist_screen.dart';
 import 'package:american_homes_online/screens/dashboard_screen.dart';
 import 'package:american_homes_online/screens/favorite_screen.dart';
 import 'package:american_homes_online/screens/forget_password_screen.dart';
+import 'package:american_homes_online/screens/image_upload_demo.dart';
 import 'package:american_homes_online/screens/login_screen.dart';
 import 'package:american_homes_online/screens/mapsearch_screen.dart';
 import 'package:american_homes_online/screens/property_details_screen.dart';
@@ -15,6 +15,8 @@ import 'package:american_homes_online/screens/validate_screen.dart';
 import 'package:american_homes_online/widget/custom_radio_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+//void main() => runApp(RegisterScreen());
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

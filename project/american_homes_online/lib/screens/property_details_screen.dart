@@ -144,7 +144,8 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                         ))
                     : Swiper(
                         itemBuilder: (BuildContext context, int index) {
-                          return CachedNetworkImage(
+                          return
+                            CachedNetworkImage(
                             imageUrl: images[index]['image'].toString(),
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
@@ -162,6 +163,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                             errorWidget: (context, url, error) =>
                                 Icon(Icons.error),
                           );
+
                         },
                         itemCount: images.length,
                         pagination: new SwiperPagination(),
@@ -1069,9 +1071,9 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
         String latitude = address_details['property_latitude'];
         String longitude = address_details['property_longitude'];
 
-        _add(double.parse(latitude), double.parse(longitude));
+        _add(latitude==""?0.0:double.parse(latitude), longitude==""?0.0:double.parse(longitude));
 
-        _goToTheLake(double.parse(latitude), double.parse(longitude));
+        _goToTheLake(latitude==""?0.0:double.parse(latitude), longitude==""?0.0:double.parse(longitude));
 
 //        _add(address_details['property_latitude'],
 //            address_details['property_longitude']);
