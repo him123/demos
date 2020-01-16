@@ -27,6 +27,7 @@ class _AgentListScreenState extends State<AgentListScreen> {
   bool showSpinner = false;
   List<Agent> list = List();
   bool isFail = false;
+  String total='0';
 
   _AgentListScreenState({this.location, this.name});
 

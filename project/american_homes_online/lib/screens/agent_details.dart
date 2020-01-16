@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 import 'package:shimmer/shimmer.dart';
 
@@ -16,8 +17,9 @@ class AgentDetails extends StatefulWidget {
   final String agentName;
   final String agentId;
   final String img;
+  final String total;
 
-  AgentDetails({this.agentId, this.agentName, this.img});
+  AgentDetails({this.agentId, this.agentName, this.img,this.total});
 
   @override
   _AgentDetailsState createState() =>
@@ -70,7 +72,13 @@ class _AgentDetailsState extends State<AgentDetails> {
             delegate: SliverChildListDelegate([
               InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, MapSearchScreen.id);
+                  Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                          transitionDuration:
+                          Duration(seconds: 1),
+                          pageBuilder: (_, __, ___) =>
+                              MapSearchScreen(url: 'https://americanhomesonline.com/wp-json/api/v1/Agent_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&agent_id=$agentId',filters: 1,)));
                 },
                 /*MY LISTING*/ child: Container(
                   padding:
@@ -85,7 +93,7 @@ class _AgentDetailsState extends State<AgentDetails> {
                             'My Listing',
                             style: kAgentDetailsTextTitleStyle,
                           ),
-                          Text('8 Listing', style: kAgentDetailsTextBelowStyle),
+                          Text('${widget.total} Listing', style: kAgentDetailsTextBelowStyle),
                         ],
                       ),
                       new Spacer(), // I just added one line
@@ -109,26 +117,41 @@ class _AgentDetailsState extends State<AgentDetails> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        phone=='NA'?getShimmer(30.0):Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(phone==''?'NA':phone,
-                                style: kAgentDetailsTextTitleStyle),
-                            Text('Off Phone',
-                                style: kAgentDetailsTextBelowStyle),
-                          ],
+                        phone=='NA'?getShimmer(30.0):InkWell(
+                          onTap: (){
+                            print(phone);
+                            if(phone!='') {
+                              UrlLauncher.launch('tel:+${phone.toString()}');
+                            }
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(phone==''?'NA':phone,
+                                  style: kAgentDetailsTextTitleStyle),
+                              Text('Off Phone',
+                                  style: kAgentDetailsTextBelowStyle),
+                            ],
+                          ),
                         ),
                         SizedBox(
                           height: 10.0,
                         ),
-                        mobile=='NA'?getShimmer(30.0):Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(mobile==''?'NA':mobile,
-                                style: kAgentDetailsTextTitleStyle),
-                            Text('Off Mobile',
-                                style: kAgentDetailsTextBelowStyle),
-                          ],
+                        mobile=='NA'?getShimmer(30.0):InkWell(
+                          onTap: (){
+                            if(mobile!='') {
+                              UrlLauncher.launch('tel:+${mobile.toString()}');
+                            }
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(mobile==''?'NA':mobile,
+                                  style: kAgentDetailsTextTitleStyle),
+                              Text('Off Mobile',
+                                  style: kAgentDetailsTextBelowStyle),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -144,14 +167,21 @@ class _AgentDetailsState extends State<AgentDetails> {
                     SizedBox(
                       width: 10.0,
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        email == 'NA'
-                            ? getShimmer(30.0)
-                            : Text(email, style: kAgentDetailsTextTitleStyle),
-                        Text('Email', style: kAgentDetailsTextBelowStyle),
-                      ],
+                    InkWell(
+                      onTap: (){
+                        if(email!='') {
+                          UrlLauncher.launch('mailto:+${email.toString()}');
+                        }
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          email == 'NA'
+                              ? getShimmer(30.0)
+                              : Text(email, style: kAgentDetailsTextTitleStyle),
+                          Text('Email', style: kAgentDetailsTextBelowStyle),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -164,34 +194,41 @@ class _AgentDetailsState extends State<AgentDetails> {
                   : Container(
                       padding: EdgeInsets.symmetric(
                           horizontal: 10.0, vertical: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Icon(FontAwesomeIcons.facebook),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Container(
-                            width: 280.0,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                facebook == 'NA'
-                                    ? getShimmer(20.0)
-                                    : Text(
-                                        facebook==''?'NA':facebook,
-                                        style: kAgentDetailsTextTitleStyle,
-                                        overflow: TextOverflow.ellipsis,
-                                        softWrap: false,
-                                      ),
-                                Text('Facebook',
-                                    style: kAgentDetailsTextBelowStyle),
-                              ],
+                      child: InkWell(
+                        onTap: (){
+                          if(facebook!='') {
+                            UrlLauncher.launch('http:+${facebook.toString()}');
+                          }
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(FontAwesomeIcons.facebook),
+                            SizedBox(
+                              width: 10.0,
                             ),
-                          ),
-                          new Spacer(), // I just added one line
-                          Icon(Icons.navigate_next, color: Colors.black)
-                        ],
+                            Container(
+                              width: 280.0,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  facebook == 'NA'
+                                      ? getShimmer(20.0)
+                                      : Text(
+                                          facebook==''?'NA':facebook,
+                                          style: kAgentDetailsTextTitleStyle,
+                                          overflow: TextOverflow.ellipsis,
+                                          softWrap: false,
+                                        ),
+                                  Text('Facebook',
+                                      style: kAgentDetailsTextBelowStyle),
+                                ],
+                              ),
+                            ),
+                            new Spacer(), // I just added one line
+                            Icon(Icons.navigate_next, color: Colors.black)
+                          ],
+                        ),
                       ),
                     ),
               Divider(
@@ -202,28 +239,35 @@ class _AgentDetailsState extends State<AgentDetails> {
                   : Container(
                       padding: EdgeInsets.symmetric(
                           horizontal: 10.0, vertical: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Icon(FontAwesomeIcons.twitter),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Container(
-                            width: 280.0,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(twitter==''?'NA':twitter,
-                                    style: kAgentDetailsTextTitleStyle),
-                                Text('Twitter',
-                                    style: kAgentDetailsTextBelowStyle),
-                              ],
+                      child: InkWell(
+                        onTap: (){
+                          if(twitter!='') {
+                            UrlLauncher.launch('http:+${twitter.toString()}');
+                          }
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(FontAwesomeIcons.twitter),
+                            SizedBox(
+                              width: 10.0,
                             ),
-                          ),
-                          new Spacer(), // I just added one line
-                          Icon(Icons.navigate_next, color: Colors.black)
-                        ],
+                            Container(
+                              width: 280.0,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(twitter==''?'NA':twitter,
+                                      style: kAgentDetailsTextTitleStyle),
+                                  Text('Twitter',
+                                      style: kAgentDetailsTextBelowStyle),
+                                ],
+                              ),
+                            ),
+                            new Spacer(), // I just added one line
+                            Icon(Icons.navigate_next, color: Colors.black)
+                          ],
+                        ),
                       ),
                     ),
               Divider(
@@ -234,28 +278,35 @@ class _AgentDetailsState extends State<AgentDetails> {
                   : Container(
                       padding: EdgeInsets.symmetric(
                           horizontal: 10.0, vertical: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Icon(FontAwesomeIcons.linkedin),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Container(
-                            width: 280.0,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(linkedin==''?'NA':linkedin,
-                                    style: kAgentDetailsTextTitleStyle),
-                                Text('LinkedIn',
-                                    style: kAgentDetailsTextBelowStyle),
-                              ],
+                      child: InkWell(
+                        onTap: (){
+                          if(linkedin!='') {
+                            UrlLauncher.launch('http:+${linkedin.toString()}');
+                          }
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(FontAwesomeIcons.linkedin),
+                            SizedBox(
+                              width: 10.0,
                             ),
-                          ),
-                          new Spacer(), // I just added one line
-                          Icon(Icons.navigate_next, color: Colors.black)
-                        ],
+                            Container(
+                              width: 280.0,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(linkedin==''?'NA':linkedin,
+                                      style: kAgentDetailsTextTitleStyle),
+                                  Text('LinkedIn',
+                                      style: kAgentDetailsTextBelowStyle),
+                                ],
+                              ),
+                            ),
+                            new Spacer(), // I just added one line
+                            Icon(Icons.navigate_next, color: Colors.black)
+                          ],
+                        ),
                       ),
                     ),
               Divider(
@@ -266,24 +317,31 @@ class _AgentDetailsState extends State<AgentDetails> {
                   : Container(
                       padding: EdgeInsets.symmetric(
                           horizontal: 10.0, vertical: 10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Icon(FontAwesomeIcons.internetExplorer),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(website==''?'NA':website, style: kAgentDetailsTextTitleStyle),
-                              Text('Website',
-                                  style: kAgentDetailsTextBelowStyle),
-                            ],
-                          ),
-                          new Spacer(), // I just added one line
-                          Icon(Icons.navigate_next, color: Colors.black)
-                        ],
+                      child: InkWell(
+                        onTap: (){
+                          if(website!='') {
+                            UrlLauncher.launch('http:+${website.toString()}');
+                          }
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(FontAwesomeIcons.internetExplorer),
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(website==''?'NA':website, style: kAgentDetailsTextTitleStyle),
+                                Text('Website',
+                                    style: kAgentDetailsTextBelowStyle),
+                              ],
+                            ),
+                            new Spacer(), // I just added one line
+                            Icon(Icons.navigate_next, color: Colors.black)
+                          ],
+                        ),
                       ),
                     ),
               DescriptionTextWidget(

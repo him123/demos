@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -134,9 +135,13 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     height: 10.0,
                   ),
                   user_custom_picture == ''
-                      ? Image.asset(
-                          'images/default_user.png')
-                      : Image.network(user_custom_picture, width: 200.0, height: 150.0, fit: BoxFit.cover,),
+                      ? Image.asset('images/default_user.png')
+                      : Image.network(
+                          user_custom_picture,
+                          width: 200.0,
+                          height: 150.0,
+                          fit: BoxFit.cover,
+                        ),
                   SizedBox(
                     height: 10.0,
                   ),
@@ -182,7 +187,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 5.0,),
+                                    SizedBox(
+                                      height: 5.0,
+                                    ),
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: Text(
@@ -208,8 +215,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     filled: true,
-                                    labelText:
-                                        'Title/Position',
+                                    labelText: 'Title/Position',
                                     fillColor: Colors.white),
                               ),
                             ),
@@ -251,7 +257,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 5.0,),
+                                    SizedBox(
+                                      height: 5.0,
+                                    ),
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: Text(
@@ -399,7 +407,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 5.0,),
+                                    SizedBox(
+                                      height: 5.0,
+                                    ),
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: Text(
@@ -515,7 +525,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             Container(
                               width: double.infinity,
                             ),
-
                           ],
                         ),
                       ),
@@ -523,16 +532,25 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 200.0,
-                      height: 40.0,
-                      color: Colors.red,
-                      child: Text('UPDATE PROFILE',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 16.0)),
+                    child: InkWell(
+                      onTap: (){
+                        setState(() {
+                          showSpinner=true;
+                          editProfile(context, 'https://americanhomesonline.com/wp-json/api/v1/Edit_Profile/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd');
+                        });
+
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: 200.0,
+                        height: 40.0,
+                        color: Colors.red,
+                        child: Text('UPDATE PROFILE',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 16.0)),
+                      ),
                     ),
                   ),
                 ],
@@ -611,5 +629,65 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     });
 
     return "Success!";
+  }
+
+  void editProfile(BuildContext context, String url) async {
+    
+    print(url);
+    var map = new Map<String, dynamic>();
+
+    map['user_id'] = userId;
+    map['title'] = titleController.text;
+    map['description'] = '';
+    map['email'] = emailController.text;
+    map['phone'] = phnoController.text;
+    map['mobile'] = mobileController.text;
+    map['skype'] = skypeController.text;
+    map['facebook'] = facebookController.text;
+    map['twitter'] = tweeterController.text;
+    map['linkedin'] = linkedinController.text;
+    map['pinterest'] = pintrestController.text;
+    map['instagram'] = instagramController.text;
+    map['address'] = '';
+    map['languages'] = '';
+
+    map['license'] = '';
+    map['taxes'] = '';
+    map['lat'] = '';
+    map['long'] = '';
+    map['website'] = websiteController.text;
+    map['city'] = '';
+    map['area'] = '';
+    map['county'] = '';
+    map['user_custom_picture'] = '';
+    map['first_name'] = fnameController.text;
+
+    map['last_name'] = lnameController.text;
+    map['agent_member'] = '';
+    map['position'] = '';
+    map['agency_opening_hours'] = '';
+
+    print('Request: ${map.toString()}');
+
+    var response = await post(
+      Uri.parse(url),
+      body: map,
+    );
+
+    print('Response: ${response.body}');
+    dynamic data = json.decode(response.body)['data'];
+
+    setState(() {
+      showSpinner = false;
+      if (data['api_status'] == 1) {
+//        Navigator.push(
+//            context,
+//            new MaterialPageRoute(
+//              builder: (ctxt) => new SuccessScreen(),
+//            ));
+      } else {
+//        showAlert(context, data['message']);
+      }
+    });
   }
 }

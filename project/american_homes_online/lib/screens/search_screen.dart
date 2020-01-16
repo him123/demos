@@ -16,7 +16,6 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-
   bool isOpenHome = false;
   List selPType = [];
   List selAmenitiesAndFeatures = [];
@@ -27,51 +26,70 @@ class _SearchScreenState extends State<SearchScreen> {
   List utilitiesIncluded = [];
   List lotDescription = [];
   List moreCriteriaSel = [];
-  List saleOrRent = ['All','Sale', 'Rent'];
+  List saleOrRent = ['All', 'Sale', 'Rent'];
+  List petsList = ['All', 'Dogs', 'Cats'];
 
   String saleOrRental = 'All';
+  String petsSelected = 'All';
   String price = 'All';
-  String cityOraddress='';
+  String cityOraddress = '';
 
   String getText(List fullList) {
     if (fullList.length == 1) {
       return fullList[0].toString();
     } else if (fullList.length > 1) {
       return 'Multiple';
-    }else{
+    } else {
       return '';
     }
   }
 
-  double _currentPrice = 10000.0;
+  int _currentPrice = 100;
 
-  int isFilters(){
-    if(selAmenitiesAndFeatures.length>0 || selPType.length>0 || communityAmenities.length>0 ||
-        buildingAmenities.length>0||flooringType.length>0||petsAllowed.length>0||utilitiesIncluded.length>0||
-        lotDescription.length>0||moreCriteriaSel.length>0){
+  int isFilters() {
+    if (selAmenitiesAndFeatures.length > 0 ||
+        selPType.length > 0 ||
+        communityAmenities.length > 0 ||
+        buildingAmenities.length > 0 ||
+        flooringType.length > 0 ||
+        petsAllowed.length > 0 ||
+        utilitiesIncluded.length > 0 ||
+        lotDescription.length > 0 ||
+        moreCriteriaSel.length > 0) {
       return 1;
-    }else{
+    } else {
       return 0;
     }
   }
+
   void _showDialog() {
     showDialog<int>(
         context: context,
         builder: (BuildContext context) {
-          return new NumberPickerDialog.decimal(
-            minValue: 10000,
-            maxValue: 1000000,
-            title: new Text("Pick a new price"),
-            initialDoubleValue: _currentPrice,
-          );
-        }
-    ).then((int value ){
+          return Container();
+        }).then((int value) {
       if (value != null) {
-        setState(() => _currentPrice = value as double);
+        setState(() => _currentPrice = value);
       }
     });
   }
 
+  String bedRooms='0';
+  String bathRooms='0';
+
+  void _refreshBedRooms(String rooms) {
+    setState(() {
+      bedRooms = rooms;
+      print('selected Bed rooms: $bedRooms');
+    });
+  }
+
+  void _refreshBathRooms(String rooms) {
+    setState(() {
+      bathRooms = rooms;
+      print('selected Bath rooms: $bathRooms');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,20 +121,14 @@ class _SearchScreenState extends State<SearchScreen> {
                 shrinkWrap: true,
                 children: <Widget>[
                   TextField(
-                    onChanged: (val){
-                      cityOraddress=val;
+                    onChanged: (val) {
+                      cityOraddress = val;
                     },
                     decoration: InputDecoration(
                         border: UnderlineInputBorder(
                             borderSide: new BorderSide(color: Colors.red)),
                         hintText: 'Address, Neighborhood, City or Zip'),
                   ),
-//                  TextField(
-//                    decoration: InputDecoration(
-//                        border: UnderlineInputBorder(
-//                            borderSide: new BorderSide(color: Colors.red)),
-//                        hintText: 'Search by address (E.g. 123 Main)'),
-//                  ),
                   InkWell(
                     onTap: () async {
                       final result = await Navigator.push(
@@ -159,20 +171,19 @@ class _SearchScreenState extends State<SearchScreen> {
                       onTap: () {
                         Widget setupAlertDialoadContainer() {
                           return Container(
-                            height: 300.0, // Change as per your requirement
-                            width: 300.0, // Change as per your requirement
+                            height: 180.0, // Change as per your requirement
+                            width: 200.0, // Change as per your requirement
                             child: ListView.builder(
-                              shrinkWrap: false,
+                              shrinkWrap: true,
                               itemCount: saleOrRent.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return InkWell(
                                   onTap: () {
-                                    print(
-                                        'selected ${saleOrRent[index]}');
+                                    print('selected ${saleOrRent[index]}');
                                     setState(() {
                                       saleOrRental = saleOrRent[index];
                                     });
-                                  Navigator.pop(context);
+                                    Navigator.pop(context);
                                   },
                                   child: ListTile(
                                     selected: true,
@@ -190,20 +201,6 @@ class _SearchScreenState extends State<SearchScreen> {
                               return AlertDialog(
                                 title: Text('Property Type'),
                                 content: setupAlertDialoadContainer(),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    child: Text('Cancel'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  FlatButton(
-                                    child: Text('Ok'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
                               );
                             });
                       },
@@ -230,7 +227,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
-                      onTap: (){
+                      onTap: () {
                         _showDialog();
                       },
                       child: Row(
@@ -253,18 +250,20 @@ class _SearchScreenState extends State<SearchScreen> {
                   Divider(
                     color: Colors.black,
                   ),
-                  Padding(
+                /*BEDROOMS*/  Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
                         child: CustomRadio(
                       bedOrBath: 1,
+                      getValues: _refreshBedRooms,
                     )),
                   ),
-                  Padding(
+                 /*BATHROOMS*/ Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
                         child: CustomRadio(
                       bedOrBath: 2,
+                          getValues: _refreshBathRooms,
                     )),
                   ),
                   Divider(
@@ -423,20 +422,58 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   /*Pets Allowed*/ Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          'Pets Allowed',
-                          style: TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.w600),
-                        ),
-                        Text(
-                          'All',
-                          style: TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.w300),
-                        ),
-                      ],
+                    child: InkWell(
+                      onTap: () {
+                        Widget setupAlertDialoadContainer() {
+                          return Container(
+                            height: 180.0, // Change as per your requirement
+                            width: 200.0, // Change as per your requirement
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: petsList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return InkWell(
+                                  onTap: () {
+                                    print('selected ${petsList[index]}');
+                                    setState(() {
+                                      petsSelected = petsList[index];
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                  child: ListTile(
+                                    selected: true,
+                                    title: Text(petsList[index]),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        }
+
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Pets Allowed'),
+                                content: setupAlertDialoadContainer(),
+                              );
+                            });
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            'Pets Allowed',
+                            style: TextStyle(
+                                fontSize: 18.0, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            petsSelected,
+                            style: TextStyle(
+                                fontSize: 18.0, fontWeight: FontWeight.w300),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Divider(
@@ -518,27 +555,6 @@ class _SearchScreenState extends State<SearchScreen> {
                   Divider(
                     color: Colors.black,
                   ),
-//                  /*Sale Type*/ Padding(
-//                    padding: const EdgeInsets.all(8.0),
-//                    child: Row(
-//                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                      children: <Widget>[
-//                        Text(
-//                          'Sale Type',
-//                          style: TextStyle(
-//                              fontSize: 18.0, fontWeight: FontWeight.w600),
-//                        ),
-//                        Text(
-//                          'All',
-//                          style: TextStyle(
-//                              fontSize: 18.0, fontWeight: FontWeight.w300),
-//                        ),
-//                      ],
-//                    ),
-//                  ),
-//                  Divider(
-//                    color: Colors.black,
-//                  ),
                   /*Open Houses*/ Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -583,17 +599,17 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                         ),
                         onPressed: () async {
-                            final result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CriteriaScreen(
-                                    mainList: moreCriteria,
-                                  ),
-                                ));
+                          final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CriteriaScreen(
+                                  mainList: moreCriteria,
+                                ),
+                              ));
 
-                            setState(() {
-                              moreCriteriaSel = result;
-                            });
+                          setState(() {
+                            moreCriteriaSel = result;
+                          });
                         },
                       ),
                     ),
@@ -622,7 +638,23 @@ class _SearchScreenState extends State<SearchScreen> {
                         fontSize: 20,
                       ),
                     ),
-                    onPressed: () async {},
+                    onPressed: () async {
+                      setState(() {
+                        selAmenitiesAndFeatures.clear();
+                        selPType.clear();
+                        communityAmenities..clear();
+                        buildingAmenities..clear();
+                        flooringType.clear();
+                        petsAllowed.clear();
+                        utilitiesIncluded.clear();
+                        lotDescription.clear();
+                        moreCriteriaSel.clear();
+                        petsSelected='All';
+                        saleOrRental='All';
+
+                      });
+
+                    },
                   ),
                   FlatButton(
                     padding: EdgeInsets.only(
@@ -639,10 +671,12 @@ class _SearchScreenState extends State<SearchScreen> {
                       Navigator.push(
                           context,
                           PageRouteBuilder(
-                              transitionDuration:
-                              Duration(seconds: 1),
-                              pageBuilder: (_, __, ___) =>
-                                  MapSearchScreen(url: 'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&bedrooms=&min_price=&max_price=&bathrooms=&home_type$isOpenHome=&community=${getText(communityAmenities)}&zip=$cityOraddress&listing_type=${getText(selPType)}&building=${getText(buildingAmenities)}&features=${getText(selAmenitiesAndFeatures)}&size=${getText(lotDescription)}&pet_allowed=${getText(petsAllowed)}&utility${getText(utilitiesIncluded)}&floor_type=${getText(flooringType)}',filters: isFilters(),)));
+                              transitionDuration: Duration(seconds: 1),
+                              pageBuilder: (_, __, ___) => MapSearchScreen(
+                                    url:
+                                        'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&bedrooms=$bedRooms&min_price=&max_price=&bathrooms=$bathRooms&home_type$isOpenHome=&community=${getText(communityAmenities)}&zip=$cityOraddress&listing_type=${getText(selPType)}&building=${getText(buildingAmenities)}&features=${getText(selAmenitiesAndFeatures)}&size=${getText(lotDescription)}&pet_allowed=${getText(petsAllowed)}&utility${getText(utilitiesIncluded)}&floor_type=${getText(flooringType)}',
+                                    filters: isFilters(),
+                                  )));
                     },
                   ),
                 ],

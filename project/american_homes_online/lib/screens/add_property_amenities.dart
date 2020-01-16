@@ -1182,7 +1182,7 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
 
     print('Response: ${response.body}');
     dynamic data = json.decode(response.body)['data'];
-//
+
     setState(() {
       showSpinner=false;
       if (data['api_status'] == 1) {
@@ -1196,33 +1196,6 @@ class _AddPropertyAmenitiesState extends State<AddPropertyAmenities> {
       }
     });
 
-//
-//    prefs.setString('email', tookEmail);
-//    prefs.setString('address', tookAddress);
-//    prefs.setString('phone', tookNumber);
-//    prefs.setString('login', '1');
-//
-//    print(prefs.getString('profile_image'));
-//
-//    setState(() {
-//      showSpinner = false;
-//    });
-
-//    Navigator.pop(context);
-//    Navigator.of(context).pushReplacementNamed(NavigationDashboard.id);
-
-//    Navigator.push(
-//        context,
-//        new MaterialPageRoute(
-//          builder: (ctxt) => new NavigationDashboard(
-//            profileImage: image,
-//            address: address,
-//            phone: phone,
-//            email: email,
-//            name: nameUser,
-//            custId: id.toString(),
-//          ),
-//        ));
   }
 
   void showAlert(BuildContext context, String msg) {

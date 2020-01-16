@@ -5,8 +5,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CustomRadio extends StatefulWidget {
   final int bedOrBath;
+  final Function getValues;
 
-  CustomRadio({this.bedOrBath});
+  CustomRadio({ this.bedOrBath, Key key, this.getValues}): super(key: key);
 
   @override
   createState() {
@@ -21,8 +22,10 @@ class CustomRadioState extends State<CustomRadio> {
 
   List<RadioModel> sampleData = new List<RadioModel>();
 
+
   @override
   void initState() {
+
     // TODO: implement initState
     super.initState();
     sampleData.add(new RadioModel(
@@ -50,6 +53,7 @@ class CustomRadioState extends State<CustomRadio> {
             setState(() {
               sampleData.forEach((element) => element.isSelected = false);
               sampleData[0].isSelected = true;
+              widget.getValues('0');
             });
           },
           child: new RadioItem(sampleData[0], bedOrBath),
@@ -61,6 +65,7 @@ class CustomRadioState extends State<CustomRadio> {
             setState(() {
               sampleData.forEach((element) => element.isSelected = false);
               sampleData[1].isSelected = true;
+              widget.getValues('1');
             });
           },
           child: new RadioItem(sampleData[1], bedOrBath),
@@ -72,6 +77,7 @@ class CustomRadioState extends State<CustomRadio> {
             setState(() {
               sampleData.forEach((element) => element.isSelected = false);
               sampleData[2].isSelected = true;
+              widget.getValues('2');
             });
           },
           child: new RadioItem(sampleData[2], bedOrBath),
@@ -83,6 +89,7 @@ class CustomRadioState extends State<CustomRadio> {
             setState(() {
               sampleData.forEach((element) => element.isSelected = false);
               sampleData[3].isSelected = true;
+              widget.getValues('3');
             });
           },
           child: new RadioItem(sampleData[3], bedOrBath),
@@ -94,6 +101,7 @@ class CustomRadioState extends State<CustomRadio> {
             setState(() {
               sampleData.forEach((element) => element.isSelected = false);
               sampleData[4].isSelected = true;
+              widget.getValues('4');
             });
           },
           child: new RadioItem(sampleData[4], bedOrBath),
@@ -105,6 +113,7 @@ class CustomRadioState extends State<CustomRadio> {
             setState(() {
               sampleData.forEach((element) => element.isSelected = false);
               sampleData[5].isSelected = true;
+              widget.getValues('5');
             });
           },
           child: new RadioItem(sampleData[5], bedOrBath),

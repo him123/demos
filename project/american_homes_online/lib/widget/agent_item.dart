@@ -23,7 +23,7 @@ class AgentItem extends StatelessWidget {
             MaterialPageRoute(
                 fullscreenDialog: true,
                 builder: (BuildContext context) =>
-                    AgentDetails(agentId: agent_id,agentName: title,img: profile_img,)));
+                    AgentDetails(agentId: agent_id,agentName: title,img: profile_img,total: total)));
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),

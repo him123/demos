@@ -13,6 +13,8 @@ import 'package:intl/intl.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'dart:convert';
 
+import 'package:rflutter_alert/rflutter_alert.dart';
+
 class MapSearchScreen extends StatefulWidget {
   static String id = 'MapSearchScreen';
   final String url;
@@ -251,7 +253,7 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
       setState(() {
         dynamic data = json.decode(response.body)['data'];
 
-        if (response.statusCode == 200) {
+        if (response.statusCode == 200 && data!=null) {
           list = (data as List)
               .map((data) => new Property.fromJson(data))
               .toList();
@@ -271,7 +273,22 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
             );
           });
         } else {
-          throw Exception('Failed to load photos');
+          Alert(
+            context: context,
+//      type: AlertType.info,
+            title: 'No Data Found on this filter',
+//      desc: msg,
+            buttons: [
+              DialogButton(
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () => Navigator.pop(context),
+                width: 120,
+              )
+            ],
+          ).show();
         }
       });
     }
