@@ -281,6 +281,10 @@ class _AddPropertyLocationState extends State<AddPropertyLocation> {
                   ),
                 ),
                 Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Text('Please tap on map to select Loction', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red),),
+                ),
+                Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:american_homes_online/constants/data_library.dart';
 import 'package:american_homes_online/screens/criteria_list_screen.dart';
 import 'package:american_homes_online/widget/custom_radio_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:numberpicker/numberpicker.dart';
 
 import 'mapsearch_screen.dart';
@@ -26,6 +29,7 @@ class _SearchScreenState extends State<SearchScreen> {
   List utilitiesIncluded = [];
   List lotDescription = [];
   List moreCriteriaSel = [];
+  List selectedCityList = [];
   List saleOrRent = ['All', 'Sale', 'Rent'];
   List petsList = ['All', 'Dogs', 'Cats'];
 
@@ -33,12 +37,32 @@ class _SearchScreenState extends State<SearchScreen> {
   String petsSelected = 'All';
   String price = 'All';
   String cityOraddress = '';
+  List<String> cityList = [
+//    'New Yorke',
+//    'Los Angeles',
+//    'Chicago',
+//    'Phoenix',
+//    'San Antonio',
+//    'Las Vegas, Nevada'
+  ];
+
+
 
   String getText(List fullList) {
     if (fullList.length == 1) {
       return fullList[0].toString();
     } else if (fullList.length > 1) {
       return 'Multiple';
+    } else {
+      return '';
+    }
+  }
+
+  String getCity(List fullList) {
+    if (fullList.length == 1) {
+      return fullList[0].toString();
+    } else if (fullList.length > 1) {
+      return fullList[0].toString()+' And More ${fullList.length}';
     } else {
       return '';
     }
@@ -74,8 +98,9 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  String bedRooms='0';
-  String bathRooms='0';
+  String bedRooms = '0';
+  String bathRooms = '0';
+  TextEditingController cityController = TextEditingController();
 
   void _refreshBedRooms(String rooms) {
     setState(() {
@@ -89,6 +114,15 @@ class _SearchScreenState extends State<SearchScreen> {
       bathRooms = rooms;
       print('selected Bath rooms: $bathRooms');
     });
+  }
+
+  String selectedCity = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCities();
   }
 
   @override
@@ -120,14 +154,49 @@ class _SearchScreenState extends State<SearchScreen> {
               child: ListView(
                 shrinkWrap: true,
                 children: <Widget>[
-                  TextField(
-                    onChanged: (val) {
-                      cityOraddress = val;
-                    },
-                    decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.red)),
-                        hintText: 'Address, Neighborhood, City or Zip'),
+                  /*Community Amenities*/ Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () async {
+                        final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CriteriaScreen(
+                                mainList: cityList,
+                              ),
+                            ));
+
+                        setState(() {
+                          if (result != null) {
+                            selectedCityList = result;
+                          }
+                        });
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            selectedCityList.length == 0
+                                ? 'Selct City'
+                                : getCity(selectedCityList),
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.w400),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      onChanged: (val) {
+                        cityOraddress = val;
+                      },
+                      decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.red)),
+                          hintText: 'Address, Neighborhood'),
+                    ),
                   ),
                   InkWell(
                     onTap: () async {
@@ -140,8 +209,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           ));
 
                       setState(() {
-                        if(result!=null)
-                        selPType = result;
+                        if (result != null) selPType = result;
                       });
                     },
                     child: Padding(
@@ -251,7 +319,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   Divider(
                     color: Colors.black,
                   ),
-                /*BEDROOMS*/  Padding(
+                  /*BEDROOMS*/ Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
                         child: CustomRadio(
@@ -259,12 +327,12 @@ class _SearchScreenState extends State<SearchScreen> {
                       getValues: _refreshBedRooms,
                     )),
                   ),
-                 /*BATHROOMS*/ Padding(
+                  /*BATHROOMS*/ Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
                         child: CustomRadio(
                       bedOrBath: 2,
-                          getValues: _refreshBathRooms,
+                      getValues: _refreshBathRooms,
                     )),
                   ),
                   Divider(
@@ -282,9 +350,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                             ));
                         setState(() {
-                          if(result!=null)
-                            selAmenitiesAndFeatures = result;
-
+                          if (result != null) selAmenitiesAndFeatures = result;
                         });
                       },
                       child: Row(
@@ -322,8 +388,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             ));
 
                         setState(() {
-                          if(result!=null)
-                          communityAmenities = result;
+                          if (result != null) communityAmenities = result;
                         });
                       },
                       child: Row(
@@ -361,8 +426,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             ));
 
                         setState(() {
-                          if(result!=null)
-                          buildingAmenities = result;
+                          if (result != null) buildingAmenities = result;
                         });
                       },
                       child: Row(
@@ -400,8 +464,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             ));
 
                         setState(() {
-                          if(result!=null)
-                          flooringType = result;
+                          if (result != null) flooringType = result;
                         });
                       },
                       child: Row(
@@ -498,8 +561,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             ));
 
                         setState(() {
-                          if(result!=null)
-                          utilitiesIncluded = result;
+                          if (result != null) utilitiesIncluded = result;
                         });
                       },
                       child: Row(
@@ -537,8 +599,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             ));
 
                         setState(() {
-                          if(result!=null)
-                          lotDescription = result;
+                          if (result != null) lotDescription = result;
                         });
                       },
                       child: Row(
@@ -616,8 +677,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               ));
 
                           setState(() {
-                            if(result!=null)
-                            moreCriteriaSel = result;
+                            if (result != null) moreCriteriaSel = result;
                           });
                         },
                       ),
@@ -658,11 +718,9 @@ class _SearchScreenState extends State<SearchScreen> {
                         utilitiesIncluded.clear();
                         lotDescription.clear();
                         moreCriteriaSel.clear();
-                        petsSelected='All';
-                        saleOrRental='All';
-
+                        petsSelected = 'All';
+                        saleOrRental = 'All';
                       });
-
                     },
                   ),
                   FlatButton(
@@ -695,5 +753,55 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
     );
+  }
+
+  Future<String> getCities() async {
+    print('========= city api called ===========');
+    var response = await http.get(
+        'https://americanhomesonline.com/wp-json/api/v1/List_City/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd');
+
+    this.setState(() {
+      dynamic data = json.decode(response.body)['data'];
+
+      if (data != null) {
+        if (response.statusCode == 200) {
+
+          String cityStr = data.toString().replaceAll('[', '');
+          String cityStrComplete = cityStr.replaceAll(']', '');
+          print('Check Data: $cityStrComplete');
+
+          cityList = cityStrComplete.split(',').toList();
+          print(cityList);
+
+//          cityList = data.toList();
+
+
+//              (data as List).map((data) => new Agent.fromJson(data)).toList();
+//
+//          String firstname = list[0].title;
+//          print('All Shops: $firstname');
+
+//          setState(() {
+//            showSpinner = false;
+//          });
+        } else {
+//          setState(() {
+//            showSpinner = false;
+//            isFail = true;
+//          });
+          throw Exception('Failed to load photos');
+        }
+      } else {
+//        setState(() {
+//          showSpinner = false;
+//          isFail = true;
+//        });
+      }
+    });
+
+//    print(data[1]["name"]);
+
+//    showSpinner = false;
+    return "Success!";
   }
 }

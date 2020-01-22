@@ -82,8 +82,45 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
     getProperties();
 
 
-    getLocation();
+//    getLocation();
+    _getCurrentLocation();
     print('Check filter: ${widget.filters}');
+  }
+  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+
+
+  _getCurrentLocation() {
+    geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position _position) {
+      if (_position != null) {
+        setState(() {
+          latLng = LatLng(
+            _position.latitude,
+            _position.longitude,
+          );
+          print(
+              'latitude: ${latLng.latitude} Longitude: ${latLng.longitude}');
+
+          mapController.animateCamera(
+              CameraUpdate.newCameraPosition(
+                CameraPosition(
+                    target: LatLng(
+                      latLng.latitude,
+                      latLng.longitude,
+                    ),
+                    zoom: 12,
+                    bearing: 45.0,
+                    tilt: 45.0
+                ),
+              ));
+
+        });
+      }
+
+    }).catchError((e) {
+      print(e);
+    });
   }
 
   Future<void> getLocation() async {
