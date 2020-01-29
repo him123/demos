@@ -416,8 +416,10 @@ class _AddPropertyLocationState extends State<AddPropertyLocation> {
                 widget.propertyModel.google_camera_angle = google_camera_angle;
                 widget.propertyModel.property_google_view =
                     property_google_view;
-                widget.propertyModel.property_latitude = property_latitude;
-                widget.propertyModel.property_longitude = property_longitude;
+                widget.propertyModel.property_latitude = latitudeController.text;
+                widget.propertyModel.property_longitude = longitudeController.text;
+
+                print('latitude: ${longitudeController.text}');
 
                 widget.onDataChange(
                     3, 'This is title of property', widget.propertyModel);

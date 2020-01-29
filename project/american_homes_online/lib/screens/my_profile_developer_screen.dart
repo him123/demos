@@ -12,7 +12,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:http_parser/http_parser.dart';
 
-
 class MyProfileDeveloperScreen extends StatefulWidget {
   final String userId;
   final String userType;
@@ -20,7 +19,8 @@ class MyProfileDeveloperScreen extends StatefulWidget {
   MyProfileDeveloperScreen({this.userId, this.userType});
 
   @override
-  _MyProfileDeveloperScreenState createState() => _MyProfileDeveloperScreenState(userId: userId, userType: userType);
+  _MyProfileDeveloperScreenState createState() =>
+      _MyProfileDeveloperScreenState(userId: userId, userType: userType);
 }
 
 class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
@@ -58,20 +58,22 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
 
   _MyProfileDeveloperScreenState({this.userId, this.userType});
 
+  var licenseController= TextEditingController();
+  var taxesController= TextEditingController();
+  var phoneController= TextEditingController();
+  var devNameController= TextEditingController();
+  var langController= TextEditingController();
+  var abountMeController= TextEditingController();
+
   var titleController = TextEditingController();
-  var fnameController = TextEditingController();
-  var lnameController = TextEditingController();
   var emailController = TextEditingController();
-  var phnoController = TextEditingController();
   var mobileController = TextEditingController();
   var skypeController = TextEditingController();
 
-  var addressController = TextEditingController();
-  var stateController = TextEditingController();
   var cityController = TextEditingController();
+  var stateController = TextEditingController();
   var areaController = TextEditingController();
-  var neighbourController = TextEditingController();
-  var zipController = TextEditingController();
+  var addressController = TextEditingController();
 
   var facebookController = TextEditingController();
   var tweeterController = TextEditingController();
@@ -81,6 +83,7 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
   var websiteController = TextEditingController();
 
   bool showSpinner = false;
+  int attach = 0;
 
   @override
   void initState() {
@@ -107,7 +110,6 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
       spACatVal = 'None',
       selectedACate = '';
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,7 +130,7 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                     ),
                     onPressed: () async {
                       SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
+                          await SharedPreferences.getInstance();
 
                       prefs.setString('login', '0');
                       Navigator.of(context).pushNamedAndRemoveUntil(
@@ -164,9 +166,13 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                     height: 10.0,
                   ),
                   user_custom_picture == ''
-                      ? Image.asset(
-                      'images/default_user.png')
-                      : Image.network(user_custom_picture, width: 200.0, height: 150.0, fit: BoxFit.cover,),
+                      ? Image.asset('images/default_user.png')
+                      : Image.network(
+                          user_custom_picture,
+                          width: 200.0,
+                          height: 150.0,
+                          fit: BoxFit.cover,
+                        ),
                   SizedBox(
                     height: 10.0,
                   ),
@@ -181,30 +187,31 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                       color: Colors.red,
                       child: _isUploading == true
                           ? Padding(
-                        padding: const EdgeInsets.all(3.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text('UPLOAD PROFILE IMAGE',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontSize: 14.0)),
-                            SizedBox(
-                              height: 25.0,
-                              width: 25.0,
-                              child: CircularProgressIndicator(
-                                backgroundColor: Colors.white,
+                              padding: const EdgeInsets.all(3.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text('UPLOAD PROFILE IMAGE',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          fontSize: 14.0)),
+                                  SizedBox(
+                                    height: 25.0,
+                                    width: 25.0,
+                                    child: CircularProgressIndicator(
+                                      backgroundColor: Colors.white,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      )
+                            )
                           : Text('UPLOAD PROFILE IMAGE',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 14.0)),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 14.0)),
                     ),
                   ),
                   Text('*minimum 500px x 500px'),
@@ -238,7 +245,9 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 5.0,),
+                                    SizedBox(
+                                      height: 5.0,
+                                    ),
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: Text(
@@ -256,11 +265,11 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                             SizedBox(
                               height: 20.0,
                             ),
-                            /*FIRST NAME*/ Container(
+                            /*DEVELOPER NAME*/ Container(
                               width: 350.0,
                               height: 40.0,
                               child: TextFormField(
-                                controller: fnameController,
+                                controller: devNameController,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     filled: true,
@@ -271,12 +280,13 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                             SizedBox(
                               height: 10.0,
                             ),
-                            /*LAST NAME*/ Container(
+                            /*PHONE NUMBER*/ Container(
                               width: 350.0,
                               height: 40.0,
                               child: TextFormField(
-                                controller: lnameController,
-                                decoration: InputDecoration(
+                                controller: phoneController,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
@@ -292,6 +302,7 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                               height: 40.0,
                               child: TextFormField(
                                 controller: emailController,
+                                keyboardType: TextInputType.emailAddress,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     filled: true,
@@ -303,11 +314,12 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                             SizedBox(
                               height: 10.0,
                             ),
-                            /*PHONE*/ Container(
+                            /*MOBILE*/ Container(
                               width: 350.0,
                               height: 40.0,
                               child: TextFormField(
-                                controller: phnoController,
+                                controller: mobileController,
+                                keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     filled: true,
@@ -323,7 +335,7 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                               width: 350.0,
                               height: 40.0,
                               child: TextFormField(
-                                controller: mobileController,
+                                controller: skypeController,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     filled: true,
@@ -339,7 +351,7 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                               width: 350.0,
                               height: 40.0,
                               child: TextFormField(
-                                controller: skypeController,
+                                controller: langController,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     filled: true,
@@ -355,7 +367,7 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                               width: 350.0,
                               height: 40.0,
                               child: TextFormField(
-                                controller: skypeController,
+                                controller: taxesController,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     filled: true,
@@ -371,7 +383,7 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                               width: 350.0,
                               height: 40.0,
                               child: TextFormField(
-                                controller: skypeController,
+                                controller: licenseController,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     filled: true,
@@ -382,22 +394,6 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                             ),
                             SizedBox(
                               height: 10.0,
-                            ),
-                            /*Opening Hours*/ Container(
-                              width: 350.0,
-                              height: 40.0,
-                              child: TextFormField(
-                                controller: skypeController,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    filled: true,
-//                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                    labelText: 'Opening Hours',
-                                    fillColor: Colors.white),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20.0,
                             ),
                             Container(
                               width: double.infinity,
@@ -434,7 +430,9 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 5.0,),
+                                    SizedBox(
+                                      height: 5.0,
+                                    ),
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: Text(
@@ -499,7 +497,7 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                             SizedBox(
                               height: 10.0,
                             ),
-                            /*PHONE*/ Container(
+                            /*Instagrame*/ Container(
                               width: 350.0,
                               height: 40.0,
                               child: TextFormField(
@@ -582,7 +580,9 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 5.0,),
+                                    SizedBox(
+                                      height: 5.0,
+                                    ),
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: Text(
@@ -611,7 +611,7 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                                     side: BorderSide(
                                         width: 1.0, style: BorderStyle.solid),
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(5.0)),
+                                        BorderRadius.all(Radius.circular(5.0)),
                                   ),
                                 ),
                                 child: DropdownButton<String>(
@@ -624,11 +624,6 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                                       fontSize: 16,
                                       inherit: false,
                                       decorationColor: Colors.white),
-//                  underline: Container(
-//                    height: 2,
-//                    color: Colors.deepPurpleAccent,
-//                  ),
-
                                   onChanged: (String data) {
                                     setState(() {
                                       spCatVal = data;
@@ -638,11 +633,11 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                                   items: spCategories
                                       .map<DropdownMenuItem<String>>(
                                           (String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
                                 ),
                               ),
                             ),
@@ -660,7 +655,7 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                                     side: BorderSide(
                                         width: 1.0, style: BorderStyle.solid),
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(5.0)),
+                                        BorderRadius.all(Radius.circular(5.0)),
                                   ),
                                 ),
                                 child: DropdownButton<String>(
@@ -673,11 +668,6 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                                       fontSize: 16,
                                       inherit: false,
                                       decorationColor: Colors.white),
-//                  underline: Container(
-//                    height: 2,
-//                    color: Colors.deepPurpleAccent,
-//                  ),
-
                                   onChanged: (String data) {
                                     setState(() {
                                       spACatVal = data;
@@ -687,11 +677,11 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                                   items: spActionCategories
                                       .map<DropdownMenuItem<String>>(
                                           (String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
                                 ),
                               ),
                             ),
@@ -730,7 +720,9 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 5.0,),
+                                    SizedBox(
+                                      height: 5.0,
+                                    ),
                                     Align(
                                       alignment: Alignment.topLeft,
                                       child: Text(
@@ -748,16 +740,16 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                             SizedBox(
                               height: 20.0,
                             ),
-                            /*ADDRESS*/ Container(
+                            /*CITY*/ Container(
                               width: 350.0,
                               height: 40.0,
                               child: TextFormField(
-                                controller: addressController,
+                                controller: cityController,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                    labelText: 'Address',
+                                    labelText: 'City',
                                     fillColor: Colors.white),
                               ),
                             ),
@@ -780,53 +772,37 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                             SizedBox(
                               height: 10.0,
                             ),
-                            /*CITY*/ Container(
+                            /*Area*/ Container(
                               width: 350.0,
                               height: 40.0,
                               child: TextFormField(
-                                controller: cityController,
+                                controller: areaController,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                    labelText: 'City',
+                                    labelText: 'Area',
                                     fillColor: Colors.white),
                               ),
                             ),
                             SizedBox(
                               height: 10.0,
                             ),
-                            /*NEIGHBORHOOD*/ Container(
+                            /*ADDRESS*/ Container(
                               width: 350.0,
                               height: 40.0,
                               child: TextFormField(
-                                controller: neighbourController,
+                                controller: addressController,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     filled: true,
 //                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                    labelText: 'Neighborhood',
+                                    labelText: 'Address',
                                     fillColor: Colors.white),
                               ),
                             ),
                             SizedBox(
                               height: 10.0,
-                            ),
-                            /*ZIP*/ Container(
-                              width: 350.0,
-                              height: 40.0,
-                              child: TextFormField(
-                                controller: zipController,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    filled: true,
-//                        hintStyle: TextStyle(color: Colors.grey[800]),
-                                    labelText: 'Zip',
-                                    fillColor: Colors.white),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20.0,
                             ),
                             Container(
                               width: double.infinity,
@@ -863,26 +839,11 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
                             SizedBox(
                               height: 20.0,
                             ),
-                            /*FIRST NAME*/ Container(
-                              width: 350.0,
-                              height: 40.0,
-                              child: TextFormField(
-                                controller: fnameController,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    filled: true,
-                                    labelText: '*Title/Position',
-                                    fillColor: Colors.white),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10.0,
-                            ),
                             /*LAST NAME*/ Container(
                               width: 350.0,
                               child: TextFormField(
                                 maxLines: 8,
-                                controller: lnameController,
+                                controller: abountMeController,
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(),
                                     filled: true,
@@ -956,10 +917,8 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
         first_name = data['first_name'];
         last_name = data['last_name'];
         email = data['email'];
-        phone = data['phone'];
         mobile = data['mobile'];
         skype = data['skype'];
-
         facebook = data['facebook'];
         twitter = data['twitter'];
         linkedin = data['linkedin'];
@@ -969,20 +928,22 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
         user_custom_picture = data['user_custom_picture'];
 
         titleController.text = title;
-        fnameController.text = first_name;
-        lnameController.text = last_name;
         emailController.text = email;
-        phnoController.text = phone;
+        phoneController.text = data['phone'];
         mobileController.text = mobile;
         skypeController.text = skype;
+        devNameController.text = data['title'];
+        langController.text = data['languages'];
+        taxesController.text = data['taxes'];
+        licenseController.text= data['license'];
 
-        addressController.text = data['address'].toString();
-        print('Address: ${data['address']}');
-//        stateController = data['state'];
+        //Location
         cityController.text = data['city'];
-//        neighbourController = data['neighbour'];
-//        zipController = data['zip'];
+        stateController.text = data['county'];
+        areaController.text = data['area'];
+        addressController.text = data['address'].toString();
 
+        //Social Media
         facebookController.text = facebook;
         tweeterController.text = twitter;
         linkedinController.text = linkedin;
@@ -990,7 +951,8 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
         pintrestController.text = pinterest;
         websiteController.text = website;
 
-        print('username: $email');
+        abountMeController.text = data['description'];
+
 
         prefs.setString('profile_pic', user_custom_picture);
       }
@@ -1009,16 +971,15 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
   }
 
   void editProfile(BuildContext context, String url) async {
-
     print(url);
     var map = new Map<String, dynamic>();
 
     map['user_id'] = userId;
     map['user_type'] = userType;
     map['title'] = titleController.text;
-    map['description'] = '';
+    map['description'] = abountMeController.text;
     map['email'] = emailController.text;
-    map['phone'] = phnoController.text;
+    map['phone'] = phoneController.text;
     map['mobile'] = mobileController.text;
     map['skype'] = skypeController.text;
     map['facebook'] = facebookController.text;
@@ -1026,25 +987,24 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
     map['linkedin'] = linkedinController.text;
     map['pinterest'] = pintrestController.text;
     map['instagram'] = instagramController.text;
-    map['address'] = '';
-    map['languages'] = '';
+    map['address'] = addressController.text;
+    map['languages'] = langController.text;
 
-    map['license'] = '';
-    map['taxes'] = '';
+    map['license'] = licenseController.text;
+    map['taxes'] = taxesController.text;
     map['lat'] = '';
     map['long'] = '';
     map['website'] = websiteController.text;
-    map['city'] = '';
-    map['area'] = '';
-    map['county'] = '';
-    map['user_custom_picture'] = '';
-    map['first_name'] = fnameController.text;
-
-    map['last_name'] = lnameController.text;
+    map['city'] = cityController.text;
+    map['area'] = areaController.text;
+    map['county'] = stateController.text;
+    map['first_name'] = '';
+    map['last_name'] = '';
     map['agent_member'] = '';
     map['position'] = '';
     map['agency_opening_hours'] = '';
     map['user_custom_picture'] = user_custom_picture;
+    map['profile_image_url_small'] = attach.toString();
 
     print('Request: ${map.toString()}');
 
@@ -1097,11 +1057,11 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
 
     // Find the mime type of the selected file by looking at the header bytes of the file
     final mimeTypeData =
-    lookupMimeType(image.path, headerBytes: [0xFF, 0xD8]).split('/');
+        lookupMimeType(image.path, headerBytes: [0xFF, 0xD8]).split('/');
 
     // Intilize the multipart request
     final imageUploadRequest =
-    http.MultipartRequest('POST', Uri.parse(baseUrl));
+        http.MultipartRequest('POST', Uri.parse(baseUrl));
 
     print(image.path);
     // Attach the file in the request
@@ -1122,7 +1082,7 @@ class _MyProfileDeveloperScreenState extends State<MyProfileDeveloperScreen> {
       } else {
         dynamic data = json.decode(response.body)['data'];
         print('Data: $data');
-        int attach = data['attach'];
+        attach = data['attach'];
         user_custom_picture = data['html'];
         print('check Image: $user_custom_picture');
 

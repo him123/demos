@@ -17,7 +17,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 class MapSearchScreen extends StatefulWidget {
   static String id = 'MapSearchScreen';
-  final String url;
+  String url;
   final int filters;
 
   MapSearchScreen({this.url, this.filters});
@@ -39,6 +39,9 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
   Map<MarkerId, Marker> markers =
       <MarkerId, Marker>{}; // CLASS MEMBER, MAP OF MARKS
   String savedSearchName = '';
+  double newLat = 0.0, newLong = 0.0;
+  bool showProgress=false;
+  bool showNoDataFound=false;
 
   void _add(List<Property> list) {
     for (int i = 0; i < list.length; i++) {
@@ -79,17 +82,19 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getProperties();
-
+    showProgress=true;
+    getProperties('');
 
 //    getLocation();
     _getCurrentLocation();
     print('Check filter: ${widget.filters}');
   }
+
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
 
-
   _getCurrentLocation() {
+    _checkGps();
+
     geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position _position) {
@@ -99,88 +104,83 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
             _position.latitude,
             _position.longitude,
           );
-          print(
-              'latitude: ${latLng.latitude} Longitude: ${latLng.longitude}');
+          print('latitude: ${latLng.latitude} Longitude: ${latLng.longitude}');
 
-          mapController.animateCamera(
-              CameraUpdate.newCameraPosition(
-                CameraPosition(
-                    target: LatLng(
-                      latLng.latitude,
-                      latLng.longitude,
-                    ),
-                    zoom: 12,
-                    bearing: 45.0,
-                    tilt: 45.0
+          mapController.animateCamera(CameraUpdate.newCameraPosition(
+            CameraPosition(
+                target: LatLng(
+                  latLng.latitude,
+                  latLng.longitude,
                 ),
-              ));
-
+                zoom: 12,
+                bearing: 45.0,
+                tilt: 45.0),
+          ));
         });
       }
-
     }).catchError((e) {
       print(e);
     });
   }
 
-  Future<void> getLocation() async {
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.location);
-    if (permission == PermissionStatus.denied) {
-      await PermissionHandler()
-          .requestPermissions([PermissionGroup.locationAlways]);
-    }
-
-    var geolocator = Geolocator();
-    GeolocationStatus geolocationStatus =
-        await geolocator.checkGeolocationPermissionStatus();
-    switch (geolocationStatus) {
-      case GeolocationStatus.denied:
-        print('====== denied ======');
-        break;
-      case GeolocationStatus.disabled:
-      case GeolocationStatus.restricted:
-        print('======= restricted =======');
-        break;
-      case GeolocationStatus.unknown:
-        print('======== unknown ==========');
-        break;
-      case GeolocationStatus.granted:
-        print('====== Grante =============');
-
-        _checkGps();
-
-        await Geolocator()
-            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-            .then((Position _position) {
-          if (_position != null) {
-            setState(() {
-              latLng = LatLng(
-                _position.latitude,
-                _position.longitude,
-              );
-              print(
-                  'latitude: ${latLng.latitude} Longitude: ${latLng.longitude}');
-
-              mapController.animateCamera(
-                  CameraUpdate.newCameraPosition(
-                CameraPosition(
-                  target: LatLng(
-                    latLng.latitude,
-                    latLng.longitude,
-                  ),
-                  zoom: 12,
-                  bearing: 45.0,
-                  tilt: 45.0
-                ),
-              ));
-
-            });
-          }
-        });
-        break;
-    }
-  }
+//  Future<void> getLocation() async {
+//    PermissionStatus permission = await PermissionHandler()
+//        .checkPermissionStatus(PermissionGroup.location);
+//    if (permission == PermissionStatus.denied) {
+//      await PermissionHandler()
+//          .requestPermissions([PermissionGroup.locationAlways]);
+//    }
+//
+//    var geolocator = Geolocator();
+//    GeolocationStatus geolocationStatus =
+//        await geolocator.checkGeolocationPermissionStatus();
+//    switch (geolocationStatus) {
+//      case GeolocationStatus.denied:
+//        print('====== denied ======');
+//        break;
+//      case GeolocationStatus.disabled:
+//      case GeolocationStatus.restricted:
+//        print('======= restricted =======');
+//        break;
+//      case GeolocationStatus.unknown:
+//        print('======== unknown ==========');
+//        break;
+//      case GeolocationStatus.granted:
+//        print('====== Grante =============');
+//
+//        _checkGps();
+//
+//        await Geolocator()
+//            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+//            .then((Position _position) {
+//          if (_position != null) {
+//            setState(() {
+//              latLng = LatLng(
+//                _position.latitude,
+//                _position.longitude,
+//              );
+//              print(
+//                  'latitude: ${latLng.latitude} Longitude: ${latLng.longitude}');
+//
+//              mapController.animateCamera(
+//                  CameraUpdate.newCameraPosition(
+//                CameraPosition(
+//                  target: LatLng(
+//                    latLng.latitude,
+//                    latLng.longitude,
+//                  ),
+//                  zoom: 12,
+//                  bearing: 45.0,
+//                  tilt: 45.0
+//                ),
+//              ));
+//
+//            });
+//          }
+//        });
+//        break;
+//    }
+//  }
 
   Future _checkGps() async {
     if (!(await Geolocator().isLocationServiceEnabled())) {
@@ -189,9 +189,9 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text("Can't get gurrent location"),
+              title: Text("Can't get current location"),
               content:
-              const Text('Please make sure you enable GPS and try again'),
+                  const Text('Please make sure you enable GPS and try again'),
               actions: <Widget>[
                 FlatButton(
                   child: Text('Ok'),
@@ -289,7 +289,7 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
                         ),
                         Padding(
                           padding: EdgeInsets.only(right: 10.0),
-                          child: list.length == 0
+                          child: showProgress==true
                               ? Row(
                                   children: <Widget>[
                                     SizedBox(
@@ -326,13 +326,46 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
                 body: TabBarView(
                   physics: NeverScrollableScrollPhysics(),
                   children: [
-                    GoogleMap(
-                      onMapCreated: _onMapCreated,
-                      initialCameraPosition: CameraPosition(
-                        target: latLng,
-                        zoom: 11.0,
-                      ),
-                      markers: Set<Marker>.of(markers.values),
+                    Stack(
+                      children: <Widget>[
+                        Container(
+                          child: GoogleMap(
+                            onCameraIdle: () {
+                              print('camera idel now ${widget.url}');
+                              setState(() {
+                                showProgress=true;
+                                postFix = '';
+                                postFix = '&latitude=$newLat&longitude=$newLong';
+                                list.clear();
+                                getProperties(postFix);
+                              });
+                            },
+                            onCameraMove: (cPosition) {
+                              LatLng newLatLong = cPosition.target;
+                              newLat = newLatLong.latitude;
+                              newLong = newLatLong.longitude;
+
+                              print(
+                                  'new lat ${newLatLong.latitude} long ${newLatLong.longitude}');
+                            },
+                            onMapCreated: _onMapCreated,
+                            initialCameraPosition: CameraPosition(
+                              target: latLng,
+                              zoom: 11.0,
+                            ),
+                            markers: Set<Marker>.of(markers.values),
+                          ),
+                        ),
+                        showNoDataFound==true ? Positioned(
+                          child: Container(
+                            height: 60.0,
+                            width: MediaQuery.of(context).size.width,
+                            color: Theme.of(context).primaryColor,
+                            child: Center(child: Text('No Data found',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w900, fontSize: 16.0),)),
+                          ),
+                        ):Text(''),
+                      ],
+
                     ),
                     PropertyListScreen(
                       list: list,
@@ -348,11 +381,7 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
                 child: InkWell(
                   onTap: () async {
                     print('saved');
-
                     _displayDialog(context);
-
-//                    await DBProvider.db.insertSearch('https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd',
-//                    '1', '12/21/2020','1');
                   },
                   child: Container(
                       decoration: BoxDecoration(
@@ -381,25 +410,22 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
     );
   }
 
-//  GoogleMap showGoogleMap(LatLng latLng){
-//    return GoogleMap(
-//      onMapCreated: _onMapCreated,
-//      initialCameraPosition: CameraPosition(
-//        target: LatLng,
-//        zoom: 11.0,
-//      ),
-//    );
-//  }
 
-  Future<String> getProperties() async {
-    print('========= Property called ===========${widget.url}');
-    var response = await http.get(widget.url);
+  String postFix = '';
+  Future<String> getProperties(String post) async {
+
+    print('========= post fix ===========$post');
+    String mainURL = widget.url + post;
+    print('========= Main URL ===========$mainURL');
+    var response =
+        await http.get(mainURL);
 
     if (mounted) {
       setState(() {
         dynamic data = json.decode(response.body)['data'];
 
         if (response.statusCode == 200 && data != null) {
+          showNoDataFound=false;
           list = (data as List)
               .map((data) => new Property.fromJson(data))
               .toList();
@@ -408,33 +434,11 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
           print('All Shops: $firstname');
 
           _add(list);
+          showProgress=false;
 
-//          setState(() {
-////            showSpinner = false;
-//
-////            _kGooglePlex = CameraPosition(
-////              target: LatLng(double.parse(list[0].property_latitude),
-////                  double.parse(list[0].property_longitude)),
-////              zoom: 14.4746,
-////            );
-//          });
         } else {
-          Alert(
-            context: context,
-//      type: AlertType.info,
-            title: 'No Data Found on this filter',
-//      desc: msg,
-            buttons: [
-              DialogButton(
-                child: Text(
-                  "OK",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-                onPressed: () => Navigator.pop(context),
-                width: 120,
-              )
-            ],
-          ).show();
+          showNoDataFound=true;
+          showProgress=false;
         }
       });
     }

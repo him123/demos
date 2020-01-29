@@ -65,6 +65,7 @@ class _MyProfileAgentScreenState extends State<MyProfileAgentScreen> {
   var phnoController = TextEditingController();
   var mobileController = TextEditingController();
   var skypeController = TextEditingController();
+  var memberOfController = TextEditingController();
 
   var addressController = TextEditingController();
   var stateController = TextEditingController();
@@ -106,6 +107,8 @@ class _MyProfileAgentScreenState extends State<MyProfileAgentScreen> {
       selectedCate = '',
       spACatVal = 'None',
       selectedACate = '';
+
+  int attach=0;
 
   @override
   Widget build(BuildContext context) {
@@ -356,6 +359,19 @@ class _MyProfileAgentScreenState extends State<MyProfileAgentScreen> {
                             ),
                             SizedBox(
                               height: 20.0,
+                            ),
+                            /*SKYPE*/ Container(
+                              width: 350.0,
+                              height: 40.0,
+                              child: TextFormField(
+                                controller: memberOfController,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    filled: true,
+//                        hintStyle: TextStyle(color: Colors.grey[800]),
+                                    labelText: 'Member Of',
+                                    fillColor: Colors.white),
+                              ),
                             ),
                             Container(
                               width: double.infinity,
@@ -943,10 +959,13 @@ class _MyProfileAgentScreenState extends State<MyProfileAgentScreen> {
 
         addressController.text = data['address'].toString();
         print('Address: ${data['address']}');
-//        stateController = data['state'];
+        stateController.text = data['state'];
         cityController.text = data['city'];
-//        neighbourController = data['neighbour'];
-//        zipController = data['zip'];
+        neighbourController.text = data['area'];
+        zipController.text = data['zip'];
+        stateController.text = data['county'];
+
+        memberOfController.text = data['agent_member'];
 
         facebookController.text = facebook;
         tweeterController.text = twitter;
@@ -1004,10 +1023,11 @@ class _MyProfileAgentScreenState extends State<MyProfileAgentScreen> {
     map['first_name'] = fnameController.text;
 
     map['last_name'] = lnameController.text;
-    map['agent_member'] = '';
+    map['agent_member'] = memberOfController.text;
     map['position'] = '';
     map['agency_opening_hours'] = '';
     map['user_custom_picture'] = user_custom_picture;
+    map['profile_image_url_small'] = attach.toString();
 
     print('Request: ${map.toString()}');
 
@@ -1085,7 +1105,7 @@ class _MyProfileAgentScreenState extends State<MyProfileAgentScreen> {
       } else {
         dynamic data = json.decode(response.body)['data'];
         print('Data: $data');
-        int attach = data['attach'];
+        attach = data['attach'];
         user_custom_picture = data['html'];
         print('check Image: $user_custom_picture');
 

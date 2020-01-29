@@ -84,7 +84,7 @@ class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
   var aboutmeController = TextEditingController();
 
   bool showSpinner = false;
-
+  int attach=0;
   @override
   void initState() {
     // TODO: implement initState
@@ -1050,6 +1050,7 @@ class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
     map['position'] = '';
     map['agency_opening_hours'] = '';
     map['user_custom_picture'] = user_custom_picture;
+    map['profile_image_url_small'] = attach.toString();
 
     print('Request: ${map.toString()}');
 
@@ -1108,7 +1109,7 @@ class _MyProfileAgencyScreenState extends State<MyProfileAgencyScreen> {
       } else {
         dynamic data = json.decode(response.body)['data'];
         print('Data: $data');
-        int attach = data['attach'];
+        attach = data['attach'];
         user_custom_picture = data['html'];
         print('check Image: $user_custom_picture');
 

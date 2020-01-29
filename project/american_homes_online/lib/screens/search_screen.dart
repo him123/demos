@@ -5,9 +5,9 @@ import 'package:american_homes_online/screens/criteria_list_screen.dart';
 import 'package:american_homes_online/widget/custom_radio_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_picker/Picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:numberpicker/numberpicker.dart';
 
 import 'mapsearch_screen.dart';
 
@@ -46,8 +46,6 @@ class _SearchScreenState extends State<SearchScreen> {
 //    'Las Vegas, Nevada'
   ];
 
-
-
   String getText(List fullList) {
     if (fullList.length == 1) {
       return fullList[0].toString();
@@ -60,9 +58,13 @@ class _SearchScreenState extends State<SearchScreen> {
 
   String getCity(List fullList) {
     if (fullList.length == 1) {
+      selectedCity = fullList[0];
+      print(selectedCity);
       return fullList[0].toString();
     } else if (fullList.length > 1) {
-      return fullList[0].toString()+' And More ${fullList.length}';
+      selectedCity = fullList.join(', ');
+      print(selectedCity);
+      return fullList[0].toString() + ' And More ${fullList.length}';
     } else {
       return '';
     }
@@ -98,8 +100,8 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  String bedRooms = '0';
-  String bathRooms = '0';
+  String bedRooms = '';
+  String bathRooms = '';
   TextEditingController cityController = TextEditingController();
 
   void _refreshBedRooms(String rooms) {
@@ -117,12 +119,42 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   String selectedCity = '';
+  String selectedMinPrice='',selectedMaxPrice='';
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getCities();
+  }
+
+  showPickerNumber(BuildContext context) {
+    new Picker(
+        adapter: NumberPickerAdapter(data: [
+          NumberPickerColumn(begin: 0, end: 100000, jump: 1000, postfix: Text('\$ '), ),
+          NumberPickerColumn(begin: 1000, end: 100000, jump: 1000, postfix: Text('\$ ')),
+        ]),
+        delimiter: [
+          PickerDelimiter(
+              child: Container(
+            width: 30.0,
+            alignment: Alignment.center,
+            child: Icon(Icons.more_vert),
+          ))
+        ],
+        hideHeader: true,
+        title: new Text("Please Select"),
+        onConfirm: (Picker picker, List value) {
+          setState(() {
+            //          print(value.toString());
+//          print(picker.getSelectedValues());
+            selectedMinPrice = picker.getSelectedValues()[0].toString();
+            selectedMaxPrice = picker.getSelectedValues()[1].toString();
+
+            print('Max Value $selectedMaxPrice Min Value $selectedMinPrice');
+
+          });
+        }).showDialog(context);
   }
 
   @override
@@ -297,7 +329,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
                       onTap: () {
-                        _showDialog();
+                        showPickerNumber(context);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -308,7 +340,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 fontSize: 18.0, fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            'All',
+                            '\$'+selectedMinPrice+' - '+'\$'+selectedMaxPrice,
                             style: TextStyle(
                                 fontSize: 18.0, fontWeight: FontWeight.w300),
                           ),
@@ -741,7 +773,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               transitionDuration: Duration(seconds: 1),
                               pageBuilder: (_, __, ___) => MapSearchScreen(
                                     url:
-                                        'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&bedrooms=$bedRooms&min_price=&max_price=&bathrooms=$bathRooms&home_type$isOpenHome=&community=${getText(communityAmenities)}&zip=$cityOraddress&listing_type=${getText(selPType)}&building=${getText(buildingAmenities)}&features=${getText(selAmenitiesAndFeatures)}&size=${getText(lotDescription)}&pet_allowed=${getText(petsAllowed)}&utility${getText(utilitiesIncluded)}&floor_type=${getText(flooringType)}',
+                                        'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&bedrooms=$bedRooms&min_price=&max_price=&bathrooms=$bathRooms&home_type$isOpenHome=&community=${getText(communityAmenities)}&zip=${cityOraddress.trim()}&listing_type=${getText(selPType)}&building=${getText(buildingAmenities)}&features=${getText(selAmenitiesAndFeatures)}&size=${getText(lotDescription)}&pet_allowed=${getText(petsAllowed)}&utility${getText(utilitiesIncluded)}&floor_type=${getText(flooringType)}&property_city=${selectedCity.trim()}',
                                     filters: isFilters(),
                                   )));
                     },
@@ -765,7 +797,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
       if (data != null) {
         if (response.statusCode == 200) {
-
           String cityStr = data.toString().replaceAll('[', '');
           String cityStrComplete = cityStr.replaceAll(']', '');
           print('Check Data: $cityStrComplete');
@@ -774,7 +805,6 @@ class _SearchScreenState extends State<SearchScreen> {
           print(cityList);
 
 //          cityList = data.toList();
-
 
 //              (data as List).map((data) => new Agent.fromJson(data)).toList();
 //

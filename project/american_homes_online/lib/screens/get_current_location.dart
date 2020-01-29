@@ -36,6 +36,7 @@ class _GetCurrentLocationState extends State<GetCurrentLocation> {
   GoogleMapController mapController;
 
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+
   _getCurrentLocation() {
     geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
@@ -46,8 +47,7 @@ class _GetCurrentLocationState extends State<GetCurrentLocation> {
             _position.latitude,
             _position.longitude,
           );
-          print(
-              'latitude: ${latLng.latitude} Longitude: ${latLng.longitude}');
+          print('latitude: ${latLng.latitude} Longitude: ${latLng.longitude}');
 
           mapController.animateCamera(
               CameraUpdate.newCameraPosition(

@@ -43,10 +43,10 @@ void main() async {
 
   Widget _defaultHome;
 
-
-
   if (login == '1') {
-    _defaultHome = new DashBoardScreen(userType: userType,);
+    _defaultHome = new DashBoardScreen(
+      userType: userType,
+    );
   } else {
     _defaultHome = new LoginScreen();
   }
@@ -56,19 +56,19 @@ void main() async {
       primaryColor: kPrimaryColor,
       accentColor: kAccentColor,
       canvasColor: Colors.white,
-        fontFamily: 'Raleway',
-        textTheme: ThemeData.light().textTheme.copyWith(
-            body1: TextStyle(
-              color: Color.fromRGBO(20, 51, 51, 1),
-            ),
-            body2: TextStyle(
-              color: Color.fromRGBO(20, 51, 51, 1),
-            ),
-            title: TextStyle(
-              fontSize: 20,
-              fontFamily: 'RobotoCondensed',
-              fontWeight: FontWeight.bold,
-            )),
+      fontFamily: 'Raleway',
+      textTheme: ThemeData.light().textTheme.copyWith(
+          body1: TextStyle(
+            color: Color.fromRGBO(20, 51, 51, 1),
+          ),
+          body2: TextStyle(
+            color: Color.fromRGBO(20, 51, 51, 1),
+          ),
+          title: TextStyle(
+            fontSize: 20,
+            fontFamily: 'RobotoCondensed',
+            fontWeight: FontWeight.bold,
+          )),
     ),
     debugShowCheckedModeBanner: false,
     // initialRoute: LoginScreen.id,
@@ -78,9 +78,17 @@ void main() async {
       RegisterScreen.id: (context) => RegisterScreen(),
       ForgetPasswordScreen.id: (context) => ForgetPasswordScreen(),
       ValidateScreen.id: (context) => ValidateScreen(),
-      DashBoardScreen.id: (context) => DashBoardScreen(userType: userType,),
-      MapSearchScreen.id: (context) => MapSearchScreen(url: 'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&bedrooms=&min_price=&max_price=&bathrooms=&home_type=&community=&zip=&listing_type=&building=&features=&size=&pet_allowed=&utility&floor_type=',filters: 0,),
-      MyFavorite.id: (context) => MyFavorite(userId: id,),
+      DashBoardScreen.id: (context) => DashBoardScreen(
+            userType: userType,
+          ),
+      MapSearchScreen.id: (context) => MapSearchScreen(
+            url:
+                'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&bedrooms=&min_price=&max_price=&bathrooms=&home_type=&community=&zip=&listing_type=&building=&features=&size=&pet_allowed=&utility&floor_type=',
+            filters: 0,
+          ),
+      MyFavorite.id: (context) => MyFavorite(
+            userId: id,
+          ),
       SavedSearch.id: (context) => SavedSearch(),
       AgentFinderScreen.id: (context) => AgentFinderScreen(),
       SearchScreen.id: (context) => SearchScreen(),
