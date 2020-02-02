@@ -78,7 +78,7 @@ class _AgentDetailsState extends State<AgentDetails> {
                           transitionDuration:
                           Duration(seconds: 1),
                           pageBuilder: (_, __, ___) =>
-                              MapSearchScreen(url: 'https://americanhomesonline.com/wp-json/api/v1/Agent_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&agent_id=$agentId',filters: 1,)));
+                              MapSearchScreen(url: 'https://americanhomesonline.com/wp-json/api/v1/Agent_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&agent_id=$agentId',filters: 1,city: 'No',)));
                 },
                 /*MY LISTING*/ child: Container(
                   padding:

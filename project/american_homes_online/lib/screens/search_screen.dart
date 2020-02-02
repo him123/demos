@@ -6,7 +6,6 @@ import 'package:american_homes_online/widget/custom_radio_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/Picker.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 
 import 'mapsearch_screen.dart';
@@ -30,7 +29,7 @@ class _SearchScreenState extends State<SearchScreen> {
   List lotDescription = [];
   List moreCriteriaSel = [];
   List selectedCityList = [];
-  List saleOrRent = ['All', 'Sale', 'Rent'];
+  List saleOrRent = ['All', 'Buy', 'Rentals'];
   List petsList = ['All', 'Dogs', 'Cats'];
 
   String saleOrRental = 'All';
@@ -119,7 +118,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   String selectedCity = '';
-  String selectedMinPrice='',selectedMaxPrice='';
+  String selectedMinPrice = '', selectedMaxPrice = '';
 
   @override
   void initState() {
@@ -131,8 +130,14 @@ class _SearchScreenState extends State<SearchScreen> {
   showPickerNumber(BuildContext context) {
     new Picker(
         adapter: NumberPickerAdapter(data: [
-          NumberPickerColumn(begin: 0, end: 100000, jump: 1000, postfix: Text('\$ '), ),
-          NumberPickerColumn(begin: 1000, end: 100000, jump: 1000, postfix: Text('\$ ')),
+          NumberPickerColumn(
+            begin: 0,
+            end: 10000000,
+            jump: 1000,
+            postfix: Text('\$ '),
+          ),
+          NumberPickerColumn(
+              begin: 1000, end: 10000000, jump: 1000, postfix: Text('\$ ')),
         ]),
         delimiter: [
           PickerDelimiter(
@@ -152,7 +157,6 @@ class _SearchScreenState extends State<SearchScreen> {
             selectedMaxPrice = picker.getSelectedValues()[1].toString();
 
             print('Max Value $selectedMaxPrice Min Value $selectedMinPrice');
-
           });
         }).showDialog(context);
   }
@@ -175,6 +179,12 @@ class _SearchScreenState extends State<SearchScreen> {
               width: 10.0,
             ),
             Text("Advance Search"),
+            Spacer(),
+            cityList.length == 0
+                ? CircularProgressIndicator(
+                    backgroundColor: Colors.white,
+                  )
+                : Text('')
           ],
         ),
       ),
@@ -209,7 +219,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         children: <Widget>[
                           Text(
                             selectedCityList.length == 0
-                                ? 'Selct City'
+                                ? 'Select City'
                                 : getCity(selectedCityList),
                             style: TextStyle(
                                 fontSize: 16.0, fontWeight: FontWeight.w400),
@@ -309,7 +319,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            'Sale/Rental',
+                            'Buy/Rental',
                             style: TextStyle(
                                 fontSize: 18.0, fontWeight: FontWeight.w600),
                           ),
@@ -340,7 +350,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                 fontSize: 18.0, fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            '\$'+selectedMinPrice+' - '+'\$'+selectedMaxPrice,
+                            '\$' +
+                                selectedMinPrice +
+                                ' - ' +
+                                '\$' +
+                                selectedMaxPrice,
                             style: TextStyle(
                                 fontSize: 18.0, fontWeight: FontWeight.w300),
                           ),
@@ -773,8 +787,11 @@ class _SearchScreenState extends State<SearchScreen> {
                               transitionDuration: Duration(seconds: 1),
                               pageBuilder: (_, __, ___) => MapSearchScreen(
                                     url:
-                                        'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&bedrooms=$bedRooms&min_price=&max_price=&bathrooms=$bathRooms&home_type$isOpenHome=&community=${getText(communityAmenities)}&zip=${cityOraddress.trim()}&listing_type=${getText(selPType)}&building=${getText(buildingAmenities)}&features=${getText(selAmenitiesAndFeatures)}&size=${getText(lotDescription)}&pet_allowed=${getText(petsAllowed)}&utility${getText(utilitiesIncluded)}&floor_type=${getText(flooringType)}&property_city=${selectedCity.trim()}',
+                                        'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&bedrooms=${bedRooms=='0'?'':bedRooms}&min_price=$selectedMinPrice&max_price=$selectedMaxPrice&bathrooms=${bathRooms=='0'?'':bathRooms}&home_type=${getText(selPType)}&community=${getText(communityAmenities)}&zip=${cityOraddress.trim()}&listing_type=${saleOrRental=='All'?'':saleOrRental}&building=${getText(buildingAmenities)}&features=${getText(selAmenitiesAndFeatures)}&size=${getText(lotDescription)}&pet_allowed=${getText(petsAllowed)}&utility${getText(utilitiesIncluded)}&floor_type=${getText(flooringType)}&property_city=${selectedCity.trim()}',
                                     filters: isFilters(),
+                                    city: selectedCity.trim() == ''
+                                        ? 'No'
+                                        : 'Yes',
                                   )));
                     },
                   ),

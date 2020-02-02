@@ -26,7 +26,7 @@ class AddPropertyLocation extends StatefulWidget {
 class _AddPropertyLocationState extends State<AddPropertyLocation> {
   Completer<GoogleMapController> _controller = Completer();
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
-
+  final formKey = GlobalKey<FormState>();
   static CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(42.2814681, -71.09566540000003),
     zoom: 5.0,
@@ -66,6 +66,7 @@ class _AddPropertyLocationState extends State<AddPropertyLocation> {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      key: formKey,
       children: <Widget>[
         /*Listing Location*/ Padding(
           padding: EdgeInsets.all(8.0),
@@ -282,7 +283,7 @@ class _AddPropertyLocationState extends State<AddPropertyLocation> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: Text('Please tap on map to select Loction', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red),),
+                  child: Text('Please tap on map to select Location', style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red),),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),

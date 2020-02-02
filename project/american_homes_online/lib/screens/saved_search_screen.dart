@@ -64,7 +64,7 @@ class _SavedSearchState extends State<SavedSearch> {
                                 transitionDuration:
                                 Duration(seconds: 1),
                                 pageBuilder: (_, __, ___) =>
-                                    MapSearchScreen(url: item.url, filters: 0,)));
+                                    MapSearchScreen(url: item.url, filters: 0,city: 'No',)));
                       },
                       child: Column(
                         children: <Widget>[

@@ -1,5 +1,4 @@
-import 'package:american_homes_online/constants/constants.dart';
-import 'package:american_homes_online/constants/data_library.dart';
+
 import 'package:flutter/material.dart';
 
 class CriteriaScreen extends StatefulWidget {

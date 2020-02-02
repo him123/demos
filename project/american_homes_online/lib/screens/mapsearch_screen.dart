@@ -6,6 +6,7 @@ import 'package:american_homes_online/model/saved_search.dart';
 import 'package:american_homes_online/screens/property_list_screen.dart';
 import 'package:american_homes_online/screens/search_screen.dart';
 import 'package:android_intent/android_intent.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,13 +15,15 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:app_settings/app_settings.dart';
 
 class MapSearchScreen extends StatefulWidget {
   static String id = 'MapSearchScreen';
   String url;
   final int filters;
+  final String city;
 
-  MapSearchScreen({this.url, this.filters});
+  MapSearchScreen({this.url, this.filters, this.city});
 
   @override
   _MapSearchScreenState createState() => _MapSearchScreenState();
@@ -36,14 +39,16 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
 
   List<Property> list = List();
 
+
   Map<MarkerId, Marker> markers =
       <MarkerId, Marker>{}; // CLASS MEMBER, MAP OF MARKS
   String savedSearchName = '';
-  double newLat = 0.0, newLong = 0.0;
-  bool showProgress=false;
-  bool showNoDataFound=false;
+  double newLat =  40.380720, newLong = -102.164004;
+  bool showProgress = false;
+  bool showNoDataFound = false;
 
   void _add(List<Property> list) {
+    markers.clear();
     for (int i = 0; i < list.length; i++) {
       MarkerId markerId = MarkerId(list[i].property_id.toString());
 
@@ -73,21 +78,22 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
 
   GoogleMapController mapController;
 
-  static LatLng latLng = LatLng(
-    0.0,
-    0.0,
+  LatLng latLng = LatLng(
+    40.380720 ,-102.164004
   );
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    showProgress=true;
+    showProgress = true;
     getProperties('');
 
-//    getLocation();
-    _getCurrentLocation();
-    print('Check filter: ${widget.filters}');
+    if (widget.city == 'Yes') {
+      print('City name Found ${widget.city}');
+    } else {
+      print('City does not Found');
+      _getCurrentLocation();
+    }
   }
 
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
@@ -123,65 +129,6 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
     });
   }
 
-//  Future<void> getLocation() async {
-//    PermissionStatus permission = await PermissionHandler()
-//        .checkPermissionStatus(PermissionGroup.location);
-//    if (permission == PermissionStatus.denied) {
-//      await PermissionHandler()
-//          .requestPermissions([PermissionGroup.locationAlways]);
-//    }
-//
-//    var geolocator = Geolocator();
-//    GeolocationStatus geolocationStatus =
-//        await geolocator.checkGeolocationPermissionStatus();
-//    switch (geolocationStatus) {
-//      case GeolocationStatus.denied:
-//        print('====== denied ======');
-//        break;
-//      case GeolocationStatus.disabled:
-//      case GeolocationStatus.restricted:
-//        print('======= restricted =======');
-//        break;
-//      case GeolocationStatus.unknown:
-//        print('======== unknown ==========');
-//        break;
-//      case GeolocationStatus.granted:
-//        print('====== Grante =============');
-//
-//        _checkGps();
-//
-//        await Geolocator()
-//            .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-//            .then((Position _position) {
-//          if (_position != null) {
-//            setState(() {
-//              latLng = LatLng(
-//                _position.latitude,
-//                _position.longitude,
-//              );
-//              print(
-//                  'latitude: ${latLng.latitude} Longitude: ${latLng.longitude}');
-//
-//              mapController.animateCamera(
-//                  CameraUpdate.newCameraPosition(
-//                CameraPosition(
-//                  target: LatLng(
-//                    latLng.latitude,
-//                    latLng.longitude,
-//                  ),
-//                  zoom: 12,
-//                  bearing: 45.0,
-//                  tilt: 45.0
-//                ),
-//              ));
-//
-//            });
-//          }
-//        });
-//        break;
-//    }
-//  }
-
   Future _checkGps() async {
     if (!(await Geolocator().isLocationServiceEnabled())) {
       if (Theme.of(context).platform == TargetPlatform.android) {
@@ -201,6 +148,32 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
 
                     intent.launch();
                     Navigator.of(context, rootNavigator: true).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Can't get current location"),
+              content:
+                  const Text('Please make sure you enable GPS and try again'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok'),
+                  onPressed: () async {
+                    if (!(await Geolocator().isLocationServiceEnabled())) {
+                      AppSettings.openLocationSettings();
+                    } else {
+                      setState(() {
+                        int count = 0;
+                        Navigator.of(context).popUntil((_) => count++ >= 2);
+                      });
+                    }
                   },
                 ),
               ],
@@ -289,7 +262,7 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
                         ),
                         Padding(
                           padding: EdgeInsets.only(right: 10.0),
-                          child: showProgress==true
+                          child: showProgress == true
                               ? Row(
                                   children: <Widget>[
                                     SizedBox(
@@ -331,41 +304,70 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
                         Container(
                           child: GoogleMap(
                             onCameraIdle: () {
+                              if(widget.city=='No'){
                               print('camera idel now ${widget.url}');
                               setState(() {
-                                showProgress=true;
+                                showProgress = true;
                                 postFix = '';
-                                postFix = '&latitude=$newLat&longitude=$newLong';
+                                postFix =
+                                    '&latitude=$newLat&longitude=$newLong';
                                 list.clear();
                                 getProperties(postFix);
                               });
+                              }
                             },
                             onCameraMove: (cPosition) {
-                              LatLng newLatLong = cPosition.target;
-                              newLat = newLatLong.latitude;
-                              newLong = newLatLong.longitude;
+                              if(widget.city=='No'){
+                                LatLng newLatLong = cPosition.target;
+                                newLat = newLatLong.latitude;
+                                newLong = newLatLong.longitude;
 
-                              print(
-                                  'new lat ${newLatLong.latitude} long ${newLatLong.longitude}');
+                                print(
+                                    'new lat ${newLatLong.latitude} long ${newLatLong.longitude}');
+                              }
+                              
                             },
                             onMapCreated: _onMapCreated,
                             initialCameraPosition: CameraPosition(
                               target: latLng,
-                              zoom: 11.0,
+                              zoom: 3.0,
                             ),
                             markers: Set<Marker>.of(markers.values),
                           ),
                         ),
-                        showNoDataFound==true ? Positioned(
-                          child: Container(
-                            height: 60.0,
-                            width: MediaQuery.of(context).size.width,
-                            color: Theme.of(context).primaryColor,
-                            child: Center(child: Text('No Data found',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w900, fontSize: 16.0),)),
-                          ),
-                        ):Text(''),
+                        showNoDataFound == true
+                            ? Positioned(
+                                child: Container(
+                                  height: 60.0,
+                                  width: MediaQuery.of(context).size.width,
+                                  color: Theme.of(context).accentColor,
+                                  child: Center(
+                                      child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Text(
+                                        'No Data found',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0),
+                                      ),
+                                      SizedBox(
+                                        height: 5.0,
+                                      ),
+                                      Text(
+                                        'Change location OR Set Filter',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 15.0),
+                                      ),
+                                    ],
+                                  )),
+                                ),
+                              )
+                            : Text(''),
                       ],
-
                     ),
                     PropertyListScreen(
                       list: list,
@@ -410,22 +412,20 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
     );
   }
 
-
   String postFix = '';
-  Future<String> getProperties(String post) async {
 
+  Future<String> getProperties(String post) async {
     print('========= post fix ===========$post');
     String mainURL = widget.url + post;
     print('========= Main URL ===========$mainURL');
-    var response =
-        await http.get(mainURL);
+    var response = await http.get(mainURL);
 
     if (mounted) {
       setState(() {
         dynamic data = json.decode(response.body)['data'];
 
         if (response.statusCode == 200 && data != null) {
-          showNoDataFound=false;
+          showNoDataFound = false;
           list = (data as List)
               .map((data) => new Property.fromJson(data))
               .toList();
@@ -434,11 +434,42 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
           print('All Shops: $firstname');
 
           _add(list);
-          showProgress=false;
 
+          if (list[0].property_latitude != '' && widget.city=='Yes' && mapController!=null) {
+            mapController.animateCamera(CameraUpdate.newCameraPosition(
+              CameraPosition(
+                  target: LatLng(
+                    double.parse(list[0].property_latitude),
+                    double.parse(list[0].property_longitude),
+                  ),
+                  zoom: 12,
+                  bearing: 45.0,
+                  tilt: 45.0),
+            ));
+          }
+
+          showProgress = false;
+          //showNoDataFound = false;
         } else {
-          showNoDataFound=true;
-          showProgress=false;
+          list.clear();
+          showNoDataFound = true;
+          showProgress = false;
+          markers.clear();
+
+          // print('Moving map to: LAT 37.0902');
+          // if (mapController!=null) {
+          //   mapController.animateCamera(CameraUpdate.newCameraPosition(
+          //     CameraPosition(
+          //         target: LatLng(
+          //           40.380720,
+          //           -102.164004,
+          //         ),
+          //         zoom: 3,
+          //        ),
+          //   ));
+          // }
+
+
         }
       });
     }

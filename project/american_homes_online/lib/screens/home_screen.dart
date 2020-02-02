@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         transitionDuration:
                                         Duration(seconds: 1),
                                         pageBuilder: (_, __, ___) =>
-                                            MapSearchScreen(url: 'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&bedrooms=&min_price=&max_price=&bathrooms=&home_type=&community=&zip=&listing_type=&building=&features=&size=&pet_allowed=&utility&floor_type=',filters: 0,)));
+                                            MapSearchScreen(url: 'https://americanhomesonline.com/wp-json/api/v1/All_Property/?secret_key=yQTTspWXd530xNAEnBKkMFNFuBbKG6kd&bedrooms=&min_price=&max_price=&bathrooms=&home_type=&community=&zip=&listing_type=&building=&features=&size=&pet_allowed=&utility&floor_type=',filters: 0,city: 'No',)));
                               },
                               child: Column(
                                 mainAxisAlignment:
